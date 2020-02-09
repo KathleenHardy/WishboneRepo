@@ -36,11 +36,11 @@ class AuthenticationDAO extends AbstractDAO
 
         if (! $this->mysqli->connect_errno) {
             $query1 = 'INSERT INTO authentication
-                            (email, pass) VALUES(?,?)';
+                            (email, pass, userType) VALUES(?,?,?)';
             $email = $Registrant->getRegistrantEmail();
             $pass = $Registrant->getRegistrantPassword();
             $stmt = $this->mysqli->prepare($query1);
-            $stmt->bind_param('ss', $email, $pass);
+            $stmt->bind_param('ssi', $email, $pass, 1);
             $stmt->execute();
             // $stmt->close();
 

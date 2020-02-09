@@ -1,7 +1,11 @@
+<?php 
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>User Log In</title>
+<title>Post Availability</title>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -34,58 +38,7 @@
 
 <body>
 	<div class="page-wrap">
-			<?php
-session_start();
-
-if (isset($_SESSION['useremail'])) {
-    header("Location: userHome.php");
-}
-
-require_once ("config.php");
-
-$useremail = $userpassword = $fmsg = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset($_POST["userpassword"])) {
-    $useremail = test_input($_POST["useremail"]);
-    $userpassword = test_input($_POST["userpassword"]);
-
-    $query = "SELECT * FROM `authentication` WHERE email = '$useremail' AND pass='$userpassword'";
-
-    $result = mysqli_query($connection, $query) or die(mysqli_error($connection));
-
-    $count = mysqli_num_rows($result);
-
-    if ($count == 1) {
-        $_SESSION['useremail'] = $useremail;
-  
-        $row = mysqli_fetch_array($result);
-        $userType = $row['userType'];
-        
-        if ($userType == 1) {
-            header('Location: userHome.php');
-            mysqli_close($connection);
-        } else if ( $userType == 2) {
-            header('Location: entertainerHome.php');
-            mysqli_close($connection);
-        } else if ( $userType == 3) {
-            header('Location: userHome.php');
-            mysqli_close($connection);
-        }
-        
-    } else {
-        $fmsg = "Invalid Login Credentials.";
-    }
-}
-
-function test_input($data)
-{
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-
-?>
+	
 			<!-- header -->
 		<header class="header">
 			<div class="container">
@@ -101,16 +54,14 @@ function test_input($data)
 					<ul class="consult-menu">
 						<li class="current-menu-item"><a href="index.html">Home</a></li>
 
-						<li class="menu-item-has-children"><a href="entertainer.html">Entertainer</a>
+						<li class="menu-item-has-children"><a href="entertainer.php">Entertainer</a>
 							<ul class="sub-menu">
-								<li><a href="entertainer.html">Find Entertainer</a></li>
+								<li><a href="entertainer.php">Find Entertainer</a></li>
 								<li><a href="#">Become Entertainer</a></li>
 							</ul></li>
 
-						<li><a href="event.html">Events</a></li>
+						<li><a href="event.php">Events</a></li>
 						<li><a href="about.html">About</a></li>
-						<li><a href="about.html">Contact</a></li>
-						<li><a href="login.php">log in / Sign up</a></li>
 					</ul>
 					<!-- consult-menu -->
 
@@ -130,42 +81,65 @@ function test_input($data)
 					<div class="row">
 						<div
 							class="col-lg-10 offset-0 offset-sm-0 offset-md-0 offset-lg-1 ">
+							
+							<form action="post-availability.php" method="POST">
 
-							<!-- title-01 -->
-							<div class="title-01 title-01__style-04"
-								style="margin-bottom: 25px;">
-								<h2 class="title-01__title">
-									<span>Log in with email</span>
-								</h2>
-								<div class="row">
-									<div class="col-lg-3"></div>
-									<div class="col-lg-6">
-										<div class="widget-text__content">
-											<!-- form-search -->
-											<div class="form-search">
-												<form
-													action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"
-													method="post">
-														<?php echo $fmsg?>
-														<input class="form-control" type="email" id="useremail"
-														name="useremail"
-														placeholder="Please enter your user email..." /> <input
-														class="form-control" type="password" id="userpassword"
-														name="userpassword" placeholder="Password..." />
-													<div class="form__button">
-														<button class="btn btn-primary btn-w180" type="submit">Log
-															in</button>
-														<a class="btn btn-primary btn-w180" href="signup_user.php">Sign
-															Up</a>
-													</div>
-												</form>
-											</div>
-											<!-- End / form-search -->
-										</div>
-									</div>
-									<div class="col-lg-3"></div>
-								</div>
-							</div>
+								  <input type="date" name="availabilityStartDate">
+								  <br>
+								  <br>
+								  <input type="date" name="availabilityEndDate">
+								  <br>
+								  <br>
+								  <input type="time" name="availabilityStartTime">
+								  <br>
+								  <br>
+								  <input type="time" name="availabilityEndTime">
+								  <br>
+								  <br>
+								  
+								<div class="form-group"> <!-- Submit Button -->
+									<button type="submit" class="btn btn-primary">Post Availability</button>
+								</div>  
+							</form>	
+							
+<?php
+
+
+require_once ("config.php");
+
+//TODO: save entID as a session object for later use
+$enthId = $_SESSION['entertainerid'];
+
+if (! empty($_POST)) {
+    
+    $availStartDate = $_POST['availabilityStartDate'];
+    $availEndDate = $_POST['availabilityEndDate'];
+    $availStartTime = $_POST['availabilityStartTime'];
+    $availEndTime = $_POST['availabilityEndTime'];
+    
+    
+	$sql = "INSERT INTO `availability`(`availStartDate`,`availEndDate`, `availStartTime`, `availEndTime`) VALUES 
+    	                       ('$availStartDate','$availEndDate','$availStartTime','$availEndTime')";
+
+	if (mysqli_query($connection, $sql)) {
+	    $availID = mysqli_insert_id($connection);
+    	echo "New record created successfully";
+	} else {
+    	echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+	}
+
+	
+	$sql3 = "INSERT INTO `resourceavailability`(`entid`, `availId`) VALUES ( $enthId, $availID)";
+	if (mysqli_query($connection, $sql3)) {
+	    #echo "New record created successfully";
+	} else {
+	    echo "Error: " . $sql3 . "<br>" . mysqli_error($connection);
+	}
+
+}	
+
+?>							
+							
 							<!-- End / title-01 -->
 						</div>
 					</div>

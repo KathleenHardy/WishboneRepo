@@ -1,3 +1,30 @@
+<?php
+include ('config.php');
+include ('dto/entertainer.php');
+
+session_start();
+
+$entertainerDT0 = array();
+
+$sql = "select * from entertainers";
+
+$result = mysqli_query($connection, $sql) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+
+if ($count >= 1) {
+    
+    while($row = mysqli_fetch_array($result)) {
+        
+        $entertainerDT0[] = new Entertainer( $row['entid'], $row['firstName'], $row['lastName'], $row['ratePerHour'], $row['imageLocation'],$row['homePagePicture'],$row['aboutMe']);
+    }
+} else {
+    #$fmsg = "Invalid Login Credentials.";
+}
+
+mysqli_close($connection);
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,7 +129,7 @@
 								<li><a href="entertainer.html">Find Entertainer</a></li>
 								<li><a href="#">Become Entertainer</a></li>
 							</ul></li>
-						<li><a href="event.html">Events</a></li>
+						<li><a href="event.php">Events</a></li>
 						<li><a href="about.html">about</a>
 						<li><a href="contact.html">contact</a></li>
 					</ul>
@@ -134,7 +161,7 @@
 
 									<!-- form-search -->
 									<div class="form-search">
-										<form>
+										<form action="create-gig.php">
 											<input class="form-control" type="text"
 												placeholder="Type and Hit Enter..." />
 										</form>
@@ -163,7 +190,46 @@
 
 						<div class="col-md-8">
 							<div class="row">
-								<div class="col-lg-4 col-md-6 mb-4">
+							
+                            
+							<?php 
+							        foreach($entertainerDT0 as $entertainer) {
+							            print 
+							            '<div class="col-lg-4 col-md-6 mb-4">
+									           <div class="card h-100">
+										             <a href="#"><img class="card-img-top" src="assets\10384422264_d9c7299146.jpg" alt="Card image" style="width:100%"></a>
+										       <div class="card-body text-center">
+											         <h2 class="post-02__title" style="color: #f39c12;">
+												        <a href="#">' . $entertainer->getFirstName() . ' ' . $entertainer->getLastName() . '</a>
+											         </h2>
+
+											   <div class="post-02__department">Cover Band</div>
+
+    											<p class="card-text" style="margin-top: 10px;">
+    												From <span>$' . $entertainer->getRatePerHour() . ' CAD</span> per hour
+    											</p>
+
+                                                <p class="card-text">' .$entertainer->getAboutMe(). '</p>    
+
+    											<p style="margin-top: 50px;">
+    												<button onclick="goToEntertainerDetailsPage( )" type="button" class="btn btn-default btn-block">View</button>
+    											</p>
+
+        										</div>
+        										<div class="card-footer">
+        											<small class="text-muted"> &#9733; &#9733; &#9733;
+        												&#9733; &#9734; <span>6</span>
+        											</small>
+        										</div>
+
+        									</div>
+        								</div>';
+        							 }
+							?>
+							
+							
+						
+							<div class="col-lg-4 col-md-6 mb-4">
 									<div class="card h-100">
 										<a href="#"><img class="card-img-top"
 											src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone6.jpg"
@@ -177,8 +243,8 @@
 												From <span>$24.99 CAD</span> per hour
 											</p>
 											<p style="margin-top: 50px;">
-												<button onclick="location.href='entertainer-detail.html';"
-													type="button" class="btn btn-default btn-block">View</button>
+												<button onclick='goToEntertainerDetailsPage()'
+													type="button" class="btn btn-default btn-block" name="viewDetails">View</button>
 											</p>
 										</div>
 										<div class="card-footer">
@@ -188,99 +254,7 @@
 										</div>
 									</div>
 								</div>
-
-								<div class="col-lg-4 col-md-6 mb-4">
-									<div class="card h-100">
-										<a href="#"><img class="card-img-top"
-											src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone7.jpg"
-											alt=""></a>
-										<div class="card-body">
-											<h4 class="card-title">
-												<a href="#">William Moises</a>
-											</h4>
-											<h5>$24.99</h5>
-											<p class="card-text">Lorem ipsum dolor sit amet,
-												consectetur adipisicing elit. Amet numquam aspernatur! Lorem
-												ipsum dolor sit amet.</p>
-										</div>
-										<div class="card-footer">
-											<small class="text-muted">&#9733; &#9733; &#9733;
-												&#9733; &#9734;</small>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-lg-4 col-md-6 mb-4">
-									<div class="card h-100">
-										<a href="#"><img class="card-img-top"
-											src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone8.jpg"
-											alt=""></a>
-										<div class="card-body">
-											<h4 class="card-title">
-												<a href="#">Item Two</a>
-											</h4>
-											<h5>$24.99</h5>
-											<p class="card-text">Lorem ipsum dolor sit amet,
-												consectetur adipisicing elit. Amet numquam aspernatur! Lorem
-												ipsum dolor sit amet.</p>
-										</div>
-										<div class="card-footer">
-											<small class="text-muted">&#9733; &#9733; &#9733;
-												&#9733; &#9734;</small>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-lg-4 col-md-6 mb-4">
-									<div class="card h-100">
-										<a href="#"><img class="card-img-top"
-											src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone9.jpg"
-											alt=""></a>
-										<div class="card-body text-center">
-											<h2 class="post-02__title" style="color: #f39c12;">
-												<a href="#">Daniel K. Dogbey</a>
-											</h2>
-											<div class="post-02__department">Cover Band</div>
-											<p class="card-text" style="margin-top: 10px;">
-												From <span>$24.99 CAD</span> per hour
-											</p>
-											<p style="margin-top: 50px;">
-												<button onclick="location.href='entertainer-detail.html';"
-													type="button" class="btn btn-default btn-block">View</button>
-											</p>
-										</div>
-										<div class="card-footer">
-											<small class="text-muted"> &#9733; &#9733; &#9733;
-												&#9733; &#9734; <span>6</span>
-											</small>
-										</div>
-									</div>
-								</div>
-
-								<div class="col-lg-4 col-md-6 mb-4">
-									<div class="card h-100">
-										<a href="#"><img class="card-img-top"
-											src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone10.jpg"
-											alt=""></a>
-										<div class="card-body text-center">
-											<h2 class="post-02__title" style="color: #f39c12;">
-												<a href="#">Jonathon Moody</a>
-											</h2>
-											<div class="post-02__department">Cover Band</div>
-											<p class="card-text" style="margin-top: 10px;">
-												From <span>$24.99 CAD</span> per hour
-											</p>
-											<p style="margin-top: 50px;">
-												<button onclick="location.href='entertainer-detail.html';"
-													type="button" class="btn btn-default btn-block">View</button>
-											</p>
-										</div>
-										<div class="card-footer">
-											<small class="text-muted"> &#9733; &#9733; &#9733;
-												&#9733; &#9734; <span>6</span>
-											</small>
-										</div>
-									</div>
+									
 								</div>
 
 							</div>
@@ -387,6 +361,13 @@
 	</footer>
 	<!-- End / footer -->
 
+
+	<script>
+        function goToEntertainerDetailsPage () {
+            //find a way to access php object so I can populate entertainer detail page
+        	location.href='entertainer-detail.html';
+        }
+    </script>
 
 	<!-- Vendors-->
 	<script

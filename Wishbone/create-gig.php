@@ -1,7 +1,11 @@
+<?php 
+session_start();
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>User Log In</title>
+<title>Create a Gig</title>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -34,58 +38,7 @@
 
 <body>
 	<div class="page-wrap">
-			<?php
-session_start();
-
-if (isset($_SESSION['useremail'])) {
-    header("Location: userHome.php");
-}
-
-require_once ("config.php");
-
-$useremail = $userpassword = $fmsg = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset($_POST["userpassword"])) {
-    $useremail = test_input($_POST["useremail"]);
-    $userpassword = test_input($_POST["userpassword"]);
-
-    $query = "SELECT * FROM `authentication` WHERE email = '$useremail' AND pass='$userpassword'";
-
-    $result = mysqli_query($connection, $query) or die(mysqli_error($connection));
-
-    $count = mysqli_num_rows($result);
-
-    if ($count == 1) {
-        $_SESSION['useremail'] = $useremail;
-  
-        $row = mysqli_fetch_array($result);
-        $userType = $row['userType'];
-        
-        if ($userType == 1) {
-            header('Location: userHome.php');
-            mysqli_close($connection);
-        } else if ( $userType == 2) {
-            header('Location: entertainerHome.php');
-            mysqli_close($connection);
-        } else if ( $userType == 3) {
-            header('Location: userHome.php');
-            mysqli_close($connection);
-        }
-        
-    } else {
-        $fmsg = "Invalid Login Credentials.";
-    }
-}
-
-function test_input($data)
-{
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-
-?>
+	
 			<!-- header -->
 		<header class="header">
 			<div class="container">
@@ -101,16 +54,14 @@ function test_input($data)
 					<ul class="consult-menu">
 						<li class="current-menu-item"><a href="index.html">Home</a></li>
 
-						<li class="menu-item-has-children"><a href="entertainer.html">Entertainer</a>
+						<li class="menu-item-has-children"><a href="entertainer.php">Entertainer</a>
 							<ul class="sub-menu">
-								<li><a href="entertainer.html">Find Entertainer</a></li>
+								<li><a href="entertainer.php">Find Entertainer</a></li>
 								<li><a href="#">Become Entertainer</a></li>
 							</ul></li>
 
-						<li><a href="event.html">Events</a></li>
+						<li><a href="event.php">Events</a></li>
 						<li><a href="about.html">About</a></li>
-						<li><a href="about.html">Contact</a></li>
-						<li><a href="login.php">log in / Sign up</a></li>
 					</ul>
 					<!-- consult-menu -->
 
@@ -130,42 +81,92 @@ function test_input($data)
 					<div class="row">
 						<div
 							class="col-lg-10 offset-0 offset-sm-0 offset-md-0 offset-lg-1 ">
+							<form action="create-gig.php" method="POST">
 
-							<!-- title-01 -->
-							<div class="title-01 title-01__style-04"
-								style="margin-bottom: 25px;">
-								<h2 class="title-01__title">
-									<span>Log in with email</span>
-								</h2>
-								<div class="row">
-									<div class="col-lg-3"></div>
-									<div class="col-lg-6">
-										<div class="widget-text__content">
-											<!-- form-search -->
-											<div class="form-search">
-												<form
-													action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"
-													method="post">
-														<?php echo $fmsg?>
-														<input class="form-control" type="email" id="useremail"
-														name="useremail"
-														placeholder="Please enter your user email..." /> <input
-														class="form-control" type="password" id="userpassword"
-														name="userpassword" placeholder="Password..." />
-													<div class="form__button">
-														<button class="btn btn-primary btn-w180" type="submit">Log
-															in</button>
-														<a class="btn btn-primary btn-w180" href="signup_user.php">Sign
-															Up</a>
-													</div>
-												</form>
-											</div>
-											<!-- End / form-search -->
+										<div class="form-group"> <!-- Gig Name -->
+											<label for="gig_name_id" class="control-label">Gigs Name</label>
+											<input type="text" class="form-control" id="gig_name_id" name="gigs_name" placeholder="Enter a name for your Gig">
+										</div>	
+										
+										<div class="form-group"> <!-- Gigs category -->
+											<label for="gigs_category_id" class="control-label">Gigs Category</label>
+											<select class="form-control" id="gigs_category_id" name="gigs_category">
+												<option value="Event">Event</option>
+												<option value="Music">Music</option>
+												<option value="Concert">Concert</option>
+												<option value="Festival">Festival</option>
+												<option value="Party">Party</option>
+											</select>					
 										</div>
-									</div>
-									<div class="col-lg-3"></div>
-								</div>
-							</div>
+										
+										<div class="form-group"> <!-- Gigs category -->
+											<label for="gigs_artType_id" class="control-label">Gigs Art Type</label>
+											<select class="form-control" id="gigs_artType_id" name="gigs_artType">
+												<option value="Musician">Musician</option>
+												<option value="Dancer">Dancer</option>
+												<option value="Painter">Painter</option>
+												<option value="Actor">Actor</option>
+												<option value="Model">Model</option>
+												<option value="Singer">Singer</option>
+												<option value="Photographer">Photographer</option>
+												<option value="Blogger">Blogger</option>
+											</select>					
+										</div>
+										
+										<div class="form-group"> <!-- Gigs details -->
+											<label for="gigs_details-id">Gigs details</label>
+											<textarea class="form-control" rows="5" id="gigs_details-id" name="gigs_details"></textarea>
+										</div>
+										
+										<div class="form-group"> <!-- Gigs details -->
+											<label for="gigs_notes-id">Notes</label>
+											<textarea class="form-control" rows="5" id="gigs_notes-id" name="gigs_notes"></textarea>
+										</div>
+										
+										<!--
+										<div class="input-group">
+											  <div class="input-group-prepend">
+												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+											  </div>
+												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
+										</div>
+										for later -->
+										
+										<div class="form-group"> <!-- Submit Button -->
+											<button type="submit" class="btn btn-primary">Create Gig</button>
+										</div>  
+							</form>
+<?php
+
+require_once ("config.php");
+
+$enthId = $_SESSION['entertainerid'];
+
+
+if (! empty($_POST)) {
+    
+    $gigsName = $_POST['gigs_name'];
+    $gigsCategory = $_POST['gigs_category'];
+    $gigsArtType = $_POST['gigs_artType'];
+    $gigsDetails = $_POST['gigs_details'];
+    $gigsNotes = $_POST['gigs_notes'];
+    
+    
+	$sql = "INSERT INTO `gigs`(`entid`, `gigsName`, `gigscategory`, `gigsArttype`, `gigsdetails`, `notes`) VALUES 
+    	                       ( $enthId,'$gigsName','$gigsCategory','$gigsArtType','$gigsDetails','$gigsNotes')";
+
+	if (mysqli_query($connection, $sql)) {
+    	echo "New record created successfully";
+	} else {
+    	echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+	}
+
+	mysqli_close($connection);
+
+}	
+
+?>							
+							
 							<!-- End / title-01 -->
 						</div>
 					</div>
