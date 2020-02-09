@@ -110,7 +110,7 @@ mysqli_close($connection);
 						<li><a href="about.html">About Me</a>
 						<li><a href="create-gig.php">Add a Gig</a></li>
 						<li><a href="post-availability.php">Set my Availability</a></li>
-						<li><a href="#logout">Log out</a></li>
+						<li><a href="logout.php">Log out</a></li>
 						
 					</ul>
 					<!-- consult-menu -->
@@ -271,6 +271,34 @@ mysqli_close($connection);
                         ';
 						}
                         ?>
+                        
+                        <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
+							style="padding-left: 5px; padding-right: 5px;">
+
+							<!-- post-02 -->
+							<div class="post-02 post-02__style-02 js-post-effect">
+								<div class="post-02__media">
+									<a href="#"><img src="assets/img/projects/v-4.jpg" alt="" /></a>
+								</div>
+								<div class="post-02__body">
+									<h2 class="post-02__title">
+										<a href="#">5 Ways to Use 404 Pages</a>
+									</h2>
+									<div class="post-02__department">Business Consulting</div>
+									<div class="post-02__content">
+										<div class="post-02__description">Sed ante nisl,
+											fermentum et facilisis in, maximus sed ipsum. Cras hendrerit
+											feugiat eros, ut fringilla nunc finibus sed. Quisque vitae
+											dictum augue, vitae pretium sem. Proin tristique lobortis
+											mauris</div>
+										<a class="post-02__link" href="#">View detail</a>
+									</div>
+								</div>
+							</div>
+							<!-- End / post-02 -->
+
+						</div>
+						
 					</div>
 				</div>
 			</section>
