@@ -1,3 +1,32 @@
+<?php
+include ('config.php');
+include ('dto/gigDetails.php');
+
+session_start();
+
+$gigDetailsDT0 = array();
+
+$sql = "select * from gigsdetails";
+
+$result = mysqli_query($connection, $sql) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+
+if ($count >= 1) {
+    
+    while($row = mysqli_fetch_array($result)) {
+        $gigDetailsDT0[] = new GigDetails( $row['gigsName'], $row['gigsCategory'], $row['gigsArtType'], $row['gigsDetails'], $row['notes'],
+                                           $row['firstName'],$row['lastName'],$row['ratePerHour'], $row['aboutMe'], 
+                                           $row['availStartDate'], $row['availEndDate'], $row['availStartTime'], $row['availEndTime']);
+    }
+} else {
+    #$fmsg = "Invalid Login Credentials.";
+}
+
+mysqli_close($connection);
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -165,6 +194,64 @@
 					</div>
 
 					<!-- post-03 -->
+					
+					<?php
+					$counter = 0;
+					foreach($gigDetailsDT0 as $gigDetails) {
+					    
+					    if ($counter++ % 2 == 1 ) {
+					        print
+					        '<div class="post-03">
+        						<div class="post-03__media">
+        							<a href="#"><img src="assets/img/services/3.jpg" alt="" /></a>
+        						</div>
+        						<div class="post-03__body">
+        							<h6 class="post-03__subTitle">' . $gigDetails->getGigsArtType() . '</h6>
+        							<h2 class="post-03__title">
+        								<a href="#">' . $gigDetails->getGigsName() . '</a>
+        							</h2>
+        							<div class="post-03__description">
+        								<p>1 June, 2018</p>
+        								<p>Building B, University of Ottawa</p>
+        								<p>Starts at $' . $gigDetails->getRatePerHour() . ' CAD</p>
+        								<span>' . $gigDetails->getGigsDetails() . '</span>
+        							</div>
+        							<a class="post-03__link" href="event-detail.html"> view event
+        								<i class="fa fa-angle-right" aria-hidden="true"></i>
+        							</a>
+        						</div>
+        					</div>';
+					        
+					    } else {
+					        print
+					        '<div class="post-03 post-03__reverse">
+        						<div class="post-03__media">
+        							<a href="#"><img src="assets/img/services/3.jpg" alt="" /></a>
+        						</div>
+        						<div class="post-03__body">
+        							<h6 class="post-03__subTitle">' . $gigDetails->getGigsArtType() . '</h6>
+        							<h2 class="post-03__title">
+        								<a href="#">' . $gigDetails->getGigsName() . '</a>
+        							</h2>
+        							<div class="post-03__description">
+        								<p>1 June, 2018</p>
+        								<p>Building B, University of Ottawa</p>
+        								<p>Starts at $' . $gigDetails->getRatePerHour() . ' CAD</p>
+        								<span>' . $gigDetails->getGigsDetails() . '</span>
+        							</div>
+        							<a class="post-03__link" href="event-detail.html"> view event
+        								<i class="fa fa-angle-right" aria-hidden="true"></i>
+        							</a>
+        						</div>
+        					</div>';
+					        
+					        
+					    } 
+					    
+					}
+					?>
+
+					<!-- 
 					<div class="post-03">
 						<div class="post-03__media">
 							<a href="#"><img src="assets/img/services/1.jpg" alt="" /></a>
@@ -187,10 +274,7 @@
 							</a>
 						</div>
 					</div>
-					<!-- End / post-03 -->
 
-
-					<!-- post-03 -->
 					<div class="post-03 post-03__reverse">
 						<div class="post-03__media">
 							<a href="#"><img src="assets/img/services/2.jpg" alt="" /></a>
@@ -213,10 +297,7 @@
 							</a>
 						</div>
 					</div>
-					<!-- End / post-03 -->
-
-
-					<!-- post-03 -->
+	
 					<div class="post-03">
 						<div class="post-03__media">
 							<a href="#"><img src="assets/img/services/3.jpg" alt="" /></a>
@@ -239,6 +320,9 @@
 							</a>
 						</div>
 					</div>
+					
+					-->
+					
 					<!-- End / post-03 -->
 
 				</div>

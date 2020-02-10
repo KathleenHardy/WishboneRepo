@@ -17,11 +17,13 @@ drop table if exists authentication; -- Remark this out for old table
 
 /*
 Table for Authentication - may later be moved so it is only table on server directly exposed
+	- added usertype 
 */
 CREATE TABLE authentication (
     authid int not null auto_increment,
     email varchar(50) unique,
     pass varchar(50),
+    userType int not null,
 
     primary key (authid)
 );

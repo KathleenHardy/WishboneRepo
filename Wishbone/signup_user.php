@@ -34,14 +34,18 @@
 
 <body>
 	<div class="page-wrap">
-			<?php
+
+<?php
 include ('dao/authenticationDAO.php');
+require_once ("config.php");
+
 $hasError = false;
 $authenticationDAO = new AuthenticationDAO();
 $errorMessages = Array();
 
 if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_POST["userEmail"]) || isset($_POST["userPwd"]) || isset($_POST["userConfirmPwd"])) {
 
+    
     if ($_POST["userFirstName"] == "") {
         $hasError = true;
         $errorMessages['firstNameError'] = 'Please enter your first name';
@@ -71,12 +75,65 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
         $hasError = true;
         $errorMessages['userConfirmPwdError'] = 'Passwords need to be matched';
     }
+    
+     
+    
+    if (isset($_POST['reg_user'])) {
+        $selected_radio = $_POST["userType"];
+        
+        if ($selected_radio == 'Entertainer') {
+            $email = $_POST["userEmail"];
+            $pass = $_POST["userPwd"];
+            $firstName = $_POST["userFirstName"];
+            $lastName = $_POST["userLastName"];      
+            
+            $sql = "INSERT INTO `authentication`(`email`, `pass`, `userType`) VALUES ('$email','$pass', 2)";
+            if (mysqli_query($connection, $sql)) {
+                #echo "New record created successfully";
+            } else {
+                echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+            }
+            
+            $sql2 = "select authid from authentication where email = '$email'";
+            $result = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
+            
+            $count = mysqli_num_rows($result);
 
-    if (! $hasError) {
-        $authentication = new Authentication($_POST["userFirstName"], $_POST["userLastName"], $_POST["userEmail"], $_POST["userPwd"]);
-        $addSuccess = $authenticationDAO->addNewRegistrant($authentication);
-        echo $addSuccess;
+            if ($count == 1) {
+                
+                $row = mysqli_fetch_array($result);
+                $authID = $row['authid'];
+
+                $sql3 = "INSERT INTO `entertainers`(`authid`, `firstName`, `lastName`) VALUES ( $authID, '$firstName','$lastName')";
+                if (mysqli_query($connection, $sql3)) {
+                    #echo "New record created successfully";
+                } else {
+                    echo "Error: " . $sql3 . "<br>" . mysqli_error($connection);
+                }
+                
+                
+            } else {
+                echo 'no value';
+            }
+            
+        }
+        
+        else if ($selected_radio == 'Event Planner') {
+            if (! $hasError) {
+                $authentication = new Authentication($_POST["userFirstName"], $_POST["userLastName"], $_POST["userEmail"], $_POST["userPwd"]);
+                $addSuccess = $authenticationDAO->addNewRegistrant($authentication);
+                echo $addSuccess;
+            }
+        }
+        else if ($selected_radio == 'Venues') {
+        }
+        
     }
+   
+        
+        
+    
+    
 }
 
 ?>
@@ -131,6 +188,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
 								<h2 class="title-01__title">
 									<span>User Registration</span>
 								</h2>
+
 								<div class="row">
 									<div class="col-lg-3"></div>
 									<div class="col-lg-6">
@@ -179,6 +237,10 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
                 echo '<span style=\'color:red\'>' . $errorMessages['userConfirmPwdError'] . '</span>';
             }
             ?>
+            											<label class="radio-inline"><input type="radio" name="userType" value="Entertainer" checked>Entertainer</label>
+                                                        <label class="radio-inline"><input type="radio" name="userType" value="Event Planner">Event Planner</label>
+                                                        <label class="radio-inline"><input type="radio" name="userType" value="Venues">Venues</label>
+                                                        
 														<div class="form__button">
 														<button class="btn btn-primary btn-w180" type="submit"
 															id="reg_user" , name="reg_user">Save</button>

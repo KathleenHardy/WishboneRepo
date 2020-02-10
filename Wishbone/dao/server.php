@@ -12,7 +12,7 @@ class Server
     // protected static $DB_USERNAME = "b5_23734857";
     // protected static $DB_PASSWORD = "wishboneP@55word";
     // protected static $DB_DATABASE = "b5_23734857_wishbone";
-    protected static $DB_HOST = "localhost";
+    protected static $DB_HOST = "localhost:3308";
 
     protected static $DB_USERNAME = "root";
 
@@ -56,5 +56,7 @@ class Server
         return Server::$DB_DATABASE;
     }
 }
+
+
 
 ?>
