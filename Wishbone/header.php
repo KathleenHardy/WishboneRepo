@@ -10,7 +10,7 @@ class header
         <header class=\"header\">
 			<div class=\"container\">
 				<div class=\"header__logo\">
-					<a style=\"color: #f39c12; font-size: 25px; font-weight: 700;\" href=\"index.html\">WISHBONE</a>
+					<a style=\"color: #f39c12; font-size: 25px; font-weight: 700;\" href=\"index.php\">WISHBONE</a>
 				</div>
             
                 <nav class=\"consult-nav\">

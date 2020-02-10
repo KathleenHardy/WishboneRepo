@@ -40,7 +40,7 @@
 			<div class="container">
 				<div class="header__logo">
 					<a style="color: #f39c12; font-size: 25px; font-weight: 700;"
-						href="index.html">WISHBONE</a>
+						href="index.php">WISHBONE</a>
 				</div>
 
 				<!--
@@ -83,7 +83,7 @@
 
 					<!-- consult-menu -->
 					<ul class="consult-menu">
-						<li class="current-menu-item"><a href="index.html">Home</a></li>
+						<li class="current-menu-item"><a href="index.php">Home</a></li>
 
 						<!--
 							<li class="menu-item-has-children"><a href="#">page</a>
@@ -148,7 +148,7 @@
 													<div class="form-search">
 														<a
 															style="color: #f39c12; font-size: 85px; font-weight: 700;"
-															href="index.html">WISHBONE</a>
+															href="index.php">WISHBONE</a>
 														<!--
 															<form>
 																<input class="form-control" style="background: transparent; border-color:#c2c2c2; color:#c2c2c2" type="text" placeholder="Enter Location to find an entertainer..."/>
@@ -730,7 +730,7 @@
 					<div class="col-8 col-sm-7 col-md-9 col-lg-3 ">
 						<div class="footer__item" style="top: -12px; position: relative;">
 							<a style="color: #f39c12; font-size: 35px; font-weight: 700;"
-								href="index.html">WISHBONE</a>
+								href="index.php">WISHBONE</a>
 							<p>Wishbone handles the entire booking process, including
 								Management, ratings/ reviews, communication and payments.</p>
 						</div>

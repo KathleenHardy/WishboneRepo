@@ -142,7 +142,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
 			<div class="container">
 				<div class="header__logo">
 					<a style="color: #f39c12; font-size: 25px; font-weight: 700;"
-						href="index.html">WISHBONE</a>
+						href="index.php">WISHBONE</a>
 				</div>
 
 				<!-- consult-nav -->
@@ -150,7 +150,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
 
 					<!-- consult-menu -->
 					<ul class="consult-menu">
-						<li class="current-menu-item"><a href="index.html">Home</a></li>
+						<li class="current-menu-item"><a href="index.php">Home</a></li>
 
 						<li class="menu-item-has-children"><a href="entertainer.html">Entertainer</a>
 							<ul class="sub-menu">
@@ -244,7 +244,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
 														<div class="form__button">
 														<button class="btn btn-primary btn-w180" type="submit"
 															id="reg_user" , name="reg_user">Save</button>
-														<a class="btn btn-primary btn-w180" href="index.html">cancel</a><br>
+														<a class="btn btn-primary btn-w180" href="index.php">cancel</a><br>
 
 													</div>
 												</form>

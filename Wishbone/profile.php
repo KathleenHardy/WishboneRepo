@@ -196,7 +196,7 @@ $profilelists = $profilelistDAO->getProfilelists($userid);
 				<div class="row row-eq-height">
 					<div class="col-8 col-sm-7 col-md-9 col-lg-3 ">
 						<div class="footer__item" style="top: -12px; position: relative;">
-							<a style="font-size: 35px; font-weight: 700;" href="index.html">WISHBONE</a>
+							<a style="font-size: 35px; font-weight: 700;" href="index.php">WISHBONE</a>
 							<p>Wishbone handles the entire booking process, including
 								Management, ratings/ reviews, communication and payments.</p>
 						</div>

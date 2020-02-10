@@ -91,7 +91,7 @@ function test_input($data)
 			<div class="container">
 				<div class="header__logo">
 					<a style="color: #f39c12; font-size: 25px; font-weight: 700;"
-						href="index.html">WISHBONE</a>
+						href="index.php">WISHBONE</a>
 				</div>
 
 				<!-- consult-nav -->
@@ -99,7 +99,7 @@ function test_input($data)
 
 					<!-- consult-menu -->
 					<ul class="consult-menu">
-						<li class="current-menu-item"><a href="index.html">Home</a></li>
+						<li class="current-menu-item"><a href="index.php">Home</a></li>
 
 						<li class="menu-item-has-children"><a href="entertainer.html">Entertainer</a>
 							<ul class="sub-menu">

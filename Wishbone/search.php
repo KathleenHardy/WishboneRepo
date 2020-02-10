@@ -106,7 +106,7 @@ $header = new header();
 $header->getHeader();
 ?>  
 					<a style="color: #f39c12; font-size: 25px; font-weight: 700;"
-		href="index.html">WISHBONE</a>
+		href="index.php">WISHBONE</a>
 
 	<div class="block">
 		<form action="search.php" method="POST">
@@ -250,7 +250,7 @@ $header->getHeader();
 				<div class="col-8 col-sm-7 col-md-9 col-lg-3 ">
 					<div class="footer__item" style="top: -12px; position: relative;">
 						<a style="color: #f39c12; font-size: 35px; font-weight: 700;"
-							href="index.html">WISHBONE</a>
+							href="index.php">WISHBONE</a>
 						<p>Wishbone handles the entire booking process, including
 							Management, ratings/ reviews, communication and payments.</p>
 					</div>

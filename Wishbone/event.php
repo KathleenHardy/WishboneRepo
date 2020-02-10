@@ -69,7 +69,7 @@ mysqli_close($connection);
 			<div class="container">
 				<div class="header__logo">
 					<a style="color: #f39c12; font-size: 25px; font-weight: 700;"
-						href="index.html">WISHBONE</a>
+						href="index.php">WISHBONE</a>
 				</div>
 
 				<!--
@@ -107,7 +107,7 @@ mysqli_close($connection);
 
 					<!-- consult-menu -->
 					<ul class="consult-menu">
-						<li><a href="index.html">Home</a></li>
+						<li><a href="index.php">Home</a></li>
 
 						<!--
 							<li class="menu-item-has-children"><a href="#">page</a>
