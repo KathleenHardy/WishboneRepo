@@ -101,12 +101,12 @@ mysqli_close($connection);
 					<!-- consult-menu -->
 					<ul class="consult-menu">
 						<li class="menu-item-has-children current-menu-item"><a
-							href="entertainer.html">Home</a>
+							href="entertainer.php">Home</a>
 							<ul class="sub-menu">
-								<li><a href="entertainer.html">My Network</a></li>
+								<li><a href="entertainer.php">My Network</a></li>
 								<li><a href="#">My Art Profile</a></li>
 							</ul></li>
-						<li><a href="event.html">My Portfolio</a></li>
+						<li><a href="event.php">My Portfolio</a></li>
 						<li><a href="about.html">About Me</a>
 						<li><a href="create-gig.php">Add a Gig</a></li>
 						<li><a href="post-availability.php">Set my Availability</a></li>

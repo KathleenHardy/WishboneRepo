@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+        <style>
+        body {background-color: black;}
+        </style>
 <title>Home</title>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -8,6 +11,8 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <!-- Fonts-->
+<link href="https://fonts.googleapis.com/css?family=Archivo&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css"
 	href="assets/fonts/fontawesome/font-awesome.min.css">
 <link rel="stylesheet" type="text/css"
@@ -39,8 +44,8 @@
 		<header class="header header__style-02">
 			<div class="container">
 				<div class="header__logo">
-					<a style="color: #f39c12; font-size: 25px; font-weight: 700;"
-						href="index.php">WISHBONE</a>
+					<a style="color: #fac668; font-size: 25px; font-weight: 700;"
+						href="index.html">HOME</a>
 				</div>
 
 				<!--
@@ -83,8 +88,6 @@
 
 					<!-- consult-menu -->
 					<ul class="consult-menu">
-						<li class="current-menu-item"><a href="index.php">Home</a></li>
-
 						<!--
 							<li class="menu-item-has-children"><a href="#">page</a>
 								<ul class="sub-menu">
@@ -110,7 +113,7 @@
 						<li><a href="event.php">Events</a></li>
 						<li><a href="about.html">About</a></li>
 						<li><a href="about.html">Contact</a></li>
-						<li><a href="login.php">log in / Sign up</a></li>
+						<li><a href="login.php">Log in / Register</a></li>
 					</ul>
 					<!-- consult-menu -->
 
@@ -130,41 +133,46 @@
 			<!-- slider -->
 			<div class="slider">
 
-				<!-- carousel__element owl-carousel -->
-				<div class="carousel__element owl-carousel"
-					data-options='{"items":1,"loop":true,"dots":false,"nav":false,"margin":0, "autoplay": true, "autoplayTimeout": 3000}'>
-					<div class="slider__item"
-						style="background-image: url('assets/img/slider.jpg');">
-						<div class="md-tb">
-							<div class="md-tb__cell">
-								<div class="slider__content">
-									<div class="container">
-										<h3 style="color: white">Discover, Connect and Book at
-											the thought of a wish</h3>
-										<div class="row">
-											<div class="col-lg-12">
-												<div class="widget-text__content">
-													<!-- form-search -->
-													<div class="form-search">
-														<a
-															style="color: #f39c12; font-size: 85px; font-weight: 700;"
-															href="index.php">WISHBONE</a>
-														<!--
-															<form>
-																<input class="form-control" style="background: transparent; border-color:#c2c2c2; color:#c2c2c2" type="text" placeholder="Enter Location to find an entertainer..."/>
-															</form>
+                <!-- carousel__element owl-carousel -->
+                <div class="carousel__element owl-carousel"
+                    data-options='{"items":1,"loop":true,"dots":false,"nav":false,"margin":0, "autoplay": true, "autoplayTimeout": 3000}'>
+                    <div class="slider__item"
+                        style="background-image: url('assets/img/rockband.png');">
+                        <div class="md-tb">
+                            <div class="md-tb__cell">
+                                <div class="slider__content">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="widget-text__content">
+                                                    <!-- form-search -->
+                                                    <div class="form-search">
+                                                    <div id="fly-in">
+                                                    <div>
+                                                        <a
+                                                            style="color: #fac668; font-family: 'Archivo', sans-serif; font-size: 100px; font-weight: 800; opacity: 1;"
+                                                            href="index.html">WISHBONE</a>
+                                                            </div>
+                                                            </div>
+                                                        <!--
+                                                            <form>
+                                                                <input class="form-control" style="background: transparent; border-color:#c2c2c2; color:#c2c2c2" type="text" placeholder="Enter Location to find an entertainer..."/>
+                                                            </form>
 -->
-													</div>
-													<!-- End / form-search -->
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!--
+                                                    </div>
+                                                    <!-- End / form-search -->
+                                                <h5 style="color: white; font-family: 'Playfair Display', serif;">Discover, Connect & Book At
+                                                    The Thought Of A Wish</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+               					<!--
 						<div class="slider__item" style="background-image: url('https://picsum.photos/1920/1080');">
 							<div class="md-tb">
 								<div class="md-tb__cell">
@@ -532,7 +540,7 @@
 			</section>
 			<!-- End / Section -->
 
-			<!-- Whatâ€™s Client Say ?-->
+			<!-- What’s Client Say ?-->
 
 			<!-- Section -->
 			<section class="md-section" style="padding-bottom: 0;">
@@ -543,7 +551,7 @@
 
 							<!-- title-01 -->
 							<div class="title-01" style="margin-bottom: 50px;">
-								<h2 class="title-01__title">Whatâ€™s Client Say?</h2>
+								<h2 class="title-01__title">What’s Client Say?</h2>
 							</div>
 							<!-- End / title-01 -->
 
@@ -730,7 +738,7 @@
 					<div class="col-8 col-sm-7 col-md-9 col-lg-3 ">
 						<div class="footer__item" style="top: -12px; position: relative;">
 							<a style="color: #f39c12; font-size: 35px; font-weight: 700;"
-								href="index.php">WISHBONE</a>
+								href="index.html">WISHBONE</a>
 							<p>Wishbone handles the entire booking process, including
 								Management, ratings/ reviews, communication and payments.</p>
 						</div>

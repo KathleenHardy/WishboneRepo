@@ -124,9 +124,9 @@ mysqli_close($connection);
 							-->
 
 						<li class="menu-item-has-children current-menu-item"><a
-							href="entertainer.html">Entertainer</a>
+							href="entertainer.php">Entertainer</a>
 							<ul class="sub-menu">
-								<li><a href="entertainer.html">Find Entertainer</a></li>
+								<li><a href="entertainer.php">Find Entertainer</a></li>
 								<li><a href="#">Become Entertainer</a></li>
 							</ul></li>
 						<li><a href="event.php">Events</a></li>

@@ -125,12 +125,12 @@ mysqli_close($connection);
 							</li>
 							-->
 
-						<li class="menu-item-has-children"><a href="entertainer.html">Entertainer</a>
+						<li class="menu-item-has-children"><a href="entertainer.php">Entertainer</a>
 							<ul class="sub-menu">
-								<li><a href="entertainer.html">Find Entertainer</a></li>
+								<li><a href="entertainer.php">Find Entertainer</a></li>
 								<li><a href="#">Become Entertainer</a></li>
 							</ul></li>
-						<li class="current-menu-item"><a href="event.html">Events</a>
+						<li class="current-menu-item"><a href="event.php">Events</a>
 						</li>
 						<li><a href="about.html">about</a>
 						<li><a href="contact.html">contact</a></li>
