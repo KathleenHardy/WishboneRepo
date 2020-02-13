@@ -40,7 +40,7 @@ class VenueBookingDAO extends AbstractDAO
             
 
             $query2 = "INSERT INTO bookedVenues(resAvailId, eventPlannerId, venueId)
-							VALUES(?,2,?)";
+							VALUES(?,1,?)";
 
             $stmt2 = $this->mysqli->prepare($query2);
             $stmt2->bind_param('ii', $resAvailId, $venueId);
