@@ -1,0 +1,52 @@
+body {
+        margin: 0px;
+        height: 100%;
+        width: 100%;
+	
+}
+
+html {
+        margin: 0px;
+        height: 100%;
+        width: 100%;	
+}
+
+.title2 {
+    font-family: 'Archivo', sans-serif; 
+    text-align:center; 
+    font-weight: bold; 
+    color:white;  
+    font-size: 20px;
+    
+}
+
+
+.title-01__subTitle {
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 10px;
+}
+
+.title-01__title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 30px;
+    color: #fac668;
+    text-align: center;
+    font-family: 'Archivo', sans-serif;
+}
+
+input[type=text] {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  border-bottom: 3px solid #fac668;
+  color: white;	
+}
+
+textarea {
+	color: white;
+	background: #fac668;
+	
+}
