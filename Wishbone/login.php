@@ -34,7 +34,8 @@
 
 <body>
 	<div class="page-wrap">
-			<?php
+	
+<?php
 session_start();
 
 // if (isset($_SESSION['useremail'])) {
@@ -42,39 +43,51 @@ session_start();
 // }
 
 require_once ("config.php");
+include ('enums/userType.php');
 
 $useremail = $userpassword = $fmsg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset($_POST["userpassword"])) {
     $useremail = test_input($_POST["useremail"]);
     $userpassword = test_input($_POST["userpassword"]);
-
-    $query = "SELECT * FROM `authentication` WHERE email = '$useremail' AND pass='$userpassword'";
-
-    $result = mysqli_query($connection, $query) or die(mysqli_error($connection));
-
-    $count = mysqli_num_rows($result);
-
-    if ($count == 1) {
+    
+    
+    $query = "SELECT userType FROM `authentication` WHERE email = ? AND pass= ?";
+    
+    if ($stmt = $connection->prepare( $query)) {
         $_SESSION['useremail'] = $useremail;
-  
-        $row = mysqli_fetch_array($result);
-        $userType = $row['userType'];
         
-        if ($userType == 1) {
+        $stmt->bind_param( "ss", $useremail, $userpassword);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables
+        $stmt->bind_result($userType);
+
+        // fetch values
+        $stmt->fetch();
+
+        if ($userType == UserType::EVENT_PLANNER) {
             header('Location: userHome.php');
             mysqli_close($connection);
-        } else if ( $userType == 2) {
+        } else if ( $userType == UserType::ENTERTAINER) {
             header('Location: entertainerHome.php');
             mysqli_close($connection);
-        } else if ( $userType == 3) {
-            header('Location: userHome.php');
+        } else if ( $userType == UserType::VENUE_OWNER) {
+            header('Location: userHomeVenue.php');
             mysqli_close($connection);
         }
-        
-    } else {
+        //close statement
+        $stmt->close();
+    }
+    
+    else {
         $fmsg = "Invalid Login Credentials.";
     }
+    //close connection
+    $connection->close();
+   
 }
 
 function test_input($data)
