@@ -72,6 +72,6 @@ class Authentication
     {
         echo $registrantType;
         $this->registrantType = $registrantType;
-    }
+    } 
 }
 ?>

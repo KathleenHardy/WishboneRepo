@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset(
         //execute statement
         $stmt->execute();
         
-        //bind result variables
+        //bind result variables  
         $stmt->bind_result($userType);
 
         // fetch values

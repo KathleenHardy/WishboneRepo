@@ -8,7 +8,7 @@ drop table if exists venueOwners;
 drop table if exists availability;
 drop table if exists gigsImages;
 drop table if exists gigs;
-drop table if exists entertainers;
+drop table if exists entertainers; 
 drop view  if exists gigsDetails;
 
 

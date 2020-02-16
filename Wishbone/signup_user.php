@@ -77,7 +77,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
     }
     
     
-    if (isset($_POST['reg_user'])) {
+    if (isset($_POST['reg_user'])) {  
         
         if (! $hasError) {
             $authentication = new Authentication($_POST["userFirstName"], $_POST["userLastName"], $_POST["userEmail"], $_POST["userPwd"], $_POST["userType"]);

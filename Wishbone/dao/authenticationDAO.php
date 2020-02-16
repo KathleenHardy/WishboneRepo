@@ -1,7 +1,7 @@
 <?php
 require_once ('abstractDAO.php');
 require_once ('./model/authentication.php');
-include ('enums/userType.php');
+include ('enums/userType.php');  
 
 class AuthenticationDAO extends AbstractDAO
 {
