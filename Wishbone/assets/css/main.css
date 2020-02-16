@@ -2687,6 +2687,7 @@ mark, .mark {
 
 .post-02__media img {
 	width: 100%;
+	
 }
 
 .post-02__body {
@@ -3466,9 +3467,8 @@ mark, .mark {
 /* 29. consult_footer
 --------------------------------------------------------------------------------*/
 .footer {
-	background-color: #1a1a23;
+	background-color: black;
 	overflow: hidden;
-	color: #c2c2c2;
 }
 
 .footer .row {

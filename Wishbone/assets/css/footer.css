@@ -1,0 +1,81 @@
+.footer {
+    background-color: black;
+    overflow: hidden;
+}
+
+.footer .row {
+    position: relative;
+}
+
+.footer .widget-text__widget ul li a {
+    color: white;
+}
+
+.footer .widget-text__widget ul li a:hover {
+    color: #f39c12;
+}
+
+.footer__main {
+    padding: 80px 15px 50px;
+}
+
+@media ( min-width : 768px) {
+    .footer__main {
+        padding: 80px 30px 40px;
+    }
+}
+
+@media ( min-width : 1200px) {
+    .footer__main {
+        padding: 140px 75px 60px;
+    }
+}
+
+.footer__copyright {
+    text-align: center;
+    padding: 15px 0;
+    border-top: 1px solid rgba(235, 235, 235, .1);
+}
+
+.footer__item {
+    margin-bottom: 40px;
+}
+
+.footer__item .consult_logo {
+    margin-bottom: 20px;
+}
+
+.footer__item .form-sub {
+    padding-right: 0;
+}
+
+.consult_backToTop {
+    top: 0;
+    right: 30px;
+    position: absolute;
+    display: block;
+    text-align: right;
+}
+
+.consult_backToTop a {
+    color: #f39c12 !important;
+    padding-right: 0;
+}
+
+.consult_backToTop i {
+    margin-right: 10px;
+}
+
+@media ( min-width : 768px) {
+    .consult_backToTop {
+        padding-right: 0;
+    }
+}
+
+@media ( min-width : 992px) {
+    .consult_backToTop {
+        position: static;
+    }
+}
+
+@charset "UTF-8";
