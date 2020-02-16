@@ -68,7 +68,7 @@
 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
+									<h2 class="post-02__title" style="color: white; font-weight:bold;">
 										ENTERTAINER NAME
 									</h2>
 									<div class="post-02__department">OCCUPATION</div>
@@ -94,7 +94,7 @@
 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
+									<h2 class="post-02__title" style="color: white; font-weight:bold;">
 										ENTERTAINER NAME
 									</h2>
 									<div class="post-02__department">OCCUPATION</div>
@@ -120,7 +120,7 @@
 									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
+									<h2 class="post-02__title" style="color: white; font-weight:bold;">
 										ENTERTAINER NAME
 									</h2>
 									<div class="post-02__department">OCCUPATION</div>
@@ -147,7 +147,7 @@
 									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
+									<h2 class="post-02__title" style="color: white; font-weight:bold;">
 										ENTERTAINER NAME
 									</h2>
 									<div class="post-02__department">OCCUPATION</div>
@@ -175,7 +175,7 @@
 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
+									<h2 class="post-02__title" style="color: white; font-weight:bold;">
 										ENTERTAINER NAME
 									</h2>
 									<div class="post-02__department">OCCUPATION</div>
@@ -201,7 +201,7 @@
 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
+									<h2 class="post-02__title" style="color: white; font-weight:bold;">
 										ENTERTAINER NAME
 									</h2>
 									<div class="post-02__department">OCCUPATION</div>
@@ -228,7 +228,7 @@
 									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
+									<h2 class="post-02__title" style="color: white;font-weight:bold;">
 										ENTERTAINER NAME
 									</h2>
 									<div class="post-02__department">OCCUPATION</div>
@@ -238,12 +238,12 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
-									<a href="eventPlannerEntertainerPortfolio.php"><button type="button">View More</button>
-									
 									<span style="display: inline;"><a href="eventPlannerEntertainerPortfolio.php"><button type="button">View More</button></a></span>
 									<span style="display: inline;"><a href="eventPlannerEventForm.php"><button type="button">Book Now</button></a></span>
 							<!-- End / post-02 -->
 
+						</div>
+						</div>
 						</div>
 						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
 							style="padding-left: 5px; padding-right: 5px;">
@@ -254,7 +254,7 @@
 									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
+									<h2 class="post-02__title" style="color: white; font-weight:bold;">
 										ENTERTAINER NAME
 									</h2>
 									<div class="post-02__department">OCCUPATION</div>

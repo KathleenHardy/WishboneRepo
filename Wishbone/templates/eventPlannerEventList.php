@@ -28,6 +28,11 @@
 <!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<![endif]-->
+<script>
+function closewindow() {    
+	$.modal.close();
+}
+</script>		
 </head>
 
 <body>
@@ -68,7 +73,7 @@
 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
@@ -80,6 +85,7 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
+									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -94,7 +100,7 @@
 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
@@ -106,6 +112,7 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
+									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>								
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -120,7 +127,7 @@
 									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
@@ -132,6 +139,7 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
+								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>	
 								</div>
 								
 					</div>
@@ -147,7 +155,7 @@
 									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
@@ -159,6 +167,7 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
+								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>	
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -196,7 +205,7 @@
 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
@@ -208,6 +217,7 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
+									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -222,7 +232,7 @@
 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
@@ -234,8 +244,10 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
+								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
+
 								</div>
-															</div>
+							</div>
 							<!-- End / post-02 -->
 
 						</div>
@@ -248,7 +260,7 @@
 									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
@@ -260,6 +272,7 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
+								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>	
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -274,7 +287,7 @@
 									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
@@ -286,6 +299,7 @@
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
+									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -301,6 +315,31 @@
 			<!-- End / Section -->
 <?php include "footer.php" ?>
 	</div>
+	
+	    <!--Event Details Modal Window -->
+    <div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <form action="#">
+            <div class="modal-header">
+              <h3 class="modal-title" id="modalTitle">EVENT NAME HERE</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+			<h5>Event Date/Time</h5>
+			<h5>Venue Name</h5>
+			<h5>Venue Location</h5>
+			<h5>Entertainer Name</h5>				
+			<h5>Entertainer Email</h5>			
+			<h5>Event Description Here</h5>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 	<!-- Vendors-->
 	<script type="text/javascript"
 		src="../assets/vendors/jquery/jquery.min.js"></script>

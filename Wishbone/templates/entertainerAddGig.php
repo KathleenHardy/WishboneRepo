@@ -104,6 +104,19 @@
 											<textarea class="form-control" rows="5" style="border: 3px solid #fac668;" id="gigs_notes-id" name="gigs_notes" placeholder="Add notes"></textarea>
 										</div>
 										
+										<div class="form-group">
+										<label for="gigPhoto" class="title2">Upload Gig Image</label>
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+                                          </div>
+                                          <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="gigPhoto"
+                                              aria-describedby="inputGroupFileAddon01">
+                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                          </div>
+                                        </div>
+                                        </div>
 										<!--
 										<div class="input-group">
 											  <div class="input-group-prepend">
@@ -116,7 +129,7 @@
 										<a href="entertainerPortfolio.php"><button type="button" class="btn-all" style="display:inline;">Create</button></a>
 										 
 										 
-										<button class="btn-all" type ="button" style="display:inline;">Cancel</button>
+										<a href="entertainerPortfolio.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
 										
 										<!-- Replace buttons with below code -->
 										<!--<div class="form-group" style="display:inline;"> 

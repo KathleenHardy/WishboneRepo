@@ -11,6 +11,14 @@ html {
         width: 100%;	
 }
 
+.modal-title {
+    font-family: 'Archivo', sans-serif; 
+    text-align:center; 
+    font-weight: bold; 
+    color:black;  
+    font-size: 20px;
+	
+}
 .title2 {
     font-family: 'Archivo', sans-serif; 
     text-align:center; 
