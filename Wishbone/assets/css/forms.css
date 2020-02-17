@@ -1,0 +1,87 @@
+body {
+    background-color: black;	
+    height: 100%;
+    width: 100%;
+
+}
+
+html {
+	height: 100%;
+	width: 100%;
+}
+
+.form {
+	text-align: center;
+}
+
+input[type=text], input[type=password], input[type=textarea] {
+  border: 0;
+  outline: 0;
+  background: transparent;
+  border-bottom: 3px solid #fac668;
+  color: white;
+  size: 50;
+  width: 50%;
+  text-align: center;
+  padding: 10px;
+    display: block;
+    padding: 5px;
+    margin: auto;
+}
+
+.select-form {
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  border-bottom: 3px solid #fac668;
+  color: white;
+  size: 50;
+  width: 50%;
+  text-align: center;
+  padding: 10px;
+    display: block;
+    padding: 5px;
+    margin: auto;
+}
+
+
+.form-group label {
+	margin: 10px;
+	color: #fac668;
+	text-size: 30px; 
+	font-family: 'Archivo', sans-serif;
+	font-weight: bold;
+	
+}
+
+.formsDesign {
+	text-align: center;
+   display: table;
+   width: 100%;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%)
+}
+
+#forms {
+	   display: table-cell;
+   text-align: center;
+   vertical-align: middle;
+}
+
+input[type=submit] {
+    padding: 8px 20px;
+    background: #fac668;
+    border: 0;
+    outline: none;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 20px;
+}
+.submitButton {
+	margin: 10px;
+	padding: 10px;
+}
+
