@@ -25,6 +25,8 @@ $_SESSION['userlastname'] = $login_user_lastname;
 $_SESSION['userid'] = $login_user_userid;
 mysqli_close($connection);
 ?>
+
+
 <html>
 <head>
 

@@ -1,7 +1,7 @@
 <?php require_once('dao/profilelistDAO.php');?>
 <?php
 session_start();
-$userid = $_SESSION['userid'];
+$userid = $_SESSION['authid'];
 $profilelistDAO = new profilelistDAO();
 $token = true;
 if (isset($_GET['id'])) {
