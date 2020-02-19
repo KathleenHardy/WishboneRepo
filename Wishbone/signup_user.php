@@ -78,11 +78,12 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
     
     
     if (isset($_POST['reg_user'])) {  
-        
         if (! $hasError) {
             $authentication = new Authentication($_POST["userFirstName"], $_POST["userLastName"], $_POST["userEmail"], $_POST["userPwd"], $_POST["userType"]);
             $addSuccess = $authenticationDAO->addNewRegistrant($authentication);
             echo $addSuccess;
+            
+            
         }
     }
     
@@ -195,7 +196,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
                                                         
 														<div class="form__button">
 														<button class="btn btn-primary btn-w180" type="submit"
-															id="reg_user" , name="reg_user">Save</button>
+															id="reg_user" name="reg_user">Save</button>
 														<a class="btn btn-primary btn-w180" href="index.php">cancel</a><br>
 
 													</div>

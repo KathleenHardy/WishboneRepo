@@ -8,24 +8,24 @@
 <!--===============================================================================================-->	
 	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/bootstrap/css/bootstrap.min (2).css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/bootstrap/css/bootstrap.min (2).css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/animate/animate.css">
 <!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/css-hamburgers/hamburgers.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/animsition/css/animsition.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/animsition/css/animsition.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/select2/select2.min.css">
 <!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/daterangepicker/daterangepicker.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/css/util.css">
-	<link rel="stylesheet" type="text/css" href="../assets/css/mainLogin.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/util.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/mainLogin.css">
 	<link href="https://fonts.googleapis.com/css?family=Archivo&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
 <!--===============================================================================================-->
@@ -33,9 +33,9 @@
 <body>
 
 <?php
-include ('../dao/authenticationDAO.php');
-include ('../navigationheaderHome.php');
-require_once ("../config.php");
+include ('dao/authenticationDAO.php');
+include ('navigationheaderHome.php');
+require_once ("config.php");
 
 session_start();
 
@@ -82,22 +82,21 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
         if (! $hasError) {
             $authentication = new Authentication($_POST["userFirstName"], $_POST["userLastName"], $_POST["userEmail"], $_POST["userPwd"], $_POST["userType"]);
             $addSuccess = $authenticationDAO->addNewRegistrant($authentication);
-                       
+            
+            
             if ( $_POST["userType"] == UserType::EVENT_PLANNER) {
                 header('Location: eventPlannerProfile.php');
             } else if ( $_POST["userType"] == UserType::ENTERTAINER) {
                 $_SESSION['useremail'] = $authentication->getRegistrantEmail();
-                header('Location: entertainerPortfolioEmpty.php');
+                header('Location: entertainerHome.php');
             } else if ( $_POST["userType"] == UserType::VENUE_OWNER) {
-                header('Location: venueProfileView.php');
+                header('Location: userHomeVenue.php');
             }
             
             echo $addSuccess;
 
         }
     }
-    
-    //testing.test@1.com
     
 }
 
@@ -190,21 +189,21 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
 
 	
 <!--===============================================================================================-->
-	<script src="../assets/vendors/jquery/jquery-3.2.1.min.js"></script>
+	<script src="assets/vendors/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/animsition/js/animsition.min.js"></script>
+	<script src="assets/vendors/animsition/js/animsition.min.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/bootstrap/js/popper.js"></script>
-	<script src="../assets/vendors/bootstrap/js/bootstrap.min (2).js"></script>
+	<script src="assets/vendors/bootstrap/js/popper.js"></script>
+	<script src="assets/vendors/bootstrap/js/bootstrap.min (2).js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/select2/select2.min.js"></script>
+	<script src="assets/vendors/select2/select2.min.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/daterangepicker/moment.min.js"></script>
-	<script src="../assets/vendors/daterangepicker/daterangepicker.js"></script>
+	<script src="assets/vendors/daterangepicker/moment.min.js"></script>
+	<script src="assets/vendors/daterangepicker/daterangepicker.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/countdowntime/countdowntime.js"></script>
+	<script src="assets/vendors/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/js/mainLogin.js"></script>
+	<script src="assets/js/mainLogin.js"></script>
 
 </body>
 </html>

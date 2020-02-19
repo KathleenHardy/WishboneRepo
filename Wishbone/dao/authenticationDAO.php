@@ -1,7 +1,7 @@
 <?php
 require_once ('abstractDAO.php');
-require_once ('./model/authentication.php');
-include ('enums/userType.php');  
+require_once ('../model/authentication.php');
+include ('../enums/userType.php');  
 
 class AuthenticationDAO extends AbstractDAO
 {
@@ -20,15 +20,12 @@ class AuthenticationDAO extends AbstractDAO
         echo $Registrant->getRegistrantType();
         
         if ( $Registrant->getRegistrantType() == UserType::EVENT_PLANNER) {
-            echo "signing up as an Event Planner";
             $this-> registerAsEventPlanner( $Registrant, $imageLoc);
             
         } else if ( $Registrant->getRegistrantType() == UserType::ENTERTAINER) {
-            echo "signing up as an Entertainer";
             $this-> registerAsEntertainer( $Registrant);
             
         } else if ( $Registrant->getRegistrantType() == UserType::VENUE_OWNER) {
-            echo "signing up as a Venue Owner";
             $this-> registerAsVenueOwner( $Registrant);  
         }
        
@@ -57,6 +54,8 @@ class AuthenticationDAO extends AbstractDAO
             $stmta->bind_result($authId);
             $stmta->fetch();
             $stmta->close();
+            
+            $Registrant->setAuthId( $authId);
             
             $query2 = 'INSERT INTO venueOwners (authid, firstname, lastname)
 							VALUES(?,?,?)';
@@ -95,6 +94,8 @@ class AuthenticationDAO extends AbstractDAO
             $stmta->bind_result($authId);
             $stmta->fetch();
             $stmta->close();
+            
+            $Registrant->setAuthId( $authId);
             
             $query2 = 'INSERT INTO entertainers (authid, firstname, lastname)
 							VALUES(?,?,?)';
@@ -135,6 +136,7 @@ class AuthenticationDAO extends AbstractDAO
             $stmta->fetch();
             $stmta->close();
             
+            $Registrant->setAuthId( $authId);
             
             $query2 = 'INSERT INTO eventPlanners(authid, firstname, lastname)
 							VALUES(?,?,?)';

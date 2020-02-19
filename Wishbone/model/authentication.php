@@ -12,6 +12,8 @@ class Authentication
     private $registrantPassword;
     
     private $registrantType;
+    
+    private $authId;
 
     function __construct($registrantFirstName, $registrantLastName, $registrantEmail, $registrantPassword, $registrantType)
     {
@@ -72,6 +74,17 @@ class Authentication
     {
         echo $registrantType;
         $this->registrantType = $registrantType;
+    } 
+    
+    public function getAuthId()
+    {
+        return $this->authId;
+    }
+    
+    public function setAuthId($authId)
+    {
+        echo $authId;
+        $this->authId = $authId;
     } 
 }
 ?>

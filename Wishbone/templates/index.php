@@ -80,40 +80,40 @@ var TxtRotate = function(el, toRotate, period) {
 <?php include "navigationheaderHome.php" ?>
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="20000">
   <div class="carousel-inner">
-    <div class="carousel-item active slide-one" style="background-repeat:no-repeat; background-size:cover;background-image: url('../assets/img/mainpage-effect/concert.jpg')">
+    <div class="carousel-item active slide-one" style="background-repeat:no-repeat; background-size:cover;background-image: url('assets/img/mainpage-effect/concert.jpg')">
         <div class="container">
         <div class="row">
         <div class="col-md-12">
         <div class="wrappedtext">
         <h3 class ="first" style="color: #feb154; font-family: 'Archivo', sans-serif;"><span id="first">WELCOME ENTERTAINERS, <span id="second"
      class="txt-rotate" data-period="2000" data-rotate='[ "PROMOTE YOUR BRAND.", "CREATE YOUR PROFILE.", "ADD YOUR GIGS.", "PERFORM FOR AUDIENCES.", "DO ALL OF THE ABOVE." ]'></span></span></h3>
-            <br/><a href="register.php"><button type ="button" class="mainbutton1">Get Started</button></a>
+            <br/><a href="login.php"><button type ="button" class="mainbutton1">Get Started</button></a>
         </div>
         </div>
         </div>
         </div>
         </div>
-    <div class="carousel-item slide-two" style="background-repeat:no-repeat; background-size:cover;background-image: url('../assets/img/mainpage-effect/gallery4.jpg')">
+    <div class="carousel-item slide-two" style="background-repeat:no-repeat; background-size:cover;background-image: url('assets/img/mainpage-effect/gallery4.jpg')">
         <div class="container">
         <div class="row">
         <div class="col-md-12">
         <div class="wrappedtext">
         <h3 class ="first" style="color: #feb154; font-family: 'Archivo', sans-serif;"><span id="first">WELCOME EVENT PLANNERS, <span id="second"
      class="txt-rotate" data-period="2000" data-rotate='[ "FIND AWESOME ENTERTAINERS.", "SELECT YOUR VENUE.", "PLAN EVENTS WITH NO CONFLICTS.", "CHOOSE WHAT YOU WANT." ]'></span></span></h3>
-            <br/><a href="register.php"><button type ="button" class="mainbutton1">Get Started</button></a>
+            <br/><a href="login.php"><button type ="button" class="mainbutton1">Get Started</button></a>
         </div>
         </div>
         </div>
         </div>
         </div>
-    <div class="carousel-item slide-three" style="background-repeat:no-repeat; background-size:cover;background-image: url('../assets/img/mainpage-effect/venue2.jpg')">
+    <div class="carousel-item slide-three" style="background-repeat:no-repeat; background-size:cover;background-image: url('assets/img/mainpage-effect/venue2.jpg')">
         <div class="container">
         <div class="row">
         <div class="col-md-12">
         <div class="wrappedtext">
         <h3 class ="first" style="color: #feb154; font-family: 'Archivo', sans-serif;"><span id="first">WELCOME VENUE HOSTS, <span id="second"
      class="txt-rotate" data-period="2000" data-rotate='[ "FIND AWESOME ENTERTAINERS.", "UPDATE YOUR INFORMATION.", "HOST AMAZING EVENTS.", "CHOOSE WHAT YOU WANT." ]'></span></span></h3>
-            <br/><a href="register.php"><button type ="button" class="mainbutton1">Get Started</button></a>
+            <br/><a href="login.php"><button type ="button" class="mainbutton1">Get Started</button></a>
         </div>
         </div>
         </div>

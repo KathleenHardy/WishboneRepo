@@ -30,23 +30,96 @@
 <!--===============================================================================================-->
 </head>
 <body>
-<?php include "navigationheaderHome.php" ?>		
+
+<?php
+session_start();
+include ('navigationheaderHome.php');
+
+?>
+<?php
+// if (isset($_SESSION['useremail'])) {
+//     header("Location: userHome.php");
+// }
+
+require_once ("../config.php");
+include ('../enums/userType.php');
+
+$useremail = $userpassword = $fmsg = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset($_POST["userpassword"])) {
+    $useremail = test_input($_POST["useremail"]);
+    $userpassword = test_input($_POST["userpassword"]);
+    
+    
+    $query = "SELECT userType FROM `authentication` WHERE email = ? AND pass= ?";
+    
+    if ($stmt = $connection->prepare( $query)) {
+        $_SESSION['useremail'] = $useremail;
+        
+        $stmt->bind_param( "ss", $useremail, $userpassword);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables  
+        $stmt->bind_result($userType);
+
+        // fetch values
+        $stmt->fetch();
+
+        if ($userType == UserType::EVENT_PLANNER) {
+            header('Location: eventPlannerEventList.php');
+            mysqli_close($connection);
+        } else if ( $userType == UserType::ENTERTAINER) {
+            header('Location: entertainerEventList.php');
+            mysqli_close($connection);
+        } else if ( $userType == UserType::VENUE_OWNER) {
+            header('Location: venueProfileView.php');
+            mysqli_close($connection);
+        }
+        //close statement
+        $stmt->close();
+    }
+    
+    else {
+        $fmsg = "Invalid Login Credentials.";
+    }
+    //close connection
+    //$connection->close();
+   
+}
+
+function test_input($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+?>
+
+
+
+	
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
-				<form class="login100-form validate-form">
+				<form class="login100-form validate-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"
+													method="post">
 					<span class="login100-form-title p-b-33">
 						ACCOUNT LOGIN
 					</span>
 
 					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-						<input class="input100" type="text" name="email" placeholder="Email">
+						<input class="input100" type="text" name="useremail" id="useremail"  placeholder="Email">
+						
 						<span class="focus-input100-1"></span>
 						<span class="focus-input100-2"></span>
 					</div>
 
 					<div class="wrap-input100 rs1 validate-input" data-validate="Password is required">
-						<input class="input100" type="password" name="pass" placeholder="Password">
+						<input class="input100" type="password" name="userpassword" id="userpassword" placeholder="Password">
 						<span class="focus-input100-1"></span>
 						<span class="focus-input100-2"></span>
 					</div>

@@ -68,10 +68,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset(
         $stmt->fetch();
 
         if ($userType == UserType::EVENT_PLANNER) {
-            header('Location: eventPlannerProfileView.php');
+            header('Location: userHome.php');
             mysqli_close($connection);
         } else if ( $userType == UserType::ENTERTAINER) {
-            header('Location: entertainerEventList.php');
+            header('Location: entertainerHome.php');
             mysqli_close($connection);
         } else if ( $userType == UserType::VENUE_OWNER) {
             header('Location: userHomeVenue.php');
