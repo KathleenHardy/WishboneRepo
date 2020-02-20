@@ -7,7 +7,9 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<?php include "navigationHeadInclude1.php" ?>
+<?php 
+session_start();
+include "navigationHeadInclude1.php"; ?>
 <!-- Fonts-->
 <link rel="stylesheet" type="text/css"
 	href="../assets/fonts/fontawesome/font-awesome.min.css">
@@ -31,7 +33,41 @@
 </head>
 
 <body>
-<?php include "navigationheaderEntertainer.php" ?>
+<?php 
+include ('../config.php');
+require_once ('../dto/gig.php');
+include "navigationheaderEntertainer.php";
+
+$authId = $_SESSION['authId'];
+
+/*
+$myBookedGigs = array();
+$query2 = "SELECT *
+           FROM gigs
+           WHERE  entid = ?";
+
+if ($stmt2 = $connection->prepare( $query2)) {
+    
+    $stmt2->bind_param( "i", $entid);
+    
+    //execute statement
+    $stmt2->execute();
+    
+    //bind result variables
+    $stmt2->bind_result($gigsid, $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes);
+    
+    // fetch values
+    while( $stmt2->fetch()) {
+        $myGigs[] = new Gig( $gigsid, $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes);
+    }
+    
+    //close statement
+    $stmt2->close();
+    
+}
+*/
+
+?>
 	<div class="page-wrap">
 
 		<!-- header -->
