@@ -80,7 +80,7 @@ var TxtRotate = function(el, toRotate, period) {
 <?php include "navigationheaderHome.php" ?>
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="20000">
   <div class="carousel-inner">
-    <div class="carousel-item active slide-one" style="background-repeat:no-repeat; background-size:cover;background-image: url('assets/img/mainpage-effect/concert.jpg')">
+    <div class="carousel-item active slide-one" style="background-repeat:no-repeat; background-size:cover;background-image: url('../assets/img/mainpage-effect/concert.jpg')">
         <div class="container">
         <div class="row">
         <div class="col-md-12">
@@ -93,7 +93,7 @@ var TxtRotate = function(el, toRotate, period) {
         </div>
         </div>
         </div>
-    <div class="carousel-item slide-two" style="background-repeat:no-repeat; background-size:cover;background-image: url('assets/img/mainpage-effect/gallery4.jpg')">
+    <div class="carousel-item slide-two" style="background-repeat:no-repeat; background-size:cover;background-image: url('../assets/img/mainpage-effect/gallery4.jpg')">
         <div class="container">
         <div class="row">
         <div class="col-md-12">
@@ -106,7 +106,7 @@ var TxtRotate = function(el, toRotate, period) {
         </div>
         </div>
         </div>
-    <div class="carousel-item slide-three" style="background-repeat:no-repeat; background-size:cover;background-image: url('assets/img/mainpage-effect/venue2.jpg')">
+    <div class="carousel-item slide-three" style="background-repeat:no-repeat; background-size:cover;background-image: url('../assets/img/mainpage-effect/venue2.jpg')">
         <div class="container">
         <div class="row">
         <div class="col-md-12">

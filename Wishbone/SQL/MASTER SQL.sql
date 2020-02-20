@@ -315,7 +315,9 @@ CREATE TABLE entertainers (
     firstName varchar(50),
     lastName varchar(50),
     ratePerHour decimal(15,2),
-    imageLocation varchar(100),
+    occupation varchar(15),
+    workDescription varchar(200),
+    profilePicture varchar(100),
     homePagePicture varchar(100),
     aboutMe varchar(400),
     

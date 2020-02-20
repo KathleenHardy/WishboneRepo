@@ -51,7 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset(
     $userpassword = test_input($_POST["userpassword"]);
     
     
-    $query = "SELECT userType FROM `authentication` WHERE email = ? AND pass= ?";
+    $query = "SELECT userType, authid 
+              FROM authentication 
+              WHERE email = ? AND pass = ?";
     
     if ($stmt = $connection->prepare( $query)) {
         $_SESSION['useremail'] = $useremail;
@@ -62,11 +64,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset(
         $stmt->execute();
         
         //bind result variables  
-        $stmt->bind_result($userType);
+        $stmt->bind_result($userType, $authid);
 
         // fetch values
         $stmt->fetch();
 
+        $_SESSION['authId'] = $authid;
+        
         if ($userType == UserType::EVENT_PLANNER) {
             header('Location: eventPlannerEventList.php');
             mysqli_close($connection);
@@ -99,9 +103,6 @@ function test_input($data)
 
 ?>
 
-
-
-	
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
