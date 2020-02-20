@@ -25,6 +25,7 @@ class profilelistDAO extends abstractDAO
             echo 'Could not run query: ' . mysql_error();
             exit();
         }
+        
         $names = mysqli_fetch_row($getnames);
         $firstname = $names[0];
         $lastname = $names[1];
@@ -33,7 +34,10 @@ class profilelistDAO extends abstractDAO
         $profilelists['firstname'] = $firstname;
         $profilelists['lastname'] = $lastname;
         $profilelists['imagelocation'] = $imagelocation;
+        
+        
 
+        /*
         // get the artistid
         $getartid = $this->mysqli->query('SELECT artistid 
         	 FROM artists
@@ -42,6 +46,7 @@ class profilelistDAO extends abstractDAO
             echo 'Could not run query: ' . mysql_error();
             exit();
         }
+        
         $artistidFetch = mysqli_fetch_row($getartid);
         $artistid = $artistidFetch[0];
         $getartid->free();
@@ -137,6 +142,8 @@ class profilelistDAO extends abstractDAO
         }
         $getexperience->free();
         // var_dump($profilelists);exit;
+         * 
+         */
         return $profilelists;
     }
 

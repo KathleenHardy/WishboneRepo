@@ -4,10 +4,11 @@ drop table if exists resourceAvailability;
 drop table if exists bookingRequests;
 drop table if exists venues;
 drop table if exists eventPlanners;
+drop table if exists venueOwners;
 drop table if exists availability;
 drop table if exists gigsImages;
 drop table if exists gigs;
-drop table if exists entertainers;
+drop table if exists entertainers; 
 drop view  if exists gigsDetails;
 
 
@@ -314,7 +315,9 @@ CREATE TABLE entertainers (
     firstName varchar(50),
     lastName varchar(50),
     ratePerHour decimal(15,2),
-    imageLocation varchar(100),
+    occupation varchar(15),
+    workDescription varchar(200),
+    profilePicture varchar(100),
     homePagePicture varchar(100),
     aboutMe varchar(400),
     
@@ -385,16 +388,30 @@ CREATE TABLE eventPlanners (
 );
 
 
+CREATE TABLE venueOwners (
+    venueOwnerId int not null auto_increment,
+    authid int not null,
+    firstName varchar(50),
+    lastName varchar(50),
+    imageLocation varchar(100),
+
+    FOREIGN KEY (authid) REFERENCES authentication(authid),
+    PRIMARY KEY (venueOwnerId)
+);
+
+
 /*
 Venues table - stores details about a venue
 */
 CREATE TABLE venues (
     venueId int not null auto_increment,
+    venueOwnerId int not null,
     venueName varchar(50),
     venueCity varchar(70),
     venueState varchar(70),
     venueProvince varchar(70),
 
+	FOREIGN KEY (venueOwnerId) REFERENCES venueOwners(venueOwnerId),
     PRIMARY KEY (venueId)
 );
 
@@ -406,12 +423,12 @@ CREATE TABLE bookingRequests (
     bookingReqId int not null auto_increment,
     entid int not null,
 	eventPlannerId int,
-	venueId int,
+	venueOwnerId int,
 	message varchar(200),
 
 	FOREIGN KEY (entid) REFERENCES entertainers(entid),
     FOREIGN KEY (eventPlannerId) REFERENCES eventPlanners(eventPlannerId),
-	FOREIGN KEY (venueId) REFERENCES venues(venueId),
+	FOREIGN KEY (venueOwnerId) REFERENCES venueOwners(venueOwnerId),
     PRIMARY KEY (bookingReqId)
 );
 
@@ -442,13 +459,13 @@ CREATE TABLE bookedGigs (
     gigsid int not null,
     resAvailId int not null,
     eventPlannerId int,
-    venueId int,
+    venueOwnerId int,
 
     FOREIGN KEY (entid) REFERENCES entertainers(entid),
     FOREIGN KEY (gigsid) REFERENCES gigs(gigsid),
     FOREIGN KEY (resAvailId) REFERENCES resourceAvailability(resAvailId),
     FOREIGN KEY (eventPlannerId) REFERENCES eventPlanners(eventPlannerId),
-    FOREIGN KEY (venueId) REFERENCES venues(venueId),
+    FOREIGN KEY (venueOwnerId) REFERENCES venueOwners(venueOwnerId),
     primary key (bookedGigsId)
 );
 
@@ -755,6 +772,8 @@ INSERT into authentication (email,pass, userType) VALUES ('keller@mathew.com','p
 INSERT into authentication (email,pass, userType) VALUES ('Sotie@Erikzon.com','password', 2);
 INSERT into authentication (email,pass, userType) VALUES ('Etlana@Fries.com','password', 2);
 
+INSERT into authentication (email,pass, userType) VALUES ('madison@kindler.com','password', 3);
+INSERT into authentication (email,pass, userType) VALUES ('kellerman@comb.com','password', 3);
 
 UPDATE authentication SET userType = 1 WHERE authid = 1;
 UPDATE authentication SET userType = 1 WHERE authid = 2;
@@ -821,15 +840,24 @@ INSERT INTO bookedgigs (entid, gigsid, resAvailId) VALUES (2,2, 1);
 INSERT INTO bookedgigs (entid, gigsid, resAvailId) VALUES (3,4, 1);
 INSERT INTO bookedgigs (entid, gigsid, resAvailId) VALUES (4,1, 1);
 
-INSERT INTO `venues` (`venueId`, `venueName`, `venueCity`, `venueState`, `venueProvince`) VALUES 
-					 (NULL, 'National Arts Centre', 'Ottawa', NULL, 'Ontario');
+INSERT INTO venueOwners ( authid, firstName, lastName) VALUES 
+					    (17, 'Madison', 'Kindler');
+					    
+INSERT INTO venueOwners ( authid, firstName, lastName) VALUES 
+					    (18, 'Kellerman', 'Comb');
 
-INSERT INTO `eventplanners` (`eventPlannerId`, `authid`, `firstName`, `lastName`, `imageLocation`) VALUES 
-                            (NULL, '1', 'Andrew', 'Archibald', NULL);
 
-INSERT INTO `availability` (`availId`, `availStartDate`, `availEndDate`, `availStartTime`, `availEndTime`) VALUES 
-                           (NULL, '2020-02-09', '2020-02-09', '18:00:00', '21:00:00');
+/*
+INSERT INTO `venues` (`venueOwnerId`, `venueName`, `venueCity`, `venueState`, `venueProvince`) VALUES 
+					 (1, 'National Arts Centre', 'Ottawa', NULL, 'Ontario');
 
-INSERT INTO `resourceavailability` (`resAvailId`, `entid`, `availId`, `venueId`) VALUES 
-								(NULL, NULL, '1', '1');
 
+INSERT INTO `eventplanners` (`authid`, `firstName`, `lastName`, `imageLocation`) VALUES 
+                            ('1', 'Andrew', 'Archibald', NULL);
+
+INSERT INTO `availability` (`availStartDate`, `availEndDate`, `availStartTime`, `availEndTime`) VALUES 
+                           ('2020-02-09', '2020-02-09', '18:00:00', '21:00:00');
+
+INSERT INTO `resourceavailability` (`entid`, `availId`, `venueId`) VALUES 
+								(NULL, '1', '1');
+*/

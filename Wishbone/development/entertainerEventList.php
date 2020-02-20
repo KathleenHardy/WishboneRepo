@@ -65,7 +65,7 @@
 							<!-- post-02 -->
 							<div class="post-02 post-02__style-02 js-post-effect">
 								<div class="post-02__media">
-									<a href="#"><img src="assets/img/projects/v-1.jpg" alt="" /></a>
+									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
 									<h2 class="post-02__title" style="font-weight:bold; color: white;">

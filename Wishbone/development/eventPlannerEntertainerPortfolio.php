@@ -39,95 +39,7 @@
   <!-- End Head -->
 
   <body>
-  
-<?php 
-include ('../config.php');
-require_once ('../dto/gig.php');
-session_start();
-include "navigationheaderEntertainer.php" ;
-
-
-$authId = $_SESSION['authId'];
-// $entId = $_SESSION['authId'];
-
-$query = "SELECT entid, firstName, lastName, ratePerHour, occupation, workDescription, profilePicture, homePagePicture, aboutMe 
-          FROM entertainers
-          WHERE  authid = ?";
-
-if ($stmt = $connection->prepare( $query)) {
-
-    $stmt->bind_param( "i", $authId);
-    
-    //execute statement
-    $stmt->execute();
-
-    //bind result variables
-    $stmt->bind_result($entid, $firstName, $lastName, $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe);
-    
-    // fetch values
-    $stmt->fetch();
-    
-    //close statement
-    $stmt->close();
-      
-}
-
-$_SESSION['entertainerfirstname'] = $firstName;
-$_SESSION['entertainerlastname'] = $lastName;
-$_SESSION['entertainerid'] = $entid;
-
-$myGigs = array();
-$query2 = "SELECT * 
-           FROM gigs 
-           WHERE  entid = ?";
-
-if ($stmt2 = $connection->prepare( $query2)) {
-    
-    $stmt2->bind_param( "i", $entid);
-    
-    //execute statement
-    $stmt2->execute();
-    
-    //bind result variables
-    $stmt2->bind_result($gigsid, $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes);
-    
-    // fetch values
-    while( $stmt2->fetch()) {       
-        $myGigs[] = new Gig( $gigsid, $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes);
-    }
-    
-    //close statement
-    $stmt2->close();
-    
-}
-
-
-$query3 = "SELECT email
-          FROM authentication
-          WHERE  authid = ?";
-
-if ($stmt3 = $connection->prepare( $query3)) {
-    
-    $stmt3->bind_param( "i", $authId);
-    
-    //execute statement
-    $stmt3->execute();
-    
-    //bind result variables
-    $stmt3->bind_result($email);
-    
-    // fetch values
-    $stmt3->fetch();
-    
-    //close statement
-    $stmt3->close();
-    
-}
-
-
-$connection->close();
-
-?>
+    <?php include "navigationheaderEventPlanner.php" ?>
 
       <!-- Promo Block -->
       <section class="js-parallax u-promo-block u-promo-block--mheight-500 u-overlay u-overlay--dark text-white" style="background-image: url(../assets/img-temp/1920x1080/img5.jpg);">
@@ -136,8 +48,8 @@ $connection->close();
           <div class="row justify-content-center">
             <div class="col-12">
               <div class="text-center">
-                <h1 class="display-sm-4 display-lg-3"><?= $firstName . ' ' . $lastName  ?></h1>
-                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= $occupation ?></p>
+                <h1 class="display-sm-4 display-lg-3">Jane Moris</h1>
+                <p class="h6 text-uppercase u-letter-spacing-sm mb-2">Musician</p>
 
                 <ul class="list-inline text-center mb-0">
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Facebook">
@@ -194,13 +106,12 @@ $connection->close();
           <div class="row u-content-space-bottom">
             <div class="col-lg-12" style="text-align: center;">
               <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">ABOUT ME</h2>
-              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;"><?= $aboutMe ?></p>
+              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">I've been playing music all my life and I play professionally over 3 instruments. I also know how to create my own music, including song lyrics.</p>
               <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">Success to me comes from staying true to yourself and straying from the pack.</p>
               <p class="blockquote-footer">Jane Moris, Musician</p>
               <br/>
               <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">CONTACT ME</h2>
-              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">EMAIL: <?= $email ?></p>
-            <div class="button_entertainer""><a class="button_add_gigs" href="entertainerPortfolioEdit.php">Update Portfolio Information</a></div>
+              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">EMAIL: Jane.Moris@gmail.com</p>
             </div>
                     
           <!-- End About and Contact -->
@@ -290,10 +201,13 @@ $connection->close();
           </div>
           <!-- End Work Content -->
         </div>
-      
-      <!--  Button to Add Gigs -->  
-<div class="button_entertainer" align="center"><a class="button_add_gigs" href="entertainerAddGig.php">Add A Gig</a></div>
-      <!-- End Portfolio -->
+            <!-- End Portfolio -->
+         <div class="row">
+         <div class="col-md-12" style="text-align: center;">  
+           <a href="eventPlannerEventForm.php"><button type="button" style="display:inline; padding: 8px 20px; background: #fac668; border: 0; outline: none; border-radius: 25px; color: #fff; font-size: 20px;">Book</button></a>          
+           <a href="eventPlannerEntertainerList.php"><button type="button" style="padding: 8px 20px; background: #fac668; border: 0; outline: none; border-radius: 25px; color: #fff; font-size: 20px;">Back</button></a>
+    </div>
+    </div>
     </main>
 
     <!-- Footer -->

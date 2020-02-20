@@ -7,24 +7,24 @@
 <!--===============================================================================================-->	
 	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/bootstrap/css/bootstrap.min (2).css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/bootstrap/css/bootstrap.min (2).css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/animate/animate.css">
 <!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/css-hamburgers/hamburgers.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/animsition/css/animsition.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/animsition/css/animsition.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/select2/select2.min.css">
 <!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="../assets/vendors/daterangepicker/daterangepicker.css">
+	<link rel="stylesheet" type="text/css" href="assets/vendors/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../assets/css/util.css">
-	<link rel="stylesheet" type="text/css" href="../assets/css/mainLogin.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/util.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/mainLogin.css">
 	<link href="https://fonts.googleapis.com/css?family=Archivo&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
 <!--===============================================================================================-->
@@ -41,8 +41,8 @@ include ('navigationheaderHome.php');
 //     header("Location: userHome.php");
 // }
 
-require_once ("../config.php");
-include ('../enums/userType.php');
+require_once ("config.php");
+include ('enums/userType.php');
 
 $useremail = $userpassword = $fmsg = "";
 
@@ -51,9 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset(
     $userpassword = test_input($_POST["userpassword"]);
     
     
-    $query = "SELECT userType, authid 
-              FROM authentication 
-              WHERE email = ? AND pass = ?";
+    $query = "SELECT userType FROM `authentication` WHERE email = ? AND pass= ?";
     
     if ($stmt = $connection->prepare( $query)) {
         $_SESSION['useremail'] = $useremail;
@@ -64,21 +62,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset(
         $stmt->execute();
         
         //bind result variables  
-        $stmt->bind_result($userType, $authid);
+        $stmt->bind_result($userType);
 
         // fetch values
         $stmt->fetch();
 
-        $_SESSION['authId'] = $authid;
-        
         if ($userType == UserType::EVENT_PLANNER) {
-            header('Location: eventPlannerEventList.php');
+            header('Location: userHome.php');
             mysqli_close($connection);
         } else if ( $userType == UserType::ENTERTAINER) {
-            header('Location: entertainerEventList.php');
+            header('Location: entertainerHome.php');
             mysqli_close($connection);
         } else if ( $userType == UserType::VENUE_OWNER) {
-            header('Location: venueProfileView.php');
+            header('Location: userHomeVenue.php');
             mysqli_close($connection);
         }
         //close statement
@@ -89,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset(
         $fmsg = "Invalid Login Credentials.";
     }
     //close connection
-    //$connection->close();
+    $connection->close();
    
 }
 
@@ -103,6 +99,9 @@ function test_input($data)
 
 ?>
 
+
+
+	
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-50">
@@ -158,21 +157,21 @@ function test_input($data)
 
 	
 <!--===============================================================================================-->
-	<script src="../assets/vendors/jquery/jquery-3.2.1.min.js"></script>
+	<script src="assets/vendors/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/animsition/js/animsition.min.js"></script>
+	<script src="assets/vendors/animsition/js/animsition.min.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/bootstrap/js/popper.js"></script>
-	<script src="../assets/vendors/bootstrap/js/bootstrap.min (2).js"></script>
+	<script src="assets/vendors/bootstrap/js/popper.js"></script>
+	<script src="assets/vendors/bootstrap/js/bootstrap.min (2).js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/select2/select2.min.js"></script>
+	<script src="assets/vendors/select2/select2.min.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/daterangepicker/moment.min.js"></script>
-	<script src="../assets/vendors/daterangepicker/daterangepicker.js"></script>
+	<script src="assets/vendors/daterangepicker/moment.min.js"></script>
+	<script src="assets/vendors/daterangepicker/daterangepicker.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/vendors/countdowntime/countdowntime.js"></script>
+	<script src="assets/vendors/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
-	<script src="../assets/js/mainLogin.js"></script>
+	<script src="assets/js/mainLogin.js"></script>
 
 </body>
 </html>

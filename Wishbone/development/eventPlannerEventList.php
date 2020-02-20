@@ -28,10 +28,15 @@
 <!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<![endif]-->
+<script>
+function closewindow() {    
+	$.modal.close();
+}
+</script>		
 </head>
 
 <body>
-<?php include "navigationheaderEntertainer.php" ?>
+<?php include "navigationheaderEventPlanner.php" ?>
 	<div class="page-wrap">
 
 		<!-- header -->
@@ -65,16 +70,16 @@
 							<!-- post-02 -->
 							<div class="post-02 post-02__style-02 js-post-effect">
 								<div class="post-02__media">
-									<a href="#"><img src="assets/img/projects/v-1.jpg" alt="" /></a>
+									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color: white;">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
 									<div class="post-02__content">
 									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">EVENT PLANNER NAME & CONTACT</div>
+									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
 												<div class="post-02__description">DESCRIPTION: Etiam non varius
 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
@@ -95,19 +100,19 @@
 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color: white;">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
 									<div class="post-02__content">
 									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">EVENT PLANNER NAME & CONTACT</div>
+									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
 												<div class="post-02__description">DESCRIPTION: Etiam non varius
 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
-									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
+									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>								
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -122,22 +127,22 @@
 									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color: white;">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
 									<div class="post-02__content">
 									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">EVENT PLANNER NAME & CONTACT</div>
+									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
 												<div class="post-02__description">DESCRIPTION: Etiam non varius
 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
-									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
+								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>	
 								</div>
-
-						</div>
+								
+					</div>
 							<!-- End / post-02 -->
 
 						</div>
@@ -150,19 +155,19 @@
 									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color: white;">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
 									<div class="post-02__content">
 									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">EVENT PLANNER NAME & CONTACT</div>
+									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
 												<div class="post-02__description">DESCRIPTION: Etiam non varius
 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
-									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
+								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>	
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -200,19 +205,19 @@
 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color: white;">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
 									<div class="post-02__content">
 									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">EVENT PLANNER NAME & CONTACT</div>
+									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
 												<div class="post-02__description">DESCRIPTION: Etiam non varius
 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
 									</div>
-								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>	
+									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
 							</div>
 							<!-- End / post-02 -->
@@ -227,13 +232,41 @@
 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color: white;">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
 									<div class="post-02__content">
 									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">EVENT PLANNER NAME & CONTACT</div>
+									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
+												<div class="post-02__description">DESCRIPTION: Etiam non varius
+											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
+											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
+											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
+									</div>
+								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
+
+								</div>
+							</div>
+							<!-- End / post-02 -->
+
+						</div>
+						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
+							style="padding-left: 5px; padding-right: 5px;">
+
+							<!-- post-02 -->
+							<div class="post-02 post-02__style-02 js-post-effect">
+								<div class="post-02__media">
+									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
+								</div>
+								<div class="post-02__body">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
+										EVENT NAME
+									</h2>
+									<div class="post-02__department">DATE TIME</div>
+									<div class="post-02__content">
+									<div class="post-02__department">VENUE NAME</div>
+									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
 												<div class="post-02__description">DESCRIPTION: Etiam non varius
 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
@@ -251,16 +284,16 @@
 							<!-- post-02 -->
 							<div class="post-02 post-02__style-02 js-post-effect">
 								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
+									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color: white;">
+									<h2 class="post-02__title" style="font-weight:bold; color:white;">
 										EVENT NAME
 									</h2>
 									<div class="post-02__department">DATE TIME</div>
 									<div class="post-02__content">
 									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">EVENT PLANNER NAME & CONTACT</div>
+									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
 												<div class="post-02__description">DESCRIPTION: Etiam non varius
 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
@@ -268,34 +301,7 @@
 									</div>
 									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
-								</div>
-							<!-- End / post-02 -->
-
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<!-- post-02 -->
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color: white;">
-										EVENT NAME
-									</h2>
-									<div class="post-02__department">DATE TIME</div>
-									<div class="post-02__content">
-									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">EVENT PLANNER NAME & CONTACT</div>
-												<div class="post-02__description">DESCRIPTION: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
-								</div>
-								</div>
+							</div>
 							<!-- End / post-02 -->
 
 						</div>
@@ -310,7 +316,7 @@
 <?php include "footer.php" ?>
 	</div>
 	
-	    <!-- Event Details Modal Window -->
+	    <!--Event Details Modal Window -->
     <div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -325,15 +331,15 @@
 			<h5>Event Date/Time</h5>
 			<h5>Venue Name</h5>
 			<h5>Venue Location</h5>
-			<h5>Event Planner Name</h5>
-			<h5>Event Planner Email</h5>			
+			<h5>Entertainer Name</h5>				
+			<h5>Entertainer Email</h5>			
 			<h5>Event Description Here</h5>
               </div>
             </div>
           </form>
         </div>
       </div>
-    </div>	
+    </div>
 	<!-- Vendors-->
 	<script type="text/javascript"
 		src="../assets/vendors/jquery/jquery.min.js"></script>
