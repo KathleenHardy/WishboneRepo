@@ -53,23 +53,23 @@
 								<h6 class="title-01__subTitle">about</h6>
 								<h2 class="title-01__title">WHO WE ARE</h2>
 								<div>Wishbone is a unique marketplace for booking
-									musicians, bands, artists, Djâ€™s, Comedians, guest speakers, and
+									musicians, bands, artists, Dj’s, Comedians, guest speakers, and
 									other forms of live entertainment on demand. At last, a unique
 									and simplified system that allows anyone everywhere to find and
 									hire entertainment for events of all genres and sizes. With
 									hundreds of local performers and professionals, we provide an
 									easy and secure way to create an extraordinary gathering,
-									whether youâ€™re a first â€“time event host or seasoned pro.
+									whether you’re a first –time event host or seasoned pro.
 									Wishbone allows anyone anywhere to discover, connect and book
 									at the thought of a wish.</div>
 							</div>
 							<!-- End / title-01 -->
 							<h2 class="title-01__title">OUR HISTORY</h2>
 							<div>Our headquarters is established and founded upon the
-								nationâ€™s capital Ottawa, Ontario. From members needing technical
+								nation’s capital Ottawa, Ontario. From members needing technical
 								support to event planners looking to book talent, our Ottawa
 								team is the center of our foundation. They interact with
-								customers personallyâ€”Wishbone is made up of real people, not
+								customers personally—Wishbone is made up of real people, not
 								automatons. We care deeply about making our customers happy.</div>
 						</div>
 					</div>
