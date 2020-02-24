@@ -2,6 +2,7 @@
 require_once ('abstractDAO.php');
 require_once ('../model/authentication.php');
 include ('../enums/userType.php');  
+include ('../enums/profileStatus.php');
 
 class AuthenticationDAO extends AbstractDAO
 {
@@ -20,7 +21,7 @@ class AuthenticationDAO extends AbstractDAO
         echo $Registrant->getRegistrantType();
         
         if ( $Registrant->getRegistrantType() == UserType::EVENT_PLANNER) {
-            $this-> registerAsEventPlanner( $Registrant, $imageLoc);
+            $this-> registerAsEventPlanner( $Registrant);
             
         } else if ( $Registrant->getRegistrantType() == UserType::ENTERTAINER) {
             $this-> registerAsEntertainer( $Registrant);
@@ -97,13 +98,14 @@ class AuthenticationDAO extends AbstractDAO
             
             $Registrant->setAuthId( $authId);
             
-            $query2 = 'INSERT INTO entertainers (authid, firstname, lastname)
-							VALUES(?,?,?)';
+            $query2 = 'INSERT INTO entertainers (authid, firstname, lastname, profileStatus)
+							VALUES(?,?,?,?)';
 
             $firstname = $Registrant->getRegistrantFirstName();
             $lastname = $Registrant->getRegistrantLastName();
+            $profileStatus = $Registrant->getProfileStatus();
             $stmt2 = $this->mysqli->prepare($query2);
-            $stmt2->bind_param('sss', $authId, $firstname, $lastname);
+            $stmt2->bind_param('sssi', $authId, $firstname, $lastname, $profileStatus);
             $stmt2->execute();
             $stmt2->close();
 
