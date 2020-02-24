@@ -97,9 +97,9 @@ $result2 = mysqli_query($connection, $query3) or die(mysqli_error($connection));
 $count2 = mysqli_num_rows($result2);
 
 if ($count2 >= 1) {
-    
+
     while ($row = mysqli_fetch_array($result2)) {
-        
+
         $availabilityDTO[] = new Availability($row['availId'], $row['availStartDate'], $row['availEndDate'], $row['availStartTime'], $row['availEndTime']);
     }
 } else {
@@ -107,9 +107,6 @@ if ($count2 >= 1) {
 }
 $_SESSION['myVenues'] = $venueDTO;
 $_SESSION['avails'] = $availabilityDTO;
-
-
-
 
 mysqli_close($connection);
 
@@ -140,13 +137,17 @@ mysqli_close($connection);
 				</div>
 				<div class="consult-project">
 					<div class="row">
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
 
-							<!-- post-02 -->
+
+						<!-- post-02 -->
 <?php
 foreach ($venueDTO as $venue) {
-    print '<div class="post-02 post-02__style-02 js-post-effect">
+
+    print '
+        <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
+							style="padding-left: 5px; padding-right: 5px;">
+        <div class="post-02 post-02__style-02 js-post-effect">
+
 								<div class="post-02__media">
 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
@@ -165,15 +166,16 @@ foreach ($venueDTO as $venue) {
 									</div>
 									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
+</div>
 							</div>';
 }
 ?>
 							<!-- End / post-02 -->
 
-						</div>
+					
 
-					</div>
-			
+				</div>
+
 			</section>
 			<div class="container">
 				<div class="row">
@@ -190,11 +192,11 @@ foreach ($venueDTO as $venue) {
 				</div>
 			</div>
 			<div class="consult-project">
-					<div class="row">
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
+				<div class="row">
+					<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
+						style="padding-left: 5px; padding-right: 5px;">
 
-							<!-- post-02 -->
+						<!-- post-02 -->
 <?php
 foreach ($availabilityDTO as $availability) {
     print '<div class="post-02 post-02__style-02 js-post-effect">
@@ -203,7 +205,7 @@ foreach ($availabilityDTO as $availability) {
 								</div>
 								<div class="post-02__body">
 									<h2 class="post-02__title" style="font-weight:bold; color:white;">
-									<a href="#">'.  $availability->getAvailStartDate() .' to '.$availability->getAvailEndDate().'</a>
+									<a href="#">' . $availability->getAvailStartDate() . ' to ' . $availability->getAvailEndDate() . '</a>
 									</h2>
 									<div class="post-02__department"> </div>
 									<div class="post-02__content">
@@ -221,70 +223,43 @@ foreach ($availabilityDTO as $availability) {
 ?>
 							<!-- End / post-02 -->
 
-						</div>
-
 					</div>
-			
-			
-			<a href="createNewVenue.php"><button type="button" class="btn-all"
-					style="display: inline;">Add Venue</button></a> <a
-				href="addVenueAvailability.php"><button type="button"
-					class="btn-all" style="display: inline;">Add Availability</button></a>
+
+				</div>
 
 
-			<!-- Past Events -->
+				<a href="createNewVenue.php"><button type="button" class="btn-all"
+						style="display: inline;">Add Venue</button></a> <a
+					href="addVenueAvailability.php"><button type="button"
+						class="btn-all" style="display: inline;">Add Availability</button></a>
 
-			<section class="md-section" style="padding-bottom: 0;">
-				<!-- 				<div class="container"> -->
-				<!-- 					<div class="row"> -->
-				<!-- 						<div -->
-				<!-- 							class="col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-2 offset-lg-2 "> -->
 
-				<!-- title-01 -->
-				<!-- 							<div class="title-01 title-01__style-04"> -->
-				<!-- 								<h2 class="title-01__title">PAST EVENTS</h2> -->
-				<!-- 							</div> -->
-				<!-- End / title-01 -->
+				<!-- Past Events -->
 
-				<!-- 						</div> -->
-				<!-- 					</div> -->
-				<!-- 				</div> -->
-				<!-- 				<div class="consult-project"> -->
-				<!-- 					<div class="row"> -->
-				<!-- 						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 " -->
-				<!-- 							style="padding-left: 5px; padding-right: 5px;"> -->
+				<section class="md-section" style="padding-bottom: 0;">
+					<!-- 				<div class="container"> -->
+					<!-- 					<div class="row"> -->
+					<!-- 						<div -->
+					<!-- 							class="col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-2 offset-lg-2 "> -->
 
-				<!-- post-02 -->
-				<!-- 							<div class="post-02 post-02__style-02 js-post-effect"> -->
-				<!-- 								<div class="post-02__media"> -->
-				<!-- 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a> -->
-				<!-- 								</div> -->
-				<!-- 								<div class="post-02__body"> -->
-				<h2 class="post-02__title" style="font-weight: bold; color: white;">
-					<!-- 										EVENT NAME -->
-					<!-- 									</h2> -->
-					<!-- 									<div class="post-02__department">DATE TIME</div> -->
-					<!-- 									<div class="post-02__content"> -->
-					<!-- 									<div class="post-02__department">VENUE NAME</div> -->
-					<!-- 									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div> -->
-					<!-- 												<div class="post-02__description">DESCRIPTION: Etiam non varius -->
-					<!-- 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu. -->
-					<!-- 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat -->
-					<!-- 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div> -->
-					<!-- 									</div> -->
-					<!-- 									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a> -->
-					<!-- 								</div> -->
+					<!-- title-01 -->
+					<!-- 							<div class="title-01 title-01__style-04"> -->
+					<!-- 								<h2 class="title-01__title">PAST EVENTS</h2> -->
 					<!-- 							</div> -->
-					<!-- End / post-02 -->
+					<!-- End / title-01 -->
 
 					<!-- 						</div> -->
+					<!-- 					</div> -->
+					<!-- 				</div> -->
+					<!-- 				<div class="consult-project"> -->
+					<!-- 					<div class="row"> -->
 					<!-- 						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 " -->
 					<!-- 							style="padding-left: 5px; padding-right: 5px;"> -->
 
 					<!-- post-02 -->
 					<!-- 							<div class="post-02 post-02__style-02 js-post-effect"> -->
 					<!-- 								<div class="post-02__media"> -->
-					<!-- 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a> -->
+					<!-- 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a> -->
 					<!-- 								</div> -->
 					<!-- 								<div class="post-02__body"> -->
 					<h2 class="post-02__title" style="font-weight: bold; color: white;">
@@ -311,7 +286,7 @@ foreach ($availabilityDTO as $availability) {
 						<!-- post-02 -->
 						<!-- 							<div class="post-02 post-02__style-02 js-post-effect"> -->
 						<!-- 								<div class="post-02__media"> -->
-						<!-- 									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a> -->
+						<!-- 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a> -->
 						<!-- 								</div> -->
 						<!-- 								<div class="post-02__body"> -->
 						<h2 class="post-02__title"
@@ -339,7 +314,7 @@ foreach ($availabilityDTO as $availability) {
 							<!-- post-02 -->
 							<!-- 							<div class="post-02 post-02__style-02 js-post-effect"> -->
 							<!-- 								<div class="post-02__media"> -->
-							<!-- 									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a> -->
+							<!-- 									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a> -->
 							<!-- 								</div> -->
 							<!-- 								<div class="post-02__body"> -->
 							<h2 class="post-02__title"
@@ -361,79 +336,112 @@ foreach ($availabilityDTO as $availability) {
 								<!-- End / post-02 -->
 
 								<!-- 						</div> -->
-								<!-- 					</div> -->
-								<!-- 				</div> -->
-								<!-- 			</section> -->
+								<!-- 						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 " -->
+								<!-- 							style="padding-left: 5px; padding-right: 5px;"> -->
+
+								<!-- post-02 -->
+								<!-- 							<div class="post-02 post-02__style-02 js-post-effect"> -->
+								<!-- 								<div class="post-02__media"> -->
+								<!-- 									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a> -->
+								<!-- 								</div> -->
+								<!-- 								<div class="post-02__body"> -->
+								<h2 class="post-02__title"
+									style="font-weight: bold; color: white;">
+									<!-- 										EVENT NAME -->
+									<!-- 									</h2> -->
+									<!-- 									<div class="post-02__department">DATE TIME</div> -->
+									<!-- 									<div class="post-02__content"> -->
+									<!-- 									<div class="post-02__department">VENUE NAME</div> -->
+									<!-- 									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div> -->
+									<!-- 												<div class="post-02__description">DESCRIPTION: Etiam non varius -->
+									<!-- 											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu. -->
+									<!-- 											Suspendisse maximus ac nisl eu porta. Praesent eget consequat -->
+									<!-- 											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div> -->
+									<!-- 									</div> -->
+									<!-- 									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a> -->
+									<!-- 								</div> -->
+									<!-- 							</div> -->
+									<!-- End / post-02 -->
+
+									<!-- 						</div> -->
+									<!-- 					</div> -->
+									<!-- 				</div> -->
+									<!-- 			</section> -->
 
 
 
 
-								<!-- End / Section -->
+									<!-- End / Section -->
 <?php include "footer.php" ?>
 	
 		
 		
 		
-		</div>
-		<!-- Event Details Modal Window -->
-		<div class="modal fade" id="eventDetailsModal" tabindex="-1"
-			role="dialog" aria-labelledby="exampleModalCenterTitle"
-			aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
-				<div class="modal-content">
-					<form action="#">
-						<div class="modal-header">
-							<h3 class="modal-title" id="modalTitle">
-								EVENT NAME HERE
-								</h5>
-								<button type="button" class="close" data-dismiss="modal"
-									aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-						
-						</div>
-						<div class="modal-body">
-							<h5>Event Date/Time</h5>
-							<h5>Venue Name</h5>
-							<h5>Venue Location</h5>
-							<h5>Event Description Here</h5>
-						</div>
-				
+		
+			
+			</div>
+			<!-- Event Details Modal Window -->
+			<div class="modal fade" id="eventDetailsModal" tabindex="-1"
+				role="dialog" aria-labelledby="exampleModalCenterTitle"
+				aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<form action="#">
+							<div class="modal-header">
+								<h3 class="modal-title" id="modalTitle">
+									EVENT NAME HERE
+									</h5>
+									<button type="button" class="close" data-dismiss="modal"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+							
+							</div>
+							<div class="modal-body">
+								<h5>Event Date/Time</h5>
+								<h5>Venue Name</h5>
+								<h5>Venue Location</h5>
+								<h5>Event Description Here</h5>
+							</div>
+					
+					</div>
+					</form>
 				</div>
-				</form>
 			</div>
 		</div>
-	</div>
-	<!-- Vendors-->
-	<script type="text/javascript"
-		src="../assets/vendors/jquery/jquery.min.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/imagesloaded/imagesloaded.pkgd.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/isotope-layout/isotope.pkgd.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/jquery.countdown/jquery.countdown.min.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/jquery.countTo/jquery.countTo.min.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/jquery.countUp/jquery.countup.min.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/jquery.matchHeight/jquery.matchHeight.min.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/jquery.mb.ytplayer/jquery.mb.YTPlayer.min.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/magnific-popup/jquery.magnific-popup.min.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/masonry-layout/masonry.pkgd.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/owl.carousel/owl.carousel.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/jquery.waypoints/jquery.waypoints.min.js"></script>
-	<script type="text/javascript" src="../assets/vendors/menu/menu.min.js"></script>
-	<script type="text/javascript"
-		src="../assets/vendors/smoothscroll/SmoothScroll.min.js"></script>
-	<!-- App-->
-	<script type="text/javascript" src="../assets/js/main.js"></script>
+		<!-- Vendors-->
+		<script type="text/javascript"
+			src="../assets/vendors/jquery/jquery.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/imagesloaded/imagesloaded.pkgd.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/isotope-layout/isotope.pkgd.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/jquery.countdown/jquery.countdown.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/jquery.countTo/jquery.countTo.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/jquery.countUp/jquery.countup.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/jquery.matchHeight/jquery.matchHeight.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/jquery.mb.ytplayer/jquery.mb.YTPlayer.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/magnific-popup/jquery.magnific-popup.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/masonry-layout/masonry.pkgd.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/owl.carousel/owl.carousel.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/jquery.waypoints/jquery.waypoints.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/menu/menu.min.js"></script>
+		<script type="text/javascript"
+			src="../assets/vendors/smoothscroll/SmoothScroll.min.js"></script>
+		<!-- App-->
+		<script type="text/javascript" src="../assets/js/main.js"></script>
 	<?php include "navigationHeadInclude2.php" ?>
+
+
 </body>
 </html>

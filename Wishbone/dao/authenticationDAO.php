@@ -20,7 +20,7 @@ class AuthenticationDAO extends AbstractDAO
         echo $Registrant->getRegistrantType();
         
         if ( $Registrant->getRegistrantType() == UserType::EVENT_PLANNER) {
-            $this-> registerAsEventPlanner( $Registrant, $imageLoc);
+            $this-> registerAsEventPlanner( $Registrant);
             
         } else if ( $Registrant->getRegistrantType() == UserType::ENTERTAINER) {
             $this-> registerAsEntertainer( $Registrant);
