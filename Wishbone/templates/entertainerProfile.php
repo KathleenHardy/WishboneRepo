@@ -1,3 +1,34 @@
+<?php
+include ('../config.php'); 
+require_once ('../dto/gig.php');
+session_start();
+
+$user_check = $_SESSION['useremail'];
+
+$infoQuery = "SELECT entertainers.profilePicture, entertainers.entid, entertainers.firstName, entertainers.lastName 
+		FROM entertainers JOIN authentication
+ 			ON authentication.authid = entertainers.authid
+ 			WHERE authentication.email = '$user_check'";
+
+$result = mysqli_query($connection, $infoQuery) or die(mysqli_error($connection));
+
+$row = mysqli_fetch_array($result);
+
+$Login_user_imagelocation = $row['profilePicture'];
+$login_user_firstname = $row['firstName'];
+$login_user_lastname = $row['lastName'];
+$login_user_userid = $row['entid'];
+
+
+$_SESSION['entertainerfirstname'] = $login_user_firstname;
+$_SESSION['entertainerlastname'] = $login_user_lastname;
+$_SESSION['entertainerid'] = $login_user_userid;
+
+
+mysqli_close($connection);
+
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,94 +73,11 @@
 <!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<![endif]-->
-		
-<script>
-    $(document).ready(function(){
-      var date_input=$('input[name="date"]'); //our date input has the name "date"
-      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-      var options={
-        format: 'mm/dd/yyyy',
-        container: container,
-        todayHighlight: true,
-        autoclose: true,
-      };
-      date_input.datepicker(options);
-    })
-</script>
+	
 </head>
 
 <body>
-
-<?php 
-session_start();
-include ('../config.php');
-include "navigationheaderVenueHost.php";
-
-$authId = $_SESSION['authId'];
-
-$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
-          FROM venueowners
-          WHERE  authid = ?";
-
-if ($stmt = $connection->prepare( $query)) {
-
-    $stmt->bind_param( "i", $authId);
-    
-    //execute statement
-    $stmt->execute();
-
-    //bind result variables
-    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
-    
-    // fetch values
-    $stmt->fetch();
-    
-    //close statement
-    $stmt->close();
-      
-}
-
-
-$_SESSION['venueOwnerfirstname'] = $firstName;
-$_SESSION['venueOwnerlastname'] = $lastName;
-$_SESSION['venueOwnerId'] = $venueOwnerId;
-
-
-
-$query2 = "SELECT email
-          FROM authentication
-          WHERE  authid = ?";
-
-if ($stmt2 = $connection->prepare( $query2)) {
-    
-    $stmt2->bind_param( "i", $authId);
-    
-    //execute statement
-    $stmt2->execute();
-    
-    //bind result variables
-    $stmt2->bind_result($email);
-    
-    // fetch values
-    $stmt2->fetch();
-    
-    //close statement
-    $stmt2->close();  
-}
-
-/**
- * TODO: You can query the database here to get all the venues - please use prepared statements:
- * 
- */
-
-
-$connection->close();
-
-?>
-
-
-
-
+<?php include "navigationheaderEventPlanner.php" ?>
 	<div class="page-wrap">
 
 		<!-- header -->
@@ -148,7 +96,7 @@ $connection->close();
 
 							<!-- title-01 -->
 							<div class="title-01 title-01__style-04" style="padding: 20px;">
-								<h2 class="title-01__title"><?= $firstName . ' ' . $lastName  ?></h2>
+								<h2 class="title-01__title"><?= $login_user_firstname.' '.$login_user_lastname ?></h2>
 							</div>
           <div class="row">
             <div class="col-md-4 mx-auto">
@@ -158,20 +106,25 @@ $connection->close();
             </div>
           </div>
 		
-									<div class="profileInfo" style ="padding: 20px; text-align: center;">
+										<div class="profileInfo" style ="padding: 20px; text-align: center;">		
 										<form action="eventPlannerProfileUpdate.php" method="POST">
 
     										<div class="form-group"> <!-- Event Name -->
     											<label for="firstName" class="control-label title2">First Name</label>
-    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="firstName" name="firstName" value="<?php echo $firstName;?>">
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="firstName" name="firstName" value="<?php echo $login_user_firstname;?>">
     										</div>	
     										<div class="form-group"> <!-- Event Name -->
     											<label for="lastName" class="control-label title2">Last Name</label>
-    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="lastName" name="lastName" value="<?php echo $lastName;?>">
-    										</div>											
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="lastName" name="lastName" value="<?php echo $login_user_lastname;?>">
+    										</div>	
+    																											
+    										
+                                            </div>										
 										 <button type="submit" class="btn-all" style="display:inline;">Update</button>
-										</form>	
-									</div>
+										</form>										
+										
+											
+										
 							</div>
 							</div>
 							</div></div>

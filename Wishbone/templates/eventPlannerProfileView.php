@@ -1,3 +1,34 @@
+<?php
+include ('../config.php');
+require_once ('../dto/gig.php');
+session_start();
+
+$user_check = $_SESSION['useremail'];
+
+$infoQuery = "SELECT eventplanners.imageLocation, eventplanners.eventPlannerid, eventplanners.firstName, eventplanners.lastName 
+		FROM eventplanners JOIN authentication
+ 			ON authentication.authid = eventplanners.authid
+ 			WHERE authentication.email = '$user_check'";
+
+$result = mysqli_query($connection, $infoQuery) or die(mysqli_error($connection));
+
+$row = mysqli_fetch_array($result);
+
+$Login_user_imagelocation = $row['imageLocation'];
+$login_user_firstname = $row['firstName'];
+$login_user_lastname = $row['lastName'];
+$login_user_userid = $row['eventPlannerid'];
+
+
+$_SESSION['entertainerfirstname'] = $login_user_firstname;
+$_SESSION['entertainerlastname'] = $login_user_lastname;
+$_SESSION['eventPlannerid'] = $login_user_userid;
+
+
+mysqli_close($connection);
+
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,7 +96,7 @@
 
 							<!-- title-01 -->
 							<div class="title-01 title-01__style-04" style="padding: 20px;">
-								<h2 class="title-01__title">JANE MORIS</h2>
+								<h2 class="title-01__title"><?= $login_user_firstname.' '.$login_user_lastname ?></h2>
 							</div>
           <div class="row">
             <div class="col-md-4 mx-auto">
@@ -76,10 +107,24 @@
           </div>
 		
 										<div class="profileInfo" style ="padding: 20px; text-align: center;">		
-										<h2 class="title2">I am an avid event planner and I host a range of events from art galleries to indie music concerts.</h2>										
+										<form action="eventPlannerProfileUpdate.php" method="POST">
+
+    										<div class="form-group"> <!-- Event Name -->
+    											<label for="firstName" class="control-label title2">First Name</label>
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="firstName" name="firstName" value="<?php echo $login_user_firstname;?>">
+    										</div>	
+    										<div class="form-group"> <!-- Event Name -->
+    											<label for="lastName" class="control-label title2">Last Name</label>
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="lastName" name="lastName" value="<?php echo $login_user_lastname;?>">
+    										</div>	
+    																											
+    										
+                                            </div>										
+										 <button type="submit" class="btn-all" style="display:inline;">Update</button>
+										</form>										
 										
 											
-										<a href="eventPlannerProfileView.php"><button type="button" class="btn-all" style="display:inline;">Update</button></a>
+										
 							</div>
 							</div>
 							</div></div>
