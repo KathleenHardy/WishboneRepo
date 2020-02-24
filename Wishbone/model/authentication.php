@@ -14,6 +14,8 @@ class Authentication
     private $registrantType;
     
     private $authId;
+    
+    private $profileStatus;
 
     function __construct($registrantFirstName, $registrantLastName, $registrantEmail, $registrantPassword, $registrantType)
     {
@@ -85,6 +87,17 @@ class Authentication
     {
         echo $authId;
         $this->authId = $authId;
-    } 
+    }
+    
+    public function getProfileStatus()
+    {
+        return $this->profileStatus;
+    }
+    
+    public function setProfileStatus($profileStatus)
+    {
+        echo $profileStatus;
+        $this->profileStatus = $profileStatus;
+    }
 }
 ?>

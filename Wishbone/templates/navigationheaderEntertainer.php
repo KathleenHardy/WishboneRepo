@@ -1,9 +1,39 @@
+<?php 
+session_start();
+include ('../config.php');
+include ('../enums/profileStatus.php');
+
+$authId = $_SESSION['authId'];
+
+$query = "SELECT profileStatus 
+          FROM entertainers
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+
+    //bind result variables
+    $stmt->bind_result( $profileStatus);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+      
+}
+?>
+
 <!-- Navigation Bar -->
     <header>
       <!-- Navbar -->
       <nav class="js-navbar-scroll navbar fixed-top navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="index.php">
+          <a class="navbar-brand" href="entertainerPortfolio.php">
             <span style="color: #feb154; font-family: 'Archivo', sans-serif;">WISHBONE</span>
           </a>
 
@@ -26,9 +56,15 @@
               <li class="nav-item mr-4 mb-2 mb-lg-0">
                 <a class="nav-link" href="entertainerPortfolio.php">Portfolio</a>
               </li>
-              <li class="nav-item mr-4 mb-2 mb-lg-0">
-                <a class="nav-link" href="entertainerPortfolioEmpty.php">Create Portfolio</a>
-              </li>              
+              <?php
+              if ( $profileStatus == ProfileStatus::INCOMPLETE || $profileStatus == ProfileStatus::NOT_CREATED) {
+                  print'
+                       <li class="nav-item mr-4 mb-2 mb-lg-0">
+                            <a class="nav-link" href="entertainerPortfolioEmpty.php">Create Portfolio</a>
+                       </li> 
+                       '; 
+              }
+              ?>           
               <li class="nav-item mr-4 mb-2 mb-lg-0">
                 <a class="nav-link" href="entertainerProfile.php">Profile</a>
               </li>              

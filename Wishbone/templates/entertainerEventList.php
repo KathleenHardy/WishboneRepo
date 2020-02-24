@@ -8,7 +8,7 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <?php 
-session_start();
+//session_start();
 include "navigationHeadInclude1.php"; ?>
 <!-- Fonts-->
 <link rel="stylesheet" type="text/css"
@@ -35,16 +35,37 @@ include "navigationHeadInclude1.php"; ?>
 <body>
 <?php 
 include ('../config.php');
-require_once ('../dto/gig.php');
+include ('../dto/bookedGigDetails.php');
 include "navigationheaderEntertainer.php";
 
 $authId = $_SESSION['authId'];
 
-/*
-$myBookedGigs = array();
-$query2 = "SELECT *
-           FROM gigs
-           WHERE  entid = ?";
+$query = "SELECT entid
+          FROM entertainers
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result($entid);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();    
+}
+
+$bookedGigDetailsDT0 = array();
+
+$query2 = "SELECT gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName, email
+          FROM bookedgigsdetails
+          WHERE  entid = ?";
 
 if ($stmt2 = $connection->prepare( $query2)) {
     
@@ -54,18 +75,17 @@ if ($stmt2 = $connection->prepare( $query2)) {
     $stmt2->execute();
     
     //bind result variables
-    $stmt2->bind_result($gigsid, $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes);
+    $stmt2->bind_result( $gigsName, $gigsDetails, $event_date, $venueName, $venueCity, $venueProvince, $firstName, $lastName, $email);
     
-    // fetch values
-    while( $stmt2->fetch()) {
-        $myGigs[] = new Gig( $gigsid, $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes);
+    //fetch values
+    while( $stmt2->fetch()) {        
+        $bookedGigDetailsDT0[] = new BookedGigDetails( $gigsName, $gigsDetails, $event_date, $venueName, $venueCity, $venueProvince, $firstName, $lastName, $email);     
     }
-    
+
     //close statement
-    $stmt2->close();
-    
+    $stmt2->close();  
 }
-*/
+
 
 ?>
 	<div class="page-wrap">
@@ -93,12 +113,47 @@ if ($stmt2 = $connection->prepare( $query2)) {
 						</div>
 					</div>
 				</div>
+
 				<div class="consult-project">
 					<div class="row">
+					
+    					<?php
+    					foreach( $bookedGigDetailsDT0 as $bookedGigDetails) {
+    					    print
+    					    '
+                                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
+        							style="padding-left: 5px; padding-right: 5px;">
+        
+        							<!-- post-02 -->
+        							<div class="post-02 post-02__style-02 js-post-effect">
+        								<div class="post-02__media">
+        									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
+        								</div>
+        								<div class="post-02__body">
+        									<h2 class="post-02__title" style="font-weight:bold; color: white;">
+        										' . $bookedGigDetails->getGigsName() . '
+        									</h2>
+        									<div class="post-02__department"> DATE TIME: ' . $bookedGigDetails->getEventDate() . ' </div>
+        									<div class="post-02__content">
+        									<div class="post-02__department">VENUE NAME: ' . $bookedGigDetails->getVenueName() . '</div>
+        									<div class="post-02__department">EVENT PLANNER NAME & CONTACT: ' . $bookedGigDetails->getFirstName() . '  ' . $bookedGigDetails->getLastName() . '  ' . $bookedGigDetails->getEmail() . ' </div>
+        												<div class="post-02__description">DESCRIPTION: ' . $bookedGigDetails->getGigsDetails() . '</div>
+        									</div>
+        									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button onclick="goToEntertainerDetailsPage()" type="button" id="button">View Details</button></a>
+                                            
+        								</div>
+        							</div>
+        							<!-- End / post-02 -->
+        						</div>
+                            ';
+    					}
+    					
+    					?>
+    					
+    					<!--  
 						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
 							style="padding-left: 5px; padding-right: 5px;">
 
-							<!-- post-02 -->
 							<div class="post-02 post-02__style-02 js-post-effect">
 								<div class="post-02__media">
 									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
@@ -119,13 +174,12 @@ if ($stmt2 = $connection->prepare( $query2)) {
 									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
 							</div>
-							<!-- End / post-02 -->
 
 						</div>
+						
 						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
 							style="padding-left: 5px; padding-right: 5px;">
 
-							<!-- post-02 -->
 							<div class="post-02 post-02__style-02 js-post-effect">
 								<div class="post-02__media">
 									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
@@ -146,13 +200,11 @@ if ($stmt2 = $connection->prepare( $query2)) {
 									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
 							</div>
-							<!-- End / post-02 -->
 
 						</div>
 						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
 							style="padding-left: 5px; padding-right: 5px;">
 
-							<!-- post-02 -->
 							<div class="post-02 post-02__style-02 js-post-effect">
 								<div class="post-02__media">
 									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
@@ -174,13 +226,11 @@ if ($stmt2 = $connection->prepare( $query2)) {
 								</div>
 
 						</div>
-							<!-- End / post-02 -->
 
 						</div>
 						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
 							style="padding-left: 5px; padding-right: 5px;">
 
-							<!-- post-02 -->
 							<div class="post-02 post-02__style-02 js-post-effect">
 								<div class="post-02__media">
 									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
@@ -201,7 +251,7 @@ if ($stmt2 = $connection->prepare( $query2)) {
 									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
 							</div>
-							<!-- End / post-02 -->
+							-->
 
 						</div>
 					</div>
@@ -400,6 +450,15 @@ if ($stmt2 = $connection->prepare( $query2)) {
 		src="../assets/vendors/smoothscroll/SmoothScroll.min.js"></script>
 	<!-- App-->
 	<script type="text/javascript" src="../assets/js/main.js"></script>
+	
+	
+	<script>
+        function getDetails () {
+            //find a way to access php object so I can populate entertainer detail page
+        	location.href='entertainer-detail.html';
+        }
+    </script>
+    
 	<?php include "navigationHeadInclude2.php" ?>
 </body>
 </html>

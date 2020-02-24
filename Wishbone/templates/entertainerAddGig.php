@@ -33,6 +33,191 @@
 
 <body>
 <?php include "navigationheaderEntertainer.php" ?>
+
+<?php
+$authId = $_SESSION['authId'];
+
+/*
+if(isset($_FILES['fileToUpload'])) {
+    
+    //'../assets/img-temp/gigs/'
+    $target_dir = "../assets/img-temp/portfolio/";
+    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    // Check if image file is a actual image or fake image
+    if(isset($_POST["submit"])) {
+        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+        if($check !== false) {
+            echo "File is an image - " . $check["mime"] . ".";
+            $uploadOk = 1;
+        } else {
+            echo "File is not an image.";
+            $uploadOk = 0;
+        }
+    }
+    // Check if file already exists
+    
+    if (file_exists($target_file)) {
+        echo "Sorry, file already exists.";
+        $uploadOk = 0;
+    }
+    
+    
+    // Check file size
+        if ($_FILES["fileToUpload"]["size"] > 500000) {
+        echo "Sorry, your file is too large.";
+        $uploadOk = 0;
+    } 
+    
+    // Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+	    && $imageFileType != "gif" ) {
+        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $uploadOk = 0;
+	 }
+	    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        echo "Sorry, your file was not uploaded.";
+        // if everything is ok, try to upload file
+    } else {
+        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+            echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded to ". $target_file;
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    }
+}
+*/
+
+    if(isset($_FILES['fileToUpload'])){
+        $errors= array();
+        $file_name = $_FILES['fileToUpload']['name'];
+        $file_size =$_FILES['fileToUpload']['size'];
+        $file_tmp =$_FILES['fileToUpload']['tmp_name'];
+        $file_type=$_FILES['fileToUpload']['type'];
+        //$file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
+        $file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/"; 
+
+        /*
+        $file_ext=strtolower(end(explode('.', $file_name)));
+        
+        $extensions= array("jpeg","jpg","png");
+        
+        if(in_array($file_ext,$extensions)=== false){
+            $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+        }
+        */
+        
+        if($file_size > 2097152){
+            $errors[]='File size must be excately 2 MB';
+        }
+        
+        if(empty($errors)==true){
+            echo $file_tmp; 
+            echo "          ";
+            echo $file_name;
+            
+            move_uploaded_file($file_tmp, $file_path.$file_name);
+            //copy($_FILES['fileToUpload']['tmp_name'], "../assets/img-temp/portfolio/".$file_name);
+        }else{
+            print_r($errors);
+        }
+    }
+
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") { 
+        
+        $query = "SELECT entid
+               FROM entertainers
+               WHERE  authid = ?";
+        
+        if ($stmt = $connection->prepare( $query)) {
+            
+            $stmt->bind_param( "i", $authId);
+            
+            //execute statement
+            $stmt->execute();
+            
+            //bind result variables
+            $stmt->bind_result($entid);
+            
+            // fetch values
+            $stmt->fetch();
+            
+            //close statement
+            $stmt->close();
+        }
+        
+        
+
+        $query2 = "INSERT INTO gigs
+                  ( entid, gigsName, gigscategory, gigslabel, gigsArttype, gigsdetails, notes)
+                  VALUES
+                  (?,?,?,?,?,?,?)";
+        
+        if ($stmt2 = $connection->prepare( $query2)) {
+
+            $stmt2->bind_param( "issssss", $entid, $gigsName, $gigsCategory, $gigsLabel, $gigsArtType, $gigsDetails, $gigsNotes);
+            //Set params
+            $gigsName = $_POST['gigs_name'];
+            $gigsCategory = $_POST['gigs_category'];
+            $gigsLabel = $_POST['gigs_label'];
+            $gigsArtType = $_POST['gigs_artType'];
+            $gigsDetails = $_POST['gigs_details'];
+            $gigsNotes = $_POST['gigs_notes'];
+            
+            //execute statement
+            $status = $stmt2->execute();
+
+            if ($status === false) {
+                trigger_error($stmt->error, E_USER_ERROR);
+            } else {
+                $insertedId = $stmt2->insert_id;
+            }
+            //close statement
+            $stmt2->close();
+        }
+        
+        
+        //upload gigs Image
+        $query3 = "INSERT INTO gigsimages
+                  ( gigsid, gigsImageLocation)
+                  VALUES
+                  (?,?)";
+        
+        if ($stmt3 = $connection->prepare( $query3)) {
+            
+            $stmt3->bind_param( "is", $insertedId, $gigsImageLocation);
+            
+            //Set params
+            
+            //$gigsImageLocation = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+            
+            //$gigsImageLocation = $target_file; //---------------------------------------
+            
+            
+            $gigsImageLocation = basename($_FILES["fileToUpload"]["name"]);
+
+            //execute statement
+            $status = $stmt3->execute();
+            
+            if ($status === false) {
+                trigger_error($stmt->error, E_USER_ERROR);
+            } else {
+                //header('Location: entertainerPortfolio.php');
+                mysqli_close($connection);
+            }
+            //close statement
+            $stmt3->close();
+        }
+        
+    }	
+    
+    
+?>
+
+
 	<div class="page-wrap">
 
 		<!-- header -->
@@ -53,7 +238,7 @@
 							<div class="title-01 title-01__style-04">
 								<h2 class="title-01__title">ADD YOUR GIG</h2>
 							</div>
-							<form action="entertainerAddGig.php" method="POST">
+							<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
 
 										<div class="form-group"> <!-- Gig Name -->
 											<label for="gig_name_id" class="control-label title2">Gig Name</label>
@@ -72,7 +257,7 @@
 										</div>
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="gigs_label_id" class="control-label title2">Gig Label</label>
-											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="gigs_category_id" name="gigs_category">
+											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="gigs_label_id" name="gigs_label">
 												<option value="Personal">Personal</option>
 												<option value="Professional">Professional</option>
 												<option value="Best">Best</option>
@@ -106,7 +291,9 @@
 										
 										<div class="form-group">
 										<label for="gigPhoto" class="title2">Upload Gig Image</label>
+										 
                                         <div class="input-group">
+                                       	  <!--
                                           <div class="input-group-prepend">
                                             <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
                                           </div>
@@ -115,8 +302,12 @@
                                               aria-describedby="inputGroupFileAddon01">
                                             <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                           </div>
+                                           -->
+                                            <input type="file" name="fileToUpload" id="fileToUpload">
+                                            <input type="submit" value="Upload Image" name="submit">                                          
                                         </div>
                                         </div>
+                                        
 										<!--
 										<div class="input-group">
 											  <div class="input-group-prepend">
@@ -126,18 +317,20 @@
 										</div>
 										for later -->
 										 
+										 <!--  
 										<a href="entertainerPortfolio.php"><button type="button" class="btn-all" style="display:inline;">Create</button></a>
 										 
 										 
 										<a href="entertainerPortfolio.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
+										-->
 										
 										<!-- Replace buttons with below code -->
-										<!--<div class="form-group" style="display:inline;"> 
-											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>
+										<div class="form-group" style="display:inline;"> 
+											<a href="entertainerPortfolio.php"><button type="submit" name="submit" class="btn-all">Create</button></a>
 										</div> 
 										<div class="form-group" style="display:inline;"> 
 											<button class="btn-all">Cancel</button>
-										</div>   -->
+										</div>
 										
 										 
 							</form>

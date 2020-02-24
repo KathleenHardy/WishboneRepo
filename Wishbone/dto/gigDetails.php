@@ -17,6 +17,12 @@ class GigDetails {
     private $startTime;
     private $endTime;
     
+    /**
+    private $eventPlannerId; 
+    private $venueOwnerId; 
+    private $venueId;
+    */
+    
     
     function __construct( $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes , $firstName, 
         $lastName, $ratePerHour, $aboutMe, $startDate, $endDate, $startTime, $endTime) {
