@@ -7,18 +7,16 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-		<?php include "navigationHeadInclude1.php" ?>
+		<?php
+		session_start();
+		include "navigationHeadInclude1.php" ?>
 
-<!-- for date time widget -->
-<!--  jQuery -->
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 
 <!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
 <link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
-
-<!-- Bootstrap Date-Picker Plugin -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
 
 <!-- Fonts-->
 <link rel="stylesheet" type="text/css"
@@ -43,21 +41,120 @@
 		
 <script>
     $(document).ready(function(){
-      var date_input=$('input[name="date"]'); //our date input has the name "date"
-      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+     
+      
       var options={
-        format: 'mm/dd/yyyy',
-        container: container,
-        todayHighlight: true,
-        autoclose: true,
+        format: 'mm/dd/yyyy'
       };
-      date_input.datepicker(options);
+      $("#eventDate").datepicker(options);
     })
 </script>
 </head>
 
 <body>
-<?php include "navigationheaderEventPlanner.php" ?>
+<?php
+include ('../dao/authenticationDAO.php');
+include ("navigationheaderEventPlanner.php");
+require_once ("../config.php");
+
+//connection object from config file
+
+$hasError = false;
+$errorMessages = Array();
+
+//cehcks if value is set after button clic or not
+if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eventDescription"]))   
+{
+    
+    
+    if ($_POST["eventName"] == "") {
+        $hasError = true;
+        $errorMessages['eventName'] = 'Please enter event name';
+    }
+
+    if ($_POST["eventDate"] == "") {
+        $hasError = true;
+        $errorMessages['eventDate'] = 'Please enter event date';
+    }
+
+    if ($_POST["eventDescription"] == "") {
+        $hasError = true;
+        $errorMessages['eventDescription'] = 'Please enter event description';
+    }
+    
+    
+  
+        if (! $hasError) {
+            //get logged in auth id
+            $authId =  $_SESSION['authId'];
+            
+            //fetch eventPlannerId based on authId
+            $querya = 'SELECT eventPlannerId FROM eventPlanners WHERE authid = ?';
+            $stmta =mysqli_prepare ($connection,$querya);
+            $stmta->bind_param('s', $authId);
+            $stmta->execute();
+            $stmta->bind_result($eventplannerID);
+            $stmta->fetch();
+            $stmta->close();
+            
+            //fetch venueOwnerId from vanues based on venueId
+            $venue_id = $_POST["venueSelection"];
+            $queryVenueOwner = 'SELECT venueOwnerId FROM venues WHERE venueId = ?';
+            $stmta = mysqli_prepare ($connection,$queryVenueOwner);
+            $stmta->bind_param('s', $venue_id);
+            $stmta->execute();
+            $stmta->bind_result($venueOwnerId);
+            $stmta->fetch();
+            $stmta->close();
+            
+            //get selected entainer id
+            $entid = $_POST["entertainerSelection"];
+            $queryResAvailId = 'SELECT `resAvailId` FROM resourceavailability WHERE entid = ?';
+            $stmta = mysqli_prepare ($connection,$queryResAvailId);
+            $stmta->bind_param('s', $entid);
+            $stmta->execute();
+            $stmta->bind_result($resAvailId);
+            $stmta->fetch();
+            $stmta->close();
+            
+            
+            //get selected gig id
+            $gigsid = $_POST["gigSelection"];
+            
+            //get evenet name
+            $event_name = $_POST["eventName"];
+            
+            //get event date
+            $event_date = date($_POST["eventDate"]);
+            
+            //get event description
+            $event_description = $_POST["eventDescription"];
+            
+            //query to insrt into bookedgigs
+            $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,resAvailId,event_name,event_date,event_description) 
+values(".$entid.",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$resAvailId.",'".$event_name."','".$event_date."','".$event_description."');";
+            echo $query;
+           //if success then show success msg else show error msg
+           if( mysqli_query($connection,$query) === TRUE)
+           {
+            
+              ?> <script type="text/javascript">
+               window.location.href = 'http://localhost/WishboneRepo/wishbone/templates/eventPlannerEventConfirmation.php';
+               </script>
+               <?php
+           }else {
+               echo "<script type='text/javascript'>alert('".mysqli_error($connection)."');</script>";
+               echo mysqli_error($connection);
+           }
+            
+         }
+    
+    //testing.test@1.com
+    
+}
+
+?>
+
 	<div class="page-wrap">
 
 		<!-- header -->
@@ -78,49 +175,49 @@
 							<div class="title-01 title-01__style-04">
 								<h2 class="title-01__title">PLAN YOUR EVENT</h2>
 							</div>
-							<form action="entertainerAddGig.php" method="POST">
+							<form  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventName" class="control-label title2">Event Name</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventName" name="gigs_name" placeholder="Enter a name for your event">
-										</div>	
-										<div class="form-group"> <!-- Event Name -->
+											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventName" name="eventName" placeholder="Enter a name for your event">
+										</div>	 
+										<div class="form-group"> <!-- Event Name -->   
 											<label for="eventDate" class="control-label title2">Event Date/Time</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventDate" name="gigs_name" placeholder="Enter the date/time of event">
+											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
 										</div>	
 									
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="entertainerSelection" class="control-label title2">Select Your Entertainer</label>
 											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="entertainerSelection" name="entertainerSelection">
-												<option value="Option1">Jack</option>
-												<option value="Option2">Melody</option>
-												<option value="Option3">Moonstruck</option>
-												<option value="Option4">Bob</option>
-												<option value="Option5">Andrew Archibald</option>
+												<option value="1">Jack</option>
+												<option value="2">Melody</option>
+												<option value="3">Moonstruck</option>
+												<option value="4">Bob</option>
+												<option value="5">Andrew Archibald</option>
 											</select>					
 										</div>
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="gigSelection" class="control-label title2">Select Your Gig (based on entertainer)</label>
 											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="gigSelection" name="gigSelection">
-												<option value="Option1">Gig 1</option>
-												<option value="Option2">Gig 2</option>
-												<option value="Option3">Gig 3</option>
-												<option value="Option4">Gig 4</option>
-												<option value="Option5">Gig 5</option>
+												<option value="1">Gig 1</option>
+												<option value="2">Gig 2</option>
+												<option value="3">Gig 3</option>
+												<option value="4">Gig 4</option>
+												<option value="5">Gig 5</option>
 											</select>					
 										</div>										
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="venueSelection" class="control-label title2">Select Your Venue</label>
 											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="venueSelection" name="venueSelection">
-												<option value="Option1">Concert 1</option>
-												<option value="Option2">Concert 2</option>
-												<option value="Option3">Venue 3</option>
-												<option value="Option4">Gallery 4</option>
-												<option value="Option5">Museum 5</option>
+												<option value="1">Concert 1</option>
+												<option value="2">Concert 2</option>
+												<option value="3">Venue 3</option>
+												<option value="4">Gallery 4</option>
+												<option value="5">Museum 5</option>
 											</select>
 											<label for="eventName" class="control-label title2">Or Use Your Own</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventName" name="gigs_name" placeholder="Enter your own venue">
-					
+											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="valueName" name="custom_venue" placeholder="Enter your own venue">
+											
 										</div>
 										
 										<div class="form-group"> <!-- Gigs details -->
@@ -149,9 +246,10 @@
 												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
 										</div>
 										for later -->
+										
+										<input  class="btn-all" style="display:inline;" type=SUBMIT value="Submit">
 										 
-										<a href="eventPlannerEventConfirmation.php"><button type="button" class="btn-all" style="display:inline;">Submit</button></a>
-										 
+										
 										 
 										<a href="eventPlannerEventList.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
 										
