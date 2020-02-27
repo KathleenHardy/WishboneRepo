@@ -5,18 +5,13 @@ class Entertainer {
     private $firstName;
     private $lastName;
     private $ratePerHour;
-    private $imageLocation;
+    private $profilePicture;
     private $homePagePicture;
     private $aboutMe;
+    private $occupation;
+    private $workDescription;
     
-    function __construct( $entID, $firstName, $lastName, $ratePerHour, $imageLocation, $homePagePicture, $aboutMe) {
-        $this->entID = $entID;
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->ratePerHour = $ratePerHour;
-        $this->imageLocation = $imageLocation;
-        $this->homePagePicture = $homePagePicture;
-        $this->aboutMe = $aboutMe;
+    function __construct() {
     }
     
 
@@ -37,8 +32,8 @@ class Entertainer {
         $this->ratePerHour = $ratePerHour;
     }
     
-    function setImageLocation( $imageLocation) {
-        $this->imageLocation = $imageLocation;
+    function setProfilePicture( $profilePicture) {
+        $this->profilePicture = $profilePicture;
     }
     
     function setHomePagePicture( $homePagePicture) {
@@ -47,6 +42,14 @@ class Entertainer {
     
     function setAboutMe( $aboutMe) {
         $this->aboutMe = $aboutMe;
+    }
+    
+    function setOccupation( $occupation) {
+        $this->occupation = $occupation;
+    }
+    
+    function setWorkDescription( $workDescription) {
+        $this->workDescription = $workDescription;
     }
     
     // accessors
@@ -66,8 +69,8 @@ class Entertainer {
         return $this->ratePerHour;
     }
     
-    function getImageLocation() {
-        return $this->imageLocation;
+    function getProfilePicture() {
+        return $this->profilePicture;
     }
     
     function getHomePagePicture() {
@@ -76,7 +79,15 @@ class Entertainer {
     
     function getAboutMe() {
         return $this->aboutMe;
-    } 
+    }
+    
+    function getOccupation() {
+        return $this->occupation;
+    }
+    
+    function getWorkDescription() {
+        return $this->workDescription;
+    }
     
 }
 
