@@ -246,13 +246,13 @@ values(".$entid.",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$resAvailI
 												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
 										</div>
 										for later -->
-										
+										<div style="text-align:center;">
 										<input  class="btn-all" style="display:inline;" type=SUBMIT value="Submit">
 										 
 										
 										 
 										<a href="eventPlannerEventList.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
-										
+										</div>
 										<!-- Replace buttons with below code -->
 										<!--<div class="form-group" style="display:inline;"> 
 											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>

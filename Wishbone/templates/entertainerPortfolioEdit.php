@@ -25,6 +25,7 @@
 <!-- App & fonts-->
 <link rel="stylesheet" type="text/css"
 	href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i&amp;amp;subset=latin-ext">
+    <link rel="stylesheet" type="text/css" href="../assets/css/styles.css">
 <link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
 <!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -47,11 +48,11 @@
 				<div class="container">
 					<div class="row">
 						<div
-							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 ">
+							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 " style="text-align: center;">
 
 							<!-- title-01 -->
 							<div class="title-01 title-01__style-04">
-								<h2 class="title-01__title">ADD YOUR GIG</h2>
+								<h2 class="title-01__title">UPDATE YOUR INFORMATION</h2>
 							</div>
 							<form action="entertainerAddGig.php" method="POST">
 										
@@ -77,7 +78,7 @@
 										<a href="entertainerPortfolio.php"><button type="button" class="btn-all" style="display:inline;">Update</button></a>
 										 
 										 
-										<button class="btn-all" type ="button" style="display:inline;">Cancel</button>
+										<a href="entertainerPortfolio.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
 										
 										<!-- Replace buttons with below code -->
 										<!--<div class="form-group" style="display:inline;"> 
