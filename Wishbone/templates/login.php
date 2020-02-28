@@ -116,6 +116,7 @@ function test_input($data)
 						<input class="input100" type="text" name="useremail" id="useremail"  placeholder="Email">
 						
 						<span class="focus-input100-1"></span>
+						
 						<span class="focus-input100-2"></span>
 					</div>
 

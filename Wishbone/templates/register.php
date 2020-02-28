@@ -112,18 +112,18 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
 					<span class="login100-form-title p-b-33">
 						REGISTER
 					</span>
-					<div class="buttonsRegister">					
-					<span class="txt1" style="text-align: center;">You are a/an:</span>
+					<div class="buttonsRegister" style="text-align: center;">					
+					<span class="txt1" style="text-align: center;">Select a role:</span>
 					<br/>
 					<br/>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                      <label class="btn btn-secondary active">
+                      <label class="btn btn-secondary active" style ="font-size: 12px; ">
                         <input type="radio" name="userType" value=2 id="option1" autocomplete="off" checked>ENTERTAINER
                       </label>
-                      <label class="btn btn-secondary">
+                      <label class="btn btn-secondary" style ="font-size: 12px;">
                         <input type="radio" name="userType" value=1 id="option2" autocomplete="off">EVENT PLANNER
                       </label>
-                      <label class="btn btn-secondary">
+                      <label class="btn btn-secondary" style ="font-size: 12px;">
                         <input type="radio" name="userType" value=3 id="option3" autocomplete="off">VENUE HOST
                       </label>
                     </div>

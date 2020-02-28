@@ -33,7 +33,7 @@ if ($stmt = $connection->prepare( $query)) {
       <!-- Navbar -->
       <nav class="js-navbar-scroll navbar fixed-top navbar-expand-lg navbar-dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="entertainerPortfolio.php">
+          <a class="navbar-brand" href="index.php">
             <span style="color: #feb154; font-family: 'Archivo', sans-serif;">WISHBONE</span>
           </a>
 

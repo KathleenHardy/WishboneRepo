@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="../assets/vendors/magnific-popup/magnific-popup.css">
 
     <!-- Theme Styles -->
-    <link rel="stylesheet" type="text/css" href="../assets/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/styles.css"> 
     
     <!-- Button Styles -->
     <link rel="stylesheet" type="text/css" href="../assets/css/buttonEffects.css">

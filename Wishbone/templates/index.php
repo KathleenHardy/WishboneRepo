@@ -7,11 +7,13 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<?php include "navigationHeadInclude1.php" ?>
 <link rel="stylesheet" href="../assets/css/homepageEffect.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 <link href="https://fonts.googleapis.com/css?family=Archivo&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js">
 </script>
@@ -80,7 +82,7 @@ var TxtRotate = function(el, toRotate, period) {
 <?php include "navigationheaderHome.php" ?>
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="20000">
   <div class="carousel-inner">
-    <div class="carousel-item active slide-one" style="background-repeat:no-repeat; background-size:cover;background-image: url('../assets/img/mainpage-effect/concert.jpg')">
+    <div class="carousel-item active slide-one" style="background-repeat:no-repeat; background-size:cover; background-image: url('../assets/img/mainpage-effect/concert.jpg');">
         <div class="container">
         <div class="row">
         <div class="col-md-12">
@@ -134,5 +136,6 @@ var TxtRotate = function(el, toRotate, period) {
 WISHBONE</h1>
 <h5 class="animated heartBeat delay-2s" style="text-align: center; letter-spacing: -1px; color: white; font-weight: bold; font-family: 'Playfair Display', serif;">Discover, Connect & Book At The Thought Of A Wish</h5>
 </div>
+	<?php include "navigationHeadInclude2.php" ?>
 </body>
 </html>

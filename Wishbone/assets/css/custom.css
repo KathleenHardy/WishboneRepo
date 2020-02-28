@@ -23,17 +23,17 @@
 
 @media (min-width: 992px) {
   .u-portfolio-controls__item:not(:last-child)::after {
-    color: black;
+    color: white;
     margin: 0 7px 0 12px;
   }
 }
 
 .u-portfolio-controls a {
-  color: black;
+  color: white;
 }
 
 .u-portfolio-controls a.active {
-  color: black;
+  color: #fac668;
   font-weight: bold;
 }
 
@@ -44,8 +44,8 @@
 
 .u-portfolio__image {
   display: block;
-  width: 100%;
-  height: auto;
+  width: 1920px;
+  height: 256px;
   transition: all .2s ease;
 }
 

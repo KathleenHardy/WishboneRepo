@@ -43,14 +43,6 @@ mysqli_close($connection);
 <!-- for date time widget -->
 <!--  jQuery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-
-<!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
-<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
-
-<!-- Bootstrap Date-Picker Plugin -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-
 <!-- Fonts-->
 <link rel="stylesheet" type="text/css"
 	href="../assets/fonts/fontawesome/font-awesome.min.css">
@@ -67,9 +59,10 @@ mysqli_close($connection);
 <!-- App & fonts-->
 <link rel="stylesheet" type="text/css"
 	href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i&amp;amp;subset=latin-ext">
-<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
 <link rel="stylesheet" type="text/css" href="../assets/css/min.styles.css">
 <link rel="stylesheet" type="text/css" href="../assets/css/styles.css">
+<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
+
 <!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<![endif]-->
@@ -117,11 +110,10 @@ mysqli_close($connection);
     											<label for="lastName" class="control-label title2">Last Name</label>
     											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="lastName" name="lastName" value="<?php echo $login_user_lastname;?>">
     										</div>	
-    																											
-    										
-                                            </div>										
 										 <button type="submit" class="btn-all" style="display:inline;">Update</button>
-										</form>										
+										</form>										    																											
+                                            </div>										
+
 										
 											
 										

@@ -34,6 +34,8 @@
     <link rel="stylesheet" type="text/css" href="../assets/css/buttonEffects.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" rel="stylesheet" />
     
+    
+		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" /> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>
   <!-- End Head -->

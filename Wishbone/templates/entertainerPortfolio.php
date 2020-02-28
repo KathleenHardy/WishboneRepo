@@ -34,8 +34,10 @@
     <link rel="stylesheet" type="text/css" href="../assets/css/buttonEffects.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" rel="stylesheet" />
     
+		<link rel="stylesheet" type="text/css" href="../assets/css/custom.css" />    
+		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  </head>
+</head>
   <!-- End Head -->
 
   <body>
@@ -266,8 +268,7 @@ $connection->close();
           <!-- Work Content -->
           <div class="js-shuffle u-portfolio row no-gutters mb-6">
           
-          
-          <?php 
+                   <?php 
           foreach( $myGigs as $gigs) {
               $picArray = $gigs->getGigsPictures();
               $imgSrc = reset( $picArray);
@@ -284,20 +285,21 @@ $connection->close();
                ';
           }
           
-          ?>
+          ?> 
           
-		<!-- 
+<!--           
+		
             <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Personal"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/v-1.jpg" alt="Image Description">
+              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img1xx.jpg" alt="Image Description">
               <figcaption class="u-portfolio__info">
                 <h6 class="mb-0">Gig Name</h6>
                 <small class="d-block">Gig Category</small>
               </figcaption>
-              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img7.jpg">Zoom</a>
+              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img1.jpg">Zoom</a>
             </figure>
             
             <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Personal"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img7.jpg" alt="Image Description">
+              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img8.jpg" alt="Image Description">
               <figcaption class="u-portfolio__info">
                 <h6 class="mb-0">Bottle Design</h6>
                 <small class="d-block">Mockup</small>
@@ -349,9 +351,8 @@ $connection->close();
                 <small class="d-block">Logo</small>
               </figcaption>
               <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img6.jpg">Zoom</a>
-            </figure>
+            </figure>    -->         
             
-            -->
 
             <!-- sizer -->
             <figure class="col-sm-6 col-md-4 u-portfolio__item shuffle_sizer"></figure>
