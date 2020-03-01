@@ -1,31 +1,61 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
-		<meta name="viewport" content="width=device-width, initial-scale=1"> 
-		<title>Create Portfolio</title>
-		<meta name="description" content="Fullscreen Form Interface: A distraction-free form concept with fancy animations" />
-		<meta name="keywords" content="fullscreen form, css animations, distraction-free, web design" />
-		<meta name="author" content="Codrops" />
-		<?php include "navigationHeadInclude1.php" ?>
+<html>
+<head>
+<title>Portfolio Creation</title>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+		<?php
 		
-		<link rel="shortcut icon" href="../favicon.ico">
-		<link rel="stylesheet" type="text/css" href="../assets/css/normalize.css" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/demo.css" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/component.css" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/cs-select.css" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/cs-skin-boxes.css" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew2.css" />
+		include "navigationHeadInclude1.php" ?>
 
-		<script src="../assets/js/modernizr.custom.js"></script>
-	</head>
-	<body>
-	
-<?php 
-// session is already set in navigationheaderEntertainer.php
-include "navigationheaderEntertainer.php" 
-?>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+
+<!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
+<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+
+<!-- Fonts-->
+<link rel="stylesheet" type="text/css"
+	href="../assets/fonts/fontawesome/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Archivo&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="../assets/fonts/themify-icons/themify-icons.css">
+<!-- Vendors-->
+<link rel="stylesheet" type="text/css"
+	href="../assets/vendors/bootstrap4/bootstrap-grid.min.css">
+<link rel="stylesheet" type="text/css"
+	href="../assets/vendors/magnific-popup/magnific-popup.min.css">
+<link rel="stylesheet" type="text/css"
+	href="../assets/vendors/owl.carousel/owl.carousel.css">
+<!-- App & fonts-->
+<link rel="stylesheet" type="text/css"
+	href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i&amp;amp;subset=latin-ext">
+<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
+<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<![endif]-->
+		
+<script>
+    $(document).ready(function(){
+     
+      
+      var options={
+        format: 'mm/dd/yyyy'
+      };
+      $("#eventDate").datepicker(options);
+    })
+</script>
+</head>
+
+<body>
+
+<?php
+/**
+include ("navigationheaderEntertainer.php"); */?>
 
 <?php
 include ('../enums/userType.php');
@@ -35,9 +65,9 @@ $authId = $_SESSION['authId'];
 
 function profileStatus() {
     
-    if ( isset($_POST['q0']) && isset($_POST['q1']) && isset($_POST['q2']) && isset($_POST['q3'])) {
+    if ( isset($_POST['hourlyrate']) && isset($_POST['occupation']) && isset($_POST['aboutme']) && isset($_POST['gigsdetails'])) {
         $result = ProfileStatus::COMPLETE;
-    } else if ( isset($_POST['q0']) || isset($_POST['q1']) || isset($_POST['q2']) || isset($_POST['q3'])) {
+    } else if ( isset($_POST['hourlyrate']) || isset($_POST['occupation']) || isset($_POST['aboutme']) || isset($_POST['gigsdetails'])) {
         $result = ProfileStatus::INCOMPLETE;
     } 
     
@@ -57,13 +87,13 @@ function profileStatus() {
             $stmt->bind_param( "dssssssii", $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus, $authId);
             
             //Set params
-            $ratePerHour = $_POST['q0'];
-            $occupation = $_POST['q1'];
-            $workDescription = $_POST['q3'];
+            $ratePerHour = $_POST['hourlyrate'];
+            $occupation = $_POST['occupation'];
+            $workDescription = $_POST['gigsdetails'];
             $profilePicture = "";
             $homePagePicture = "";
-            $aboutMe = $_POST['q2'];
-            $myQuote = $_POST['q4'];
+            $aboutMe = $_POST['aboutme'];
+            $myQuote = $_POST['quote'];
             
             
             //execute statement
@@ -72,7 +102,7 @@ function profileStatus() {
             if ($status === false) {
                 trigger_error($stmt->error, E_USER_ERROR);
             } else {
-                header('Location: entertainerPortfolio.php');
+                header('Location: entertainerPortfolio.php'); 
                 mysqli_close($connection);
             }
     
@@ -91,123 +121,119 @@ function profileStatus() {
 ?>
 
 
-	
-		<div class="container">
-<br/><p/>
-<br/><p/>
-<br/><p/>
-			<div class="fs-form-wrap" id="fs-form-wrap">
-				<div class="fs-title">
-					<h2 class ="title-01__title">CREATE PORTFOLIO</h2>
-				</div>
-				<form id="myform" class="fs-form fs-form-full" autocomplete="off" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
-					<ol class="fs-fields">
-					
-						<li>
-							<label class="fs-field-label fs-anim-upper" for="q0" style="font-family:'Archivo', sans-serif; font-size: 25px;">What's your rate per hour?</label>
-							<input class="fs-anim-lower" id="q0" name="q0" type="text" placeholder="Your rate per hour" required/>
-						</li>
-						<li>
-							<label class="fs-field-label fs-anim-upper" for="q1" data-info="Just so people know" style="font-family:'Archivo', sans-serif; font-size: 25px;">What's your occupation as an entertainer?</label>
-							<input class="fs-anim-lower" id="q1" name="q1" type="text" placeholder="What do you do as an entertainer?" required/>
-						</li>			
-						
-						<li data-input-trigger>
-							<label class="fs-field-label fs-anim-upper" for="q2" data-info="This will help us know who you are" style="font-family:'Archivo', sans-serif; font-size: 25px;">Tell us about yourself</label>
-							<textarea class="fs-anim-lower" style="border:solid 3px #fac668;" id="q2" name="q2" placeholder="Describe here"></textarea>
-						</li>
-						<li>
-							<label class="fs-field-label fs-anim-upper" for="q3" style="font-family:'Archivo', sans-serif; font-size: 25px;">Describe your work/gigs</label>
-							<textarea class="fs-anim-lower" style="border:solid 3px #fac668;" id="q3" name="q3" placeholder="Describe here"></textarea>
-						</li>
-						<li>
-							<label class="fs-field-label fs-anim-upper" for="q3" style="font-family:'Archivo', sans-serif; font-size: 25px;">Your inspirational quote</label>
-							<textarea class="fs-anim-lower" style="border:solid 3px #fac668;" id="q4" name="q4" placeholder="Describe here"></textarea>
-						</li>
-						<li data-input-trigger>
-							<label class="fs-field-label fs-anim-upper" data-info="Upload your profile picture" style="font-family:'Archivo', sans-serif; font-size: 25px;">Upload your profile picture.</label>
-							
-							<select class="cs-select cs-skin-boxes fs-anim-lower">
-								<option value="" disabled selected>Pick a color</option>
-								<option value="#588c75" data-class="color-588c75">#588c75</option>
-								<option value="#b0c47f" data-class="color-b0c47f">#b0c47f</option>
-								<option value="#f3e395" data-class="color-f3e395">#f3e395</option>
-								<option value="#f3ae73" data-class="color-f3ae73">#f3ae73</option>
-								<option value="#da645a" data-class="color-da645a">#da645a</option>
-								<option value="#79a38f" data-class="color-79a38f">#79a38f</option>
-								<option value="#c1d099" data-class="color-c1d099">#c1d099</option>
-								<option value="#f5eaaa" data-class="color-f5eaaa">#f5eaaa</option>
-								<option value="#f5be8f" data-class="color-f5be8f">#f5be8f</option>
-								<option value="#e1837b" data-class="color-e1837b">#e1837b</option>
-								<option value="#9bbaab" data-class="color-9bbaab">#9bbaab</option>
-								<option value="#d1dcb2" data-class="color-d1dcb2">#d1dcb2</option>
-								<option value="#f9eec0" data-class="color-f9eec0">#f9eec0</option>
-								<option value="#f7cda9" data-class="color-f7cda9">#f7cda9</option>
-								<option value="#e8a19b" data-class="color-e8a19b">#e8a19b</option>
-								<option value="#bdd1c8" data-class="color-bdd1c8">#bdd1c8</option>
-								<option value="#e1e7cd" data-class="color-e1e7cd">#e1e7cd</option>
-								<option value="#faf4d4" data-class="color-faf4d4">#faf4d4</option>
-								<option value="#fbdfc9" data-class="color-fbdfc9">#fbdfc9</option>
-								<option value="#f1c1bd" data-class="color-f1c1bd">#f1c1bd</option>
-							</select>
-							
+	<div class="page-wrap">
 
-						</li>
-						<li data-input-trigger>
-							<label class="fs-field-label fs-anim-upper" data-info="Upload your homepage picture" style="font-family:'Archivo', sans-serif; font-size: 25px;">Upload your homepage picture.</label>
-							<select class="cs-select cs-skin-boxes fs-anim-lower">
-								<option value="" disabled selected>Pick a color</option>
-								<option value="#588c75" data-class="color-588c75">#588c75</option>
-								<option value="#b0c47f" data-class="color-b0c47f">#b0c47f</option>
-								<option value="#f3e395" data-class="color-f3e395">#f3e395</option>
-								<option value="#f3ae73" data-class="color-f3ae73">#f3ae73</option>
-								<option value="#da645a" data-class="color-da645a">#da645a</option>
-								<option value="#79a38f" data-class="color-79a38f">#79a38f</option>
-								<option value="#c1d099" data-class="color-c1d099">#c1d099</option>
-								<option value="#f5eaaa" data-class="color-f5eaaa">#f5eaaa</option>
-								<option value="#f5be8f" data-class="color-f5be8f">#f5be8f</option>
-								<option value="#e1837b" data-class="color-e1837b">#e1837b</option>
-								<option value="#9bbaab" data-class="color-9bbaab">#9bbaab</option>
-								<option value="#d1dcb2" data-class="color-d1dcb2">#d1dcb2</option>
-								<option value="#f9eec0" data-class="color-f9eec0">#f9eec0</option>
-								<option value="#f7cda9" data-class="color-f7cda9">#f7cda9</option>
-								<option value="#e8a19b" data-class="color-e8a19b">#e8a19b</option>
-								<option value="#bdd1c8" data-class="color-bdd1c8">#bdd1c8</option>
-								<option value="#e1e7cd" data-class="color-e1e7cd">#e1e7cd</option>
-								<option value="#faf4d4" data-class="color-faf4d4">#faf4d4</option>
-								<option value="#fbdfc9" data-class="color-fbdfc9">#fbdfc9</option>
-								<option value="#f1c1bd" data-class="color-f1c1bd">#f1c1bd</option>
-							</select>
-						</li>
-					</ol><!-- /fs-fields -->
-					<button class="fs-submit" style="font-family:'Archivo', sans-serif;" type="submit">Send My Answers</button>
-				</form><!-- /fs-form -->
-			</div><!-- /fs-form-wrap -->
+		<!-- header -->
 
-		</div><!-- /container -->
-		<script src="../assets/js/classie.js"></script>
-		<script src="../assets/js/selectFx.js"></script>
-		<script src="../assets/js/fullscreenForm.js"></script>
-		<script>
-			(function() {
-				var formWrap = document.getElementById( 'fs-form-wrap' );
+		<!-- End / header -->
 
-				[].slice.call( document.querySelectorAll( 'select.cs-select' ) ).forEach( function(el) {	
-					new SelectFx( el, {
-						stickyPlaceholder: false,
-						onChange: function(val){
-							document.querySelector('span.cs-placeholder').style.backgroundColor = val;
-						}
-					});
-				} );
+		<!-- Content-->
+		<div class="md-content">
 
-				new FForm( formWrap, {
-					onReview : function() {
-						classie.add( document.body, 'overview' ); // for demo purposes only
-					}
-				} );
-			})();
-		</script>
-		<?php include "navigationHeadInclude2.php" ?>
-	</body>
+			<!-- Section -->
+			<section class="md-section">
+				<div class="container">
+					<div class="row">
+						<div
+							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 ">
+
+							<!-- title-01 -->
+							<div class="title-01 title-01__style-04">
+								<h2 class="title-01__title">CREATE YOUR PORTFOLIO</h2>
+							</div>
+							<form  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+
+										<div class="form-group"> <!-- Event Name -->
+											<label for="hourlyrate" class="control-label title2">What's your hourly rate?</label>
+											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="hourlyrate" name="hourlyrate">
+										</div>	 
+										<div class="form-group"> <!-- Event Name -->   
+											<label for="occupation" class="control-label title2">What's your occupation as an entertainer?</label>
+											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="occupation" name="occupation">
+										</div>	
+										<div class="form-group"> <!-- Gigs details -->
+											<label for="aboutme" class="title2">Tell us about yourself</label>
+											<textarea class="form-control" style="border: 3px solid #fac668;" rows="5" id="aboutme" name="aboutme" placeholder ="Anything you want"></textarea>
+										</div>
+										<div class="form-group"> <!-- Gigs details -->
+											<label for="gigsdetails" class="title2">Tell us about your work</label>
+											<textarea class="form-control" style="border: 3px solid #fac668;" rows="5" id="gigsdetails" name="gigsdetails" placeholder ="Anything you want"></textarea>
+										</div>										
+										<div class="form-group"> <!-- Gigs details -->
+											<label for="quote" class="title2">An inspirational quote or your favourite one</label>
+											<textarea class="form-control" style="border: 3px solid #fac668;" rows="5" id="quote" name="quote" placeholder ="Anything you want"></textarea>
+										</div>
+                                        <div class="form-group">
+                                        <label for="profilepic" class="title2">Upload Your Portfolio Image</label>
+                                        <br/>
+                                        <br/>
+                                        <input type="file" id="profilepic" name="profilepic"><br><br>
+                                        </div>
+                                        <div class="form-group">
+                                        <label for="bgimage" class="title2">Upload Your Background Image</label>
+                                        <br/>
+                                        <br/>
+                                        <input type="file" id="bgimage" name="bgimage"><br><br>
+                                        </div>                                        
+										
+										<!--
+										<div class="input-group">
+											  <div class="input-group-prepend">
+												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+											  </div>
+												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
+										</div>
+										for later -->
+										<div style="text-align:center;">
+										<input  class="btn-all" style="display:inline;" type="submit" value="Submit">
+										 
+										</div>
+										<!-- Replace buttons with below code -->
+										<!--<div class="form-group" style="display:inline;"> 
+											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>
+										</div> 
+										<div class="form-group" style="display:inline;"> 
+											<button class="btn-all">Cancel</button>
+										</div>   -->
+										
+										 
+							</form>
+							</div>
+							</div></div>
+			</section>
+			<!-- End / Section -->
+<?php include "footer.php" ?>
+	</div>
+	<!-- Vendors-->
+	<script type="text/javascript"
+		src="../assets/vendors/jquery/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/imagesloaded/imagesloaded.pkgd.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/isotope-layout/isotope.pkgd.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/jquery.countdown/jquery.countdown.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/jquery.countTo/jquery.countTo.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/jquery.countUp/jquery.countup.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/jquery.matchHeight/jquery.matchHeight.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/jquery.mb.ytplayer/jquery.mb.YTPlayer.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/magnific-popup/jquery.magnific-popup.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/masonry-layout/masonry.pkgd.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/owl.carousel/owl.carousel.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/jquery.waypoints/jquery.waypoints.min.js"></script>
+	<script type="text/javascript" src="../assets/vendors/menu/menu.min.js"></script>
+	<script type="text/javascript"
+		src="../assets/vendors/smoothscroll/SmoothScroll.min.js"></script>
+	<!-- App-->
+	<script type="text/javascript" src="../assets/js/main.js"></script>
+	<?php include "navigationHeadInclude2.php" ?>
+</body>
 </html>
