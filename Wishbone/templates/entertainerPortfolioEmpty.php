@@ -68,7 +68,7 @@
 										</div>
 										for later -->
 										 
-										<a href="entertainerCreatePortfolioForm.php"><button type="button" class="btn-all"">+ Create Portfolio</button></a>
+										<a href="entertainerCreatePortfolio.php"><button type="button" class="btn-all"">+ Create Portfolio</button></a>
 										 
 								
 											
