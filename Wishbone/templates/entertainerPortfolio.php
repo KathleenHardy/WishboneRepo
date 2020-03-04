@@ -40,12 +40,13 @@
 </head>
   <!-- End Head -->
 
-  <body>
+<body>
   
 <?php 
+include "navigationheaderEntertainer.php";
 include ('../config.php');
 require_once ('../dto/gig.php');
-include "navigationheaderEntertainer.php";
+
 
 $authId = $_SESSION['authId'];
 
@@ -389,6 +390,6 @@ $connection->close();
     <script src="../assets/js/vendors/magnific-popup.js"></script>
     <script src="../assets/js/vendors/shuffle.js"></script>
     <!-- END JAVASCRIPTS -->
-  </body>
+</body>
   <!-- End Body -->
 </html>

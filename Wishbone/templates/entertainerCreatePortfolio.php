@@ -7,9 +7,9 @@
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-		<?php
-		
-		include "navigationHeadInclude1.php" ?>
+<?php
+include "navigationHeadInclude1.php" 
+?>
 
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
 <script type="text/javascript" src="https://code.jquery.com/jquery.min.js"></script>
@@ -54,8 +54,8 @@
 <body>
 
 <?php
-/**
-include ("navigationheaderEntertainer.php"); */?>
+include ("navigationheaderEntertainer.php"); 
+?>
 
 <?php
 include ('../enums/userType.php');
@@ -102,7 +102,8 @@ function profileStatus() {
             if ($status === false) {
                 trigger_error($stmt->error, E_USER_ERROR);
             } else {
-                header('Location: entertainerPortfolio.php'); 
+                //header("Location:".ADMIN_URL."/index.php");
+                echo("<script>location.href = 'entertainerPortfolio.php?msg=$msg';</script>");
                 mysqli_close($connection);
             }
     
