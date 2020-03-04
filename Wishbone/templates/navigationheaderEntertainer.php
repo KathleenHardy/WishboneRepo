@@ -56,15 +56,15 @@ if ($stmt = $connection->prepare( $query)) {
           <li class="nav-item mr-4 mb-2 mb-lg-0">
             <a class="nav-link" href="entertainerPortfolio.php">Portfolio</a>
           </li>
-          <?php
-          if ( $profileStatus == ProfileStatus::INCOMPLETE || $profileStatus == ProfileStatus::NOT_CREATED) {
-              print'
-                   <li class="nav-item mr-4 mb-2 mb-lg-0">
-                        <a class="nav-link" href="entertainerPortfolioEmpty.php">Create Portfolio</a>
-                   </li> 
-                   '; 
-          }
-          ?>                         
+<?php
+if ( $profileStatus == ProfileStatus::INCOMPLETE || $profileStatus == ProfileStatus::NOT_CREATED) {
+  print'
+       <li class="nav-item mr-4 mb-2 mb-lg-0">
+            <a class="nav-link" href="entertainerPortfolioEmpty.php">Create Portfolio</a>
+       </li> 
+       '; 
+}
+?>
           <li class="nav-item mr-4 mb-2 mb-lg-0">
             <a class="nav-link" href="index.php">Logout</a>
           </li>              
