@@ -2795,7 +2795,8 @@ mark, .mark {
 }
 
 .post-02__media img {
-    width: 100%;
+    width: 1000px;
+    height: 560px;
     
 }
 
@@ -2849,7 +2850,7 @@ mark, .mark {
 }
 
 .post-02__style-02 {
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .post-02__style-02:before {

@@ -52,7 +52,7 @@
 							<div class="title-01 title-01__style-04">
 								<h6 class="title-01__subTitle">about</h6>
 								<h2 class="title-01__title">WHO WE ARE</h2>
-								<div>Wishbone is a unique marketplace for booking
+								<div style = "color: white;">Wishbone is a unique marketplace for booking
 									musicians, bands, artists, Dj’s, Comedians, guest speakers, and
 									other forms of live entertainment on demand. At last, a unique
 									and simplified system that allows anyone everywhere to find and
@@ -62,15 +62,17 @@
 									whether you’re a first –time event host or seasoned pro.
 									Wishbone allows anyone anywhere to discover, connect and book
 									at the thought of a wish.</div>
-							</div>
+							<br/>
+							<br/>
 							<!-- End / title-01 -->
 							<h2 class="title-01__title">OUR HISTORY</h2>
-							<div>Our headquarters is established and founded upon the
+							<div style = "color: white;">Our headquarters is established and founded upon the
 								nation’s capital Ottawa, Ontario. From members needing technical
 								support to event planners looking to book talent, our Ottawa
 								team is the center of our foundation. They interact with
 								customers personally—Wishbone is made up of real people, not
 								automatons. We care deeply about making our customers happy.</div>
+						</div>
 						</div>
 					</div>
 				</div>
