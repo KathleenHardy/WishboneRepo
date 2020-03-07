@@ -1,11 +1,11 @@
 <?php
-include ('../config.php'); 
+include ('../config.php');
 require_once ('../dto/gig.php');
 session_start();
 
 $user_check = $_SESSION['useremail'];
 
-$infoQuery = "SELECT entertainers.profilePicture, entertainers.entid, entertainers.firstName, entertainers.lastName 
+$infoQuery = "SELECT entertainers.profilePicture, entertainers.entid, entertainers.firstName, entertainers.lastName
 		FROM entertainers JOIN authentication
  			ON authentication.authid = entertainers.authid
  			WHERE authentication.email = '$user_check'";

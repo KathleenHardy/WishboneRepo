@@ -97,7 +97,9 @@ if(isset($_FILES['fileToUpload'])) {
         $file_tmp =$_FILES['fileToUpload']['tmp_name'];
         $file_type=$_FILES['fileToUpload']['type'];
         //$file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
-        $file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/"; 
+        //$file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/"; 
+        
+        $file_path = "../assets/img-temp/portfolio/";
 
         /*
         $file_ext=strtolower(end(explode('.', $file_name)));
@@ -110,7 +112,7 @@ if(isset($_FILES['fileToUpload'])) {
         */
         
         if($file_size > 2097152){
-            $errors[]='File size must be excately 2 MB';
+            $errors[]='File size must be excatly 2 MB';
         }
         
         if(empty($errors)==true){
@@ -119,7 +121,6 @@ if(isset($_FILES['fileToUpload'])) {
             echo $file_name;
             
             move_uploaded_file($file_tmp, $file_path.$file_name);
-            //copy($_FILES['fileToUpload']['tmp_name'], "../assets/img-temp/portfolio/".$file_name);
         }else{
             print_r($errors);
         }

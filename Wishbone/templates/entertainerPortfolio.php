@@ -72,7 +72,6 @@ if ($stmt = $connection->prepare( $query)) {
       
 }
 
-
 $_SESSION['entertainerfirstname'] = $firstName;
 $_SESSION['entertainerlastname'] = $lastName;
 $_SESSION['entertainerid'] = $entid;
@@ -167,7 +166,7 @@ $connection->close();
 ?>
 
       <!-- Promo Block -->
-      <section class="js-parallax u-promo-block u-promo-block--mheight-500 u-overlay u-overlay--dark text-white" style="background-image: url(../assets/img-temp/1920x1080/img5.jpg);">
+      <section class="js-parallax u-promo-block u-promo-block--mheight-500 u-overlay u-overlay--dark text-white" style="background-image: url(../assets/img-temp/1920x1080/img3.jpg);">  
         <!-- Promo Content -->
         <div class="container u-overlay__inner u-ver-center u-content-space">
           <div class="row justify-content-center">
@@ -221,10 +220,11 @@ $connection->close();
           <div class="row">
             <div class="col-md-4 mx-auto">
               <div class="u-pull-half text-center">
-                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="auto" src="../assets/img-temp/200x200/img1.jpg" alt="Image Description">
+                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="200" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="Image Description">
               </div>
             </div>
           </div>
+          
           <!-- End Profile Block -->
 
           <!-- About and Contact -->
