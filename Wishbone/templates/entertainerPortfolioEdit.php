@@ -1,3 +1,37 @@
+<?php
+include ('../config.php');
+require_once ('../dto/gig.php');
+
+if(!isset($_SESSION)){session_start();}
+
+$user_check = $_SESSION['useremail'];
+
+$infoQuery = "SELECT entertainers.profilePicture, entertainers.entid, entertainers.firstName, 
+        entertainers.lastName, entertainers.aboutMe
+		FROM entertainers JOIN authentication
+ 			ON authentication.authid = entertainers.authid
+ 			WHERE authentication.email = '$user_check'";
+
+$result = mysqli_query($connection, $infoQuery) or die(mysqli_error($connection));
+
+$row = mysqli_fetch_array($result);
+
+$Login_user_imagelocation = $row['profilePicture'];
+$login_user_firstname = $row['firstName'];
+$login_user_lastname = $row['lastName'];
+$login_user_aboutme = $row['aboutMe'];
+$login_user_userid = $row['entid'];
+
+
+$_SESSION['entertainerfirstname'] = $login_user_firstname;
+$_SESSION['entertainerlastname'] = $login_user_lastname;
+$_SESSION['entertainerid'] = $login_user_userid;
+
+
+mysqli_close($connection);
+
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,17 +88,22 @@
 							<div class="title-01 title-01__style-04">
 								<h2 class="title-01__title">UPDATE YOUR INFORMATION</h2>
 							</div>
-							<form action="entertainerAddGig.php" method="POST">
-										
+							<form action="eventPlannerProfileUpdate.php" method="POST">
+										<div class="form-group"> <!-- Event Name -->
+    											<label for="firstName" class="control-label title2">First Name</label>
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="firstName" name="firstName" value="<?php echo $login_user_firstname;?>">
+    									</div>	
+    									<div class="form-group"> <!-- Event Name -->
+    											<label for="lastName" class="control-label title2">Last Name</label>
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="lastName" name="lastName" value="<?php echo $login_user_lastname;?>">
+    									</div>	
+    									
 										<div class="form-group"> <!-- About Me -->
-											<label for="gigs_details-id" class="title2">About Me</label>
-											<textarea class="form-control" style="border: 3px solid #fac668;" rows="5" id="gigs_details-id" name="gigs_details" placeholder ="What do you want others to know about you or your work?"></textarea>
+											<label for="aboutMe" class="title2">About Me</label>
+											<textarea class="form-control" style="border: 3px solid #fac668;" rows="5" id="aboutMe" name="aboutMe"><?php echo $login_user_aboutme;?></textarea>
 										</div>
 										
-										<div class="form-group"> <!-- Gigs details -->
-											<label for="gigs_notes-id" class="title2">About My Gigs</label>
-											<textarea class="form-control" rows="5" style="border: 3px solid #fac668;" id="gigs_notes-id" name="gigs_notes" placeholder="Write about your work and describe your portfolio of gigs"></textarea>
-										</div>
+										
 										
 										<!--
 										<div class="input-group">
@@ -74,8 +113,8 @@
 												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
 										</div>
 										for later -->
-										 
-										<a href="entertainerPortfolio.php"><button type="button" class="btn-all" style="display:inline;">Update</button></a>
+										<button type="submit" class="btn-all" style="display:inline;">Update</button>
+										<!-- a href="entertainerPortfolio.php"><button type="button" class="btn-all" style="display:inline;">Update</button></a-->
 										 
 										 
 										<a href="entertainerPortfolio.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
