@@ -59,7 +59,77 @@
 </head>
 
 <body>
-<?php include "navigationheaderVenueHost.php" ?>
+
+<?php 
+session_start();
+include ('../config.php');
+include "navigationheaderVenueHost.php";
+
+$authId = $_SESSION['authId'];
+
+$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
+          FROM venueowners
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+
+    //bind result variables
+    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+      
+}
+
+
+$_SESSION['venueOwnerfirstname'] = $firstName;
+$_SESSION['venueOwnerlastname'] = $lastName;
+$_SESSION['venueOwnerId'] = $venueOwnerId;
+
+
+
+$query2 = "SELECT email
+          FROM authentication
+          WHERE  authid = ?";
+
+if ($stmt2 = $connection->prepare( $query2)) {
+    
+    $stmt2->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt2->execute();
+    
+    //bind result variables
+    $stmt2->bind_result($email);
+    
+    // fetch values
+    $stmt2->fetch();
+    
+    //close statement
+    $stmt2->close();  
+}
+
+/**
+ * TODO: You can query the database here to get all the venues - please use prepared statements:
+ * 
+ */
+
+
+$connection->close();
+
+?>
+
+
+
+
 	<div class="page-wrap">
 
 		<!-- header -->
@@ -78,7 +148,7 @@
 
 							<!-- title-01 -->
 							<div class="title-01 title-01__style-04" style="padding: 20px;">
-								<h2 class="title-01__title">JANE MORIS</h2>
+								<h2 class="title-01__title"><?= $firstName . ' ' . $lastName  ?></h2>
 							</div>
           <div class="row">
             <div class="col-md-4 mx-auto">

@@ -320,6 +320,8 @@ CREATE TABLE entertainers (
     profilePicture varchar(100),
     homePagePicture varchar(100),
     aboutMe varchar(400),
+    myQuote varchar(400),
+    profileStatus int,
     
 
     FOREIGN KEY (authid) REFERENCES authentication(authid),
@@ -335,6 +337,7 @@ CREATE TABLE gigs (
     entid int not null,
     gigsName varchar(70) not null,
     gigsCategory varchar(70) not null,
+    gigsLabel varchar(20),
     gigsArtType varchar(70) not null,
     gigsDetails varchar(200),
     notes varchar(100),
@@ -460,6 +463,10 @@ CREATE TABLE bookedGigs (
     resAvailId int not null,
     eventPlannerId int,
     venueOwnerId int,
+    venueId int,
+    event_name varchar(50) not null,
+    event_date date not null,
+    event_description varchar(250) not null,
 
     FOREIGN KEY (entid) REFERENCES entertainers(entid),
     FOREIGN KEY (gigsid) REFERENCES gigs(gigsid),
@@ -490,8 +497,7 @@ ALTER TABLE bookedGigs ADD FOREIGN KEY (resAvailId) REFERENCES resourceAvailabil
 
 
 CREATE View gigsDetails as 
-(
-SELECT availStartDate, availEndDate, availStartTime, availEndTime, firstName, lastName, ratePerHour, aboutMe, gigsName, gigsCategory, gigsArtType, gigsDetails, notes
+(SELECT availStartDate, availEndDate, availStartTime, availEndTime, entertainers.entid, firstName, lastName, ratePerHour, aboutMe, gigsName, gigsCategory, gigsArtType, gigsDetails, notes
 FROM entertainers INNER JOIN gigs ON
 entertainers.entid = gigs.entid INNER JOIN bookedgigs ON
 gigs.gigsid = bookedgigs.gigsid INNER JOIN resourceavailability ON
@@ -501,16 +507,15 @@ availability.availId = resourceavailability.availId
 
 
 
-
-
-
-
-
-
-
-
-
-
+CREATE View bookedGigsDetails as 
+(
+select bookedGigsId, gigs.gigsId, bookedgigs.entid, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName, email 
+from bookedgigs INNER JOIN gigs ON 
+gigs.gigsid = bookedgigs.gigsid inner join eventplanners ON 
+bookedgigs.eventPlannerId = eventplanners.eventPlannerId JOIN venues ON 
+bookedgigs.venueId = venues.venueId JOIN authentication ON
+eventplanners.authid = authentication.authid
+);
 
 
 
@@ -548,11 +553,15 @@ SELECT @int_party := LAST_INSERT_ID( );
 
 insert into authentication (email,pass) values ('andrew@archibald.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Andrew','Archibald','assets/img/profile/M1.jpg');
-SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
-insert into address (city,province,country,userid,publicaddress) values ('Ottawa','Ontario','Canada',@user_id,true);
-insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('Andrew@archibald.com','613-000-0000',@user_id,true,false);
-set @receive:=@user_id-1;
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Andrew','Archibald');
+
+/**
+SELECT @eventplanners_id := LAST_INSERT_ID( ); -- gives us eventplanners id from the insert above
+insert into address (city,province,country,userid,publicaddress) values ('Ottawa','Ontario','Canada',@eventplanners_id,true);
+insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('Andrew@archibald.com','613-000-0000',@eventplanners_id,true,false);
+set @receive:=@eventplanners_id-1;
+
+
 -- insert into messages (senderid, receiverid, messagecontent, hasread) values (@user_id,@receive,'Hello Andrew',false);
 -- insert into connected_friends (leftid, rightid,confirmright) values (@user_id,@receive,true);
 insert into artists (userid) values(@user_id);
@@ -560,11 +569,13 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_event,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_dancer,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', 'edwardtarte', 'i am a foodie', ' \r\n				test2		');
-
+**/
 
 insert into authentication (email,pass) values ('mike@smith.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Mike','Smith','assets/img/profile/M2.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Mike','Smith');
+
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Ottawa','Ontario','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('mike@smith.com','613-100-0001',@user_id,true,false);
@@ -576,11 +587,12 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_festival,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_photographer,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', 'davie504', 'i am a foodie', ' \r\n				test2		');
-
+**/
 
 insert into authentication (email,pass) values ('oksana@shapoval.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Oksana','Shapoval','assets/img/profile/pro-photo.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Oksana','Shapoval');
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Ottawa','Ontario','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('oksana@shapoval.com','613-100-8090',@user_id,true,false);
@@ -592,11 +604,12 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_concert,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_dancer,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', 'BobRossInc', 'i am a foodie', ' \r\n				test2		');
-
+**/
 
 insert into authentication (email,pass) values ('svetlana@netchaeva.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Svetlana','Netchaeva','assets/img/profile/F1.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Svetlana','Netchaeva');
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Toronto','Ontario','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('svetlana@netchaeva.com','613-100-8330',@user_id,true,false);
@@ -608,11 +621,13 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_concert,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_musician,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', 'davie504', 'i am a foodie', ' \r\n				test2		');
+**/
 
 
 insert into authentication (email,pass) values ('zeyang@hu.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Zyang','Hu','assets/img/profile/M3.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Zyang','Hu');
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('London','Ontario','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('zeyang@hu.com','613-100-5550',@user_id,true,false);
@@ -624,11 +639,12 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_event,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_singer,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', 'davie504', 'i am a foodie', ' \r\n				test2		');
-
+**/
 
 insert into authentication (email,pass) values ('minyi@yang.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Minyi','Yang','assets/img/profile/M4.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Minyi','Yang');
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Ottawa','Ontario','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('minyi@yang.com','613-145-8090',@user_id,true,false);
@@ -640,11 +656,13 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_festival,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_dancer,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', 'BobRossInc', 'i am a foodie', ' \r\n				test2		');
+**/
 
 
 insert into authentication (email,pass) values ('ksenia@lopukhina.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Ksenia','Lopukhina','assets/img/profile/F3.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Ksenia','Lopukhina');
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Montreal','Quebec','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('ksenia@lopukhina.com','613-900-8090',@user_id,true,false);
@@ -656,12 +674,13 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_party,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_actor,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', 'BobRossInc', 'i am a foodie', ' \r\n				test2		');
-
+**/
 
 
 insert into authentication (email,pass) values ('John@Logan.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'John','Logan','assets/img/profile/M5.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'John','Logan');
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Montreal','Quebec','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('name@name.com','613-510-1123',@user_id,true,false);
@@ -673,11 +692,12 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_party,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_actor,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', '', 'i am a foodie', ' \r\n				test2		');
-
+**/
 
 insert into authentication (email,pass) values ('Marty@McFly.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Marty','McFly','assets/img/profile/M6.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Marty','McFly');
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Montreal','Quebec','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('Marty@McFly.com','613-510-1123',@user_id,true,false);
@@ -689,11 +709,13 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_party,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_actor,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', ' ', 'i am a foodie', ' \r\n				test2		');
-
+**/
 
 insert into authentication (email,pass) values ('Mary@Ross.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Mary','Ross','assets/img/profile/F6.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Mary','Ross');
+
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Montreal','Quebec','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('Mary@Ross.com','613-510-1123',@user_id,true,false);
@@ -705,11 +727,13 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_party,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_actor,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', ' ', 'i am a foodie', ' \r\n				test2		');
-
+**/
 
 insert into authentication (email,pass) values ('Tommy@Roland.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Tommy','Roland','assets/img/profile/M7.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Tommy','Roland');
+
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Montreal','Quebec','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('Tommy@Roland.com','613-510-1123',@user_id,true,false);
@@ -721,11 +745,14 @@ SELECT @art_id := LAST_INSERT_ID( );
 insert into artist_interest (interestid,artistid) values (@int_party,@art_id);
 insert into artist_artform (artformid,artistid) values (@art_actor,@art_id);
 insert into artprofile (artistid, text1,text2,text3,text4,`socialid`, `shareurl`, `bio`, `urldes`) values (@art_id,'Hobby','Hockey','Swimming','Skating','Hobby', ' ', 'i am a foodie', ' \r\n				test2		');
+**/
 
 
 insert into authentication (email,pass) values ('Rocky@Johnson.com','password');
 SELECT @auth_id := last_insert_id();
-insert into users (authid,firstname,lastname,imagelocation) values (@auth_id,'Rocky','Johnson','assets/img/profile/M9.jpg');
+insert into eventplanners (authid,firstname,lastname) values (@auth_id,'Rocky','Johnson');
+
+/**
 SELECT @user_id := LAST_INSERT_ID( ); -- gives us user id from the insert above
 insert into address (city,province,country,userid,publicaddress) values ('Ottawa','Ontario','Canada',@user_id,true);
 insert into contact (email, phonenumber, userid, publicemail, publicphone) values ('Rocky@Johnson.com','613-145-8090',@user_id,true,false);
@@ -765,7 +792,7 @@ insert into feeds values(5, ' Finally a day off ',current_time());
 insert into feeds values(6, '  Anyone else think cats are strange?  ',current_time());
 insert into feeds values(7, "Is space real if you can't see it? ",current_time());
 insert into feeds values(7, 'Ksenia is a pro in GitHub',current_time()); 
-
+**/
 
 INSERT into authentication (email,pass, userType) VALUES ('silas@fish.com','password', 2);
 INSERT into authentication (email,pass, userType) VALUES ('keller@mathew.com','password', 2);
@@ -800,7 +827,7 @@ INSERT INTO entertainers (authid, firstName, lastName, ratePerHour, aboutMe) VAL
 							(15,'Sotie','Erikzon', 75.8, 'The ultimate show of a life time. Come and be blown away');
 							
 INSERT INTO entertainers (authid, firstName, lastName, ratePerHour, aboutMe) VALUES 
-							(16,'Etlana','Fries', 98.56, 'Maecenas lorem ex, euismod eget pulvinar non, facilisis ut leo. Quisque placerat purus in neque efficitur ornare. Nam at justo magna. Aliquam venenatis odio ante, non euismod augue porttitor eget. Maecenas nec viverra eros,');
+							(16,'Etlana','Fries', 98.56, 'I have been playing music all my life and I play professionally over 3 instruments. I also know how to create my own music, including song lyrics.');
 
 
 
@@ -809,6 +836,9 @@ INSERT INTO gigs (entid, gigsName, gigsCategory, gigsArttype, gigsDetails, notes
 
 INSERT INTO gigs (entid, gigsName, gigsCategory, gigsArttype, gigsDetails, notes) VALUES 
     	                       (2,'The Fire Watch','Concert','Dancer','A new gig to watch the fire','notes');
+    	                       
+INSERT INTO gigs (entid, gigsName, gigsCategory, gigsArttype, gigsDetails, notes) VALUES 
+    	                       (2,'Titans Glory','Concert','Musician','Titans Glory is an American rock band formed in New York City in January 1973 by Paul Stanley, Gene Simmons, Peter Criss, and Ace Frehley. Well known for its members face paint and stage outfits, the group rose to prominence in the mid-to-late 1970s with their elaborate live performances, which featured fire breathing. ','notes');
     	                       
     	                       
 INSERT INTO gigs (entid, gigsName, gigsCategory, gigsArttype, gigsDetails, notes) VALUES 
@@ -835,23 +865,53 @@ INSERT INTO availability (availStartDate, availEndDate, availStartTime, availEnd
 INSERT INTO resourceavailability (entid, availId) VALUES (1, 1);
 INSERT INTO resourceavailability (entid, availId) VALUES (2, 1);
 
-INSERT INTO bookedgigs (entid, gigsid, resAvailId) VALUES (1,3, 1); 	
-INSERT INTO bookedgigs (entid, gigsid, resAvailId) VALUES (2,2, 1);
-INSERT INTO bookedgigs (entid, gigsid, resAvailId) VALUES (3,4, 1);
-INSERT INTO bookedgigs (entid, gigsid, resAvailId) VALUES (4,1, 1);
-
 INSERT INTO venueOwners ( authid, firstName, lastName) VALUES 
 					    (17, 'Madison', 'Kindler');
 					    
 INSERT INTO venueOwners ( authid, firstName, lastName) VALUES 
 					    (18, 'Kellerman', 'Comb');
 
-
-/*
-INSERT INTO `venues` (`venueOwnerId`, `venueName`, `venueCity`, `venueState`, `venueProvince`) VALUES 
+INSERT INTO venues (venueOwnerId, venueName, venueCity, venueState, venueProvince) VALUES 
 					 (1, 'National Arts Centre', 'Ottawa', NULL, 'Ontario');
+					 
+INSERT INTO venues (venueOwnerId, venueName, venueCity, venueState, venueProvince) VALUES 
+					 (2, 'Canadian Tire Center', 'Ottawa', NULL, 'Ontario');
+					 
+INSERT INTO venues (venueOwnerId, venueName, venueCity, venueState, venueProvince) VALUES 
+					 (2, 'My backyard', 'Ottawa', NULL, 'Ontario');
+				
+INSERT INTO venues (venueOwnerId, venueName, venueCity, venueProvince) VALUES 
+                     (1, 'TestVenue', 'Ottawa', 'Ontario');
+					 
+					 
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 1, 1);
+					     
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 2, 2);
+					     
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 3, 1);
+					 
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 4, 2);
+					     
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 5, 1);
+					 
+
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (1,3, 1, 1,1,1); 
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (2,3, 1, 2,1,2);	
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (2,2, 1, 3,2,1);
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (3,4, 1, 1,2,2);
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (4,1, 1, 2,1,1);
 
 
+INSERT INTO resourceavailability (venueId, availId) VALUES (1, 1);
+
+			 
+					 
+/*
 INSERT INTO `eventplanners` (`authid`, `firstName`, `lastName`, `imageLocation`) VALUES 
                             ('1', 'Andrew', 'Archibald', NULL);
 

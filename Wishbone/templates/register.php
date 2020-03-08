@@ -81,6 +81,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
     if (isset($_POST['reg_user'])) {  
         if (! $hasError) {
             $authentication = new Authentication($_POST["userFirstName"], $_POST["userLastName"], $_POST["userEmail"], $_POST["userPwd"], $_POST["userType"]);
+            $authentication->setProfileStatus( ProfileStatus::NOT_CREATED);
             $addSuccess = $authenticationDAO->addNewRegistrant($authentication);
                        
             if ( $_POST["userType"] == UserType::EVENT_PLANNER) {
