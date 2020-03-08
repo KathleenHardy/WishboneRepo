@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>My Event List</title>
+<title>My Availability List</title>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -35,12 +35,11 @@
 <body>
 <?php
 include ('../config.php');
-include "navigationheaderVenueHost.php";
-include ('../dto/venue.php');
+include "navigationheaderEntertainer.php";
+include ('../dto/entertainer.php');
 include ('../dto/availability.php');
 
-session_start();
-
+//session_start();
 // $authId = $_SESSION['authId'];
 
 // $query = "SELECT venueOwnerId
@@ -67,27 +66,27 @@ session_start();
 
 // $_SESSION['venueOwnerId'] = $venueOwnerId;
 
-$venueOwnerId = $_SESSION['venueOwnerId'];
-$venueDTO = array();
+$authIdLocal=$_SESSION['authId'];
+$availabilityDTO = array();
 
-$query2 = "SELECT * 
-        FROM venues 
-        WHERE venueOwnerId=$venueOwnerId";
+// $query2 = "SELECT * 
+//         FROM venues 
+//         WHERE venueOwnerId=$venueOwnerId";
 
-$result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+// $result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
 
-$count = mysqli_num_rows($result);
+// $count = mysqli_num_rows($result);
 
-if ($count >= 1) {
+// if ($count >= 1) {
 
-    while ($row = mysqli_fetch_array($result)) {
+//     while ($row = mysqli_fetch_array($result)) {
 
-        $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);
-    }
-} else {
-    // $fmsg = "No venues for this user";
-}
-$_SESSION['myVenues'] = $venueDTO;
+//         $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince']);
+//     }
+// } else {
+//     // $fmsg = "No venues for this user";
+// }
+// $_SESSION['myVenues'] = $venueDTO;
 
 $availabilityDTO = array();
 $query3 = "SELECT *
@@ -106,7 +105,7 @@ if ($count2 >= 1) {
 } else {
     // $fmsg = "No availabilities";
 }
-$_SESSION['myVenues'] = $venueDTO;
+//$_SESSION['myVenues'] = $venueDTO;
 $_SESSION['avails'] = $availabilityDTO;
 
 mysqli_close($connection);
@@ -129,7 +128,7 @@ mysqli_close($connection);
 
 							<!-- title-01 -->
 							<div class="title-01 title-01__style-04">
-								<h2 class="title-01__title">VENUES</h2>
+								<h2 class="title-01__title">Availabilities</h2>
 							</div>
 							<!-- End / title-01 -->
 
@@ -142,59 +141,6 @@ mysqli_close($connection);
 
 						<!-- post-02 -->
 <?php
-foreach ($venueDTO as $venue) {
-
-    print '
-        <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-        <div class="post-02 post-02__style-02 js-post-effect">
-
-								<div class="post-02__media">
-                                    <a href="#"><img src='."../assets/img-temp/portfolio/" .$venue->getVenuePicture().' alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color:white;">
-									<a href="#">' . $venue->getVenueName() . '</a>
-									</h2>
-									<div class="post-02__department">' . $venue->getVenueCity() . '</div>
-									<div class="post-02__content">
-									<div class="post-02__department">' . $venue->getVenueState() . '</div>
-									<div class="post-02__department">' . $venue->getVenueProvince() . '</div>
-                                    <div class="post-02__description">' . $venue->getVenueDescription() . '</div>
-									</div>
-									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
-								</div>
-                                </div>
-							</div>';
-}
-?>
-							<!-- End / post-02 -->
-
-					
-
-				</div>
-
-			</section>
-			<div class="container">
-				<div class="row">
-					<div
-						class="col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-2 offset-lg-2 ">
-
-						<!-- title-01 -->
-						<div class="title-01 title-01__style-04">
-							<h2 class="title-01__title">Availabilities</h2>
-						</div>
-						<!-- End / title-01 -->
-
-					</div>
-				</div>
-			</div>
-			<div class="consult-project">
-				<div class="row">
-
-
-						<!-- post-02 -->
-<?php
 foreach ($availabilityDTO as $availability) {
 
     print '
@@ -203,7 +149,7 @@ foreach ($availabilityDTO as $availability) {
         <div class="post-02 post-02__style-02 js-post-effect">
 
 								<div class="post-02__media">
-                                    <a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
+									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 								</div>
 								<div class="post-02__body">
 									<h2 class="post-02__title" style="font-weight:bold; color:white;">
@@ -227,11 +173,11 @@ foreach ($availabilityDTO as $availability) {
 
 				</div>
 
-
-				<a href="createNewVenue.php"><button type="button" class="btn-all"
-						style="display: inline;">Add Venue</button></a> <a
-					href="addVenueAvailability.php"><button type="button"
+			</section>
+			<a
+					href="addEntertainerAvailability.php"><button type="button"
 						class="btn-all" style="display: inline;">Add Availability</button></a>
+			
 
 
 				<!-- Past Events -->

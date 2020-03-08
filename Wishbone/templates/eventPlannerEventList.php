@@ -306,6 +306,7 @@ function closewindow() {
 
 						</div>
 					</div>
+					
 				</div>
 			</section>
 		

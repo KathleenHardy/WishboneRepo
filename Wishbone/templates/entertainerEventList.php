@@ -386,6 +386,7 @@ if ($stmt2 = $connection->prepare( $query2)) {
 
 						</div>
 					</div>
+					
 				</div>
 			</section>
 		
