@@ -7,16 +7,54 @@ class Venue {
     private $venueCity;
     private $venueState;
     private $venueProvince;
+    private $venueDescription;
+    private $venuePicture;
     
-    function __construct( $venueID, $venueOwnerID, $venueName, $venueCity, $venueState, $venueProvince) {
+    
+    function __construct( $venueID, $venueOwnerID, $venueName, $venueCity, $venueState, $venueProvince, $venueDescription, $venuePicture) {
         $this->venueID = $venueID;
         $this->venueOwner = $venueOwnerID;
         $this->venueName = $venueName;
         $this->venueCity = $venueCity;
         $this->venueState = $venueState;
         $this->venueProvince = $venueProvince;
+        $this->venueDescription = $venueDescription;
+        $this->venuePicture = $venuePicture;
+        
     }
     
+
+    /**
+     * @return mixed
+     */
+    public function getVenueDescription()
+    {
+        return $this->venueDescription;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getVenuePicture()
+    {
+        return $this->venuePicture;
+    }
+
+    /**
+     * @param mixed $venueDescription
+     */
+    public function setVenueDescription($venueDescription)
+    {
+        $this->venueDescription = $venueDescription;
+    }
+
+    /**
+     * @param mixed $venuePicture
+     */
+    public function setVenuePicture($venuePicture)
+    {
+        $this->venuePicture = $venuePicture;
+    }
 
     // mutators
     function setVenueID( $venueID) {

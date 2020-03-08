@@ -110,11 +110,16 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
             VALUES ($availId, $chosenVenueId)";
     
     $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection));
+    ?>
+    <script type="text/javascript">
+    window.location.href = 'http://localhost:7331/Wishbone/templates/venueEventList.php';
+    </script>
+<?php
 
     
 }
-
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -267,7 +272,7 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
 										</div>
 										for later -->
 
-								<button type="submit" class="btn-all" style="display: inline;">Add</button>
+								<a href="venueEventList.php"><button type="submit" class="btn-all" style="display: inline;">Add</button></a>
 
 
 								<a href="venueEventList.php"><button class="btn-all"

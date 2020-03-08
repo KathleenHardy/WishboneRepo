@@ -1,10 +1,19 @@
 <?php
-session_start();
+
+//require_once ('../config.php');
+include "navigationheaderEntertainer.php";
+
+//include "navigationheaderVenueHost.php";
+//require_once ('../dto/venue.php');
+//session_start();
+//$authIdLocal=$_SESSION['authId'];
+$authIdLocal=$authId;
+
 ?>
 <?php
 
-require_once ('../config.php');
-include "navigationheaderVenueHost.php";
+
+//$venueDTO = $_SESSION['myVenues'];
 
 // $authId = $_SESSION['authId'];
 
@@ -31,81 +40,88 @@ include "navigationheaderVenueHost.php";
 // }
 
 // $_SESSION['venueOwnerId'] = $venueOwnerId;
-if (isset($_FILES['venuePicture'])) {
-    $errors = array();
-    $file_name = $_FILES['venuePicture']['name'];
-    $file_size = $_FILES['venuePicture']['size'];
-    $file_tmp = $_FILES['venuePicture']['tmp_name'];
-    $file_type = $_FILES['venuePicture']['type'];
-    // $file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
-    $file_path = "C:/Users/kate/git/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
-
-    /*
-     * $file_ext=strtolower(end(explode('.', $file_name)));
-     *
-     * $extensions= array("jpeg","jpg","png");
-     *
-     * if(in_array($file_ext,$extensions)=== false){
-     * $errors[]="extension not allowed, please choose a JPEG or PNG file.";
-     * }
-     */
-
-    if ($file_size > 2097152) {
-        $errors[] = 'File size must be excately 2 MB';
-    }
-
-    if (empty($errors) == true) {
-        echo $file_tmp;
-        echo "          ";
-        echo $file_name;
-
-        move_uploaded_file($file_tmp, $file_path . $file_name);
-        // copy($_FILES['fileToUpload']['tmp_name'], "../assets/img-temp/portfolio/".$file_name);
-    } else {
-        print_r($errors);
-    }
-}
-
-$venueOwnerId = $_SESSION['venueOwnerId'];
 
 if (! empty($_POST)) {
 
+    echo "Posting";
 
-    $venueName = $_POST['venueName'];
-    $venueCity = $_POST['venueCity'];
-    $venueState = $_POST['venueState'];
-    $venueProvince = $_POST['venueProvince'];
-    $venueDescription = $_POST['venueDescription'];    
-    $venuePicture = $_FILES['venuePicture']['name'];
+    //$venueName = $_POST['venueName'];
+    $startDate = $_POST['startDate'];
+    $endDate = $_POST['endDate'];
+    $startTime = $_POST['startTime'];
+    $endTime = $_POST['endTime'];
     
-    // image file directory
-    //$target = "C:/Users/kate/git/WishboneRepo/Wishbone/assets/img-temp/portfolio/".basename($venuePicture);
-    $target = "../assets/img-temp/portfolio/".basename($venuePicture);
-    
-   
 
-    $sql = "INSERT INTO venues(venueOwnerId, venueName, venueCity, venueState, venueProvince, venueDescription, venuePicture) 
-VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince','$venueDescription','$venuePicture')";
+    $sql = "INSERT INTO availability(availStartDate, availEndDate, availStartTime, availEndTime) 
+VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
+    
 
     if (mysqli_query($connection, $sql)) {
-        echo "New venue created successfully";
+        echo "New availability created successfully";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
     
-    if (move_uploaded_file($_FILES['venuePicture']['tmp_name'], $target)) {
-        $sf="s";
-    }else{
-        $sf="f";
+    //mysqli_close($connection);
+    
+//     $sql2 = "SELECT venueID 
+//             FROM venues 
+//             WHERE venueName=$venueName";
+//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
+    $sql2 = "SELECT entid
+            FROM entertainers
+            WHERE authid=?";
+
+    if ($stmt = $connection->prepare( $sql2)) {
+        
+        $stmt->bind_param( "i", $authIdLocal);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables
+        $stmt->bind_result( $chosenEntId);
+        
+        // fetch values
+        $stmt->fetch();
+        
+        //close statement
+        $stmt->close();
+        
     }
-
-
-    mysqli_close($connection);
+    
+    $sql3="SELECT availId
+            FROM availability
+            WHERE availStartDate=? AND availEndDate=? AND availStartTime=? AND availEndTime=?";
+    
+    if ($stmt = $connection->prepare( $sql3)) {
+        
+        $stmt->bind_param( "ssss", $startDate, $endDate, $startTime, $endTime);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables
+        $stmt->bind_result( $availId);
+        
+        // fetch values
+        $stmt->fetch();
+        
+        //close statement
+        $stmt->close();
+        
+    }
+    $sql4="INSERT INTO resourceAvailability(availId, entId)
+            VALUES ($availId, $chosenEntId)";
+    
+    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection));
     ?>
-     <script type="text/javascript">
-       window.location.href = 'http://localhost:7331/Wishbone/templates/venueEventList.php';
-     </script>
+    <script type="text/javascript">
+    window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
+    </script>
 <?php
+
+    
 }
 
 ?>
@@ -177,7 +193,7 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
 </head>
 
 <body>
-<?php include "navigationheaderVenueHost.php" ?>
+
 
 	<div class="page-wrap">
 
@@ -206,55 +222,60 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
 									</div>
 								</div>
 							</div>
+							<form action="addEntertainerAvailability.php" method="POST">
 
-							<form action="createNewVenue.php" method="POST" enctype="multipart/form-data">
-
+								  
 								<div class="form-group">
 									<!-- Event Name -->
-									<label for="venueName" class="control-label title2">Venue Name</label>
-									<input type="text" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="venueName"
-										name="venueName" placeholder="Enter the venue's name">
-								</div>
-								<div class="form-group">
-									<!-- Event Name -->
-									<label for="venueCity" class="control-label title2">City</label>
-									<input type="text" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="venueCity"
-										name="venueCity" placeholder="Enter the venue's city">
+									<label for="startDate" class="control-label title2">Availability Start Date</label>
+									<input type="date" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="startDate"
+										name="startDate" placeholder="Enter the start date of the avilability">
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
-									<label for="venueState" class="control-label title2">Venue
-										State</label> <input type="text" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="venueState"
-										name="venueState">
+									<label for="endDate" class="control-label title2">Availability End Date</label>
+									<input type="date" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="endDate"
+										name="endDate" placeholder="Enter the end date of the avilability">
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
-									<label for="venueProvince" class="control-label title2">Venue
-										Province</label> <input type="text" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="venueProvince"
-										name="venueProvince">
+									<label for="startTime" class="control-label title2">Availability Start Time
+										</label> <input type="time" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="startTime"
+										name="startTime">
 								</div>
 								<div class="form-group">
-									<label for="venueDescription" class="title2">Venue Description</label>
-									<textarea class="form-control" rows="5"
-										style="border: 3px solid #fac668;" id="venueDescription"
-										name="venueDescription"
-										placeholder="Add a description for your venue"></textarea>
-								</div>
-								<div class="form-group">
-									<label for="venuePicture" class="title2">Upload Venue Image</label>
-									<input type="file" name="venuePicture">
+									<!-- Event Name -->
+									<label for="endTime" class="control-label title2">Availability End Time
+										</label> <input type="time" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="endTime"
+										name="endTime">
 								</div>
 
+								<!--
+										<div class="input-group">
+											  <div class="input-group-prepend">
+												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
+											  </div>
+												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
+										</div>
+										for later -->
 
-								 <a href="venueEventList.php"><button type="submit" class="btn-all" style="display: inline;">Add</button></a>
+								<a href="entertainerAvailabilityList.php"><button type="submit" class="btn-all" style="display: inline;">Add</button></a>
 
 
-								<a href="venueEventList.php"><button class="btn-all"
+								<a href="entertainerEventList.php"><button class="btn-all"
 										type="button" style="display: inline;">Cancel</button></a>
+
+								<!-- Replace buttons with below code -->
+								<!--<div class="form-group" style="display:inline;"> 
+											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>
+										</div> 
+										<div class="form-group" style="display:inline;"> 
+											<button class="btn-all">Cancel</button>
+										</div>   -->
 
 
 							</form>
