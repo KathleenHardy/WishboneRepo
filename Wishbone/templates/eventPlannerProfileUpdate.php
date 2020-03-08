@@ -19,24 +19,38 @@ $userType = $row['userType'];
 
 $firstName = $_POST['firstName'];
 $lastName = $_POST['lastName'];
+$aboutMe = $_POST['aboutMe'];
 
 if($userType==1){//Event Planer
     $updateQuery = "UPDATE eventplanners set firstName='$firstName' , lastName='$lastName' where authid='$auth_id'";
     $result = mysqli_query($connection, $updateQuery) or die(mysqli_error($connection));
+    $_SESSION['entertainerfirstname'] = $firstName;
+    $_SESSION['entertainerlastname'] = $lastName;
+    
+    
+    mysqli_close($connection);
+    
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
 }else if($userType==2){//Entertainer
-    $updateQuery = "UPDATE entertainers set firstName='$firstName' , lastName='$lastName' where authid='$auth_id'";
+    $updateQuery = "UPDATE entertainers set firstName='$firstName' , lastName='$lastName' , aboutMe='$aboutMe' where authid='$auth_id'";
     $result = mysqli_query($connection, $updateQuery) or die(mysqli_error($connection));
+    $_SESSION['entertainerfirstname'] = $firstName;
+    $_SESSION['entertainerlastname'] = $lastName;  
+    
+    mysqli_close($connection);
+    header('Location: ' . 'entertainerPortfolio.php');
 }else if($userType==3){//Venue Owner
     $updateQuery = "UPDATE venueowners set firstName='$firstName' , lastName='$lastName' where authid='$auth_id'";
     $result = mysqli_query($connection, $updateQuery) or die(mysqli_error($connection));
+    $_SESSION['entertainerfirstname'] = $firstName;
+    $_SESSION['entertainerlastname'] = $lastName;
+    
+    
+    mysqli_close($connection);
+    
+    header('Location: ' . $_SERVER['HTTP_REFERER']);
 }
 
 
-$_SESSION['entertainerfirstname'] = $firstName;
-$_SESSION['entertainerlastname'] = $lastName;
 
-
-mysqli_close($connection);
-
-header('Location: ' . $_SERVER['HTTP_REFERER']);
 ?>
