@@ -40,7 +40,7 @@ include ('../dto/entertainer.php');
 
 $entertainersDT0 = array();
 
-$query1 = "SELECT entid, firstName, lastName, occupation, aboutMe
+$query1 = "SELECT entid, firstName, lastName, occupation, profilePicture, aboutMe
            FROM entertainers";
 
 if ($stmt1 = $connection->prepare( $query1)) {
@@ -49,7 +49,7 @@ if ($stmt1 = $connection->prepare( $query1)) {
     $stmt1->execute();
     
     //bind result variables
-    $stmt1->bind_result( $entid, $firstName, $lastName, $occupation, $aboutMe);
+    $stmt1->bind_result( $entid, $firstName, $lastName, $occupation, $profilePicture, $aboutMe);
     
     //fetch values
     while( $stmt1->fetch()) {
@@ -60,6 +60,7 @@ if ($stmt1 = $connection->prepare( $query1)) {
         $entertainer->setFirstName($firstName);
         $entertainer->setLastName($lastName);
         $entertainer->setOccupation($occupation);
+        $entertainer->setProfilePicture($profilePicture);
         $entertainer->setAboutMe($aboutMe);
         
         $entertainersDT0[] = $entertainer;
@@ -98,6 +99,7 @@ if ($stmt1 = $connection->prepare( $query1)) {
 				
 				<div class="consult-project">
 					<div class="row">
+					
 					<?php
 					   foreach( $entertainersDT0 as $entertainers) {
     					    print
@@ -106,7 +108,7 @@ if ($stmt1 = $connection->prepare( $query1)) {
         							style="padding-left: 5px; padding-right: 5px;">
         							<div class="post-02 post-02__style-02 js-post-effect">
         								<div class="post-02__media">
-        									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
+        									<a href="#"><img src="../assets/img/profile/' . $entertainers->getProfilePicture() . '" alt="" /></a>
         								</div>
         								<div class="post-02__body">
         									<h2 class="post-02__title" style="color: white;">

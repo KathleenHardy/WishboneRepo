@@ -63,17 +63,66 @@ include ('../enums/userType.php');
 $authId = $_SESSION['authId'];
 
 
-function profileStatus() {
+if(isset($_FILES['profilepic'])){
+    $errors= array();
+    $profilePic_file_name = $_FILES['profilepic']['name'];
+    $profilePic_file_size =$_FILES['profilepic']['size'];
+    $profilePic_file_tmp =$_FILES['profilepic']['tmp_name'];
+    $profilePic_file_type=$_FILES['profilepic']['type'];
     
-    if ( isset($_POST['hourlyrate']) && isset($_POST['occupation']) && isset($_POST['aboutme']) && isset($_POST['gigsdetails'])) {
-        $result = ProfileStatus::COMPLETE;
-    } else if ( isset($_POST['hourlyrate']) || isset($_POST['occupation']) || isset($_POST['aboutme']) || isset($_POST['gigsdetails'])) {
-        $result = ProfileStatus::INCOMPLETE;
-    } 
+    //$profilePic_file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img/profile/";
+    $profilePic_file_path = "../assets/img/profile/";
     
-    return $result;
+    
+    if($profilePic_file_size > 2097152){
+        $errors[]='File size must be excatly 2 MB';
+    }
+    
+    if(empty($errors)==true){
+        move_uploaded_file($profilePic_file_tmp, $profilePic_file_path.$profilePic_file_name);
+    }else{
+        print_r($errors);
+    }
 }
 
+
+if(isset($_FILES['bgimage'])){
+    $errors= array();
+    $bgPic_file_name = $_FILES['bgimage']['name'];
+    $bgPic_file_size =$_FILES['bgimage']['size'];
+    $bgPic_file_tmp =$_FILES['bgimage']['tmp_name'];
+    $bgPic_file_type=$_FILES['bgimage']['type'];
+    
+    //$bgPic_file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img/backgrounds/";
+    $bgPic_file_path = "../assets/img/backgrounds/";
+    
+    
+    if($bgPic_file_size > 2097152){
+        $errors[]='File size must be excatly 2 MB';
+    }
+    
+    if(empty($errors)==true){
+        move_uploaded_file($bgPic_file_tmp, $bgPic_file_path.$bgPic_file_name);
+    }else{
+        print_r($errors);
+    }
+}
+
+
+    function profileStatus() {
+        
+        if ( isset($_POST['hourlyrate']) && isset($_POST['occupation']) && isset($_POST['aboutme']) && isset($_POST['gigsdetails'])) {
+            $result = ProfileStatus::COMPLETE;
+        } else if ( isset($_POST['hourlyrate']) || isset($_POST['occupation']) || isset($_POST['aboutme']) || isset($_POST['gigsdetails'])) {
+            $result = ProfileStatus::INCOMPLETE;
+        } 
+        
+        return $result;
+    }
+
+    
+    
+    
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
@@ -90,8 +139,8 @@ function profileStatus() {
             $ratePerHour = $_POST['hourlyrate'];
             $occupation = $_POST['occupation'];
             $workDescription = $_POST['gigsdetails'];
-            $profilePicture = "";
-            $homePagePicture = "";
+            $profilePicture = basename($_FILES["profilepic"]["name"]);
+            $homePagePicture = basename($_FILES["bgimage"]["name"]);
             $aboutMe = $_POST['aboutme'];
             $myQuote = $_POST['quote'];
             
@@ -103,7 +152,7 @@ function profileStatus() {
                 trigger_error($stmt->error, E_USER_ERROR);
             } else {
                 //header("Location:".ADMIN_URL."/index.php");
-                echo("<script>location.href = 'entertainerPortfolio.php?msg=$msg';</script>");
+                //echo("<script>location.href = 'entertainerPortfolio.php?msg=$msg';</script>");
                 mysqli_close($connection);
             }
     
@@ -142,7 +191,7 @@ function profileStatus() {
 							<div class="title-01 title-01__style-04">
 								<h2 class="title-01__title">CREATE YOUR PORTFOLIO</h2>
 							</div>
-							<form  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+							<form  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
 
 										<div class="form-group"> <!-- Event Name -->
 											<label for="hourlyrate" class="control-label title2">What's your hourly rate?</label>

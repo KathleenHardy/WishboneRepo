@@ -50,7 +50,7 @@ require_once ('../dto/gig.php');
 $_SESSION['entid']=$_GET['entid'];
 $entid = $_SESSION['entid'];
 
-$query = "SELECT firstName, lastName, ratePerHour, occupation, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus
+$query = "SELECT authid, firstName, lastName, ratePerHour, occupation, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus
           FROM entertainers
           WHERE  entid = ?";
 
@@ -62,7 +62,7 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->execute();
     
     //bind result variables
-    $stmt->bind_result($firstName, $lastName, $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
+    $stmt->bind_result($authId, $firstName, $lastName, $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
     
     // fetch values
     $stmt->fetch();
@@ -134,7 +134,6 @@ foreach( $myGigs as $gigs) {
 }
 
 
-/**
 $query4 = "SELECT email
           FROM authentication
           WHERE  authid = ?";
@@ -156,7 +155,8 @@ if ($stmt4 = $connection->prepare( $query4)) {
     $stmt4->close();
     
 }
-*/
+
+
 
 $connection->close();
 
@@ -237,7 +237,7 @@ $connection->close();
               <p class="blockquote-footer"><?= $firstName . ' ' . $lastName . ', ' . $occupation?></p>
               <br/>
               <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">CONTACT ME</h2>
-              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">EMAIL: Jane.Moris@gmail.com</p>
+              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">EMAIL: <?= $email ?></p>
             </div>
                     
           <!-- End About and Contact -->
