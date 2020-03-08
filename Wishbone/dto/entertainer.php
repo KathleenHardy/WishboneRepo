@@ -8,8 +8,11 @@ class Entertainer {
     private $imageLocation;
     private $homePagePicture;
     private $aboutMe;
-    
-    function __construct( $entID, $firstName, $lastName, $ratePerHour, $imageLocation, $homePagePicture, $aboutMe) {
+    private $occupation;
+
+
+
+    function __construct( $entID, $firstName, $lastName, $ratePerHour, $imageLocation, $homePagePicture, $aboutMe,$occupation) {
         $this->entID = $entID;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -17,6 +20,7 @@ class Entertainer {
         $this->imageLocation = $imageLocation;
         $this->homePagePicture = $homePagePicture;
         $this->aboutMe = $aboutMe;
+        $this->occupation = $occupation;
     }
     
 
@@ -48,6 +52,11 @@ class Entertainer {
     function setAboutMe( $aboutMe) {
         $this->aboutMe = $aboutMe;
     }
+
+    
+    function setOccupation( $occupation) {
+        $this->occupation= $occupation;
+    }
     
     // accessors
     function getEntID() {
@@ -76,6 +85,10 @@ class Entertainer {
     
     function getAboutMe() {
         return $this->aboutMe;
+    } 
+
+    function getOccupation() {
+        return $this->occupation;
     } 
     
 }

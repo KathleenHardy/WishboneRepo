@@ -23,55 +23,70 @@
 	<body>
 	
 <?php 
-session_start();
+// session is already set in navigationheaderEntertainer.php
 include "navigationheaderEntertainer.php" 
 ?>
 
 <?php
-
-require_once ("../config.php");
 include ('../enums/userType.php');
 
 $authId = $_SESSION['authId'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $query = "UPDATE entertainers
-              SET ratePerHour = ?, occupation = ?, workDescription = ?, profilePicture = ?, homePagePicture = ?, aboutMe = ? 
-              WHERE  authid = ?";
+function profileStatus() {
     
-    if ($stmt = $connection->prepare( $query)) {
-        
-        $stmt->bind_param( "dsssssi", $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $authId);
-        
-        //Set params
-        $ratePerHour = $_POST['q0'];
-        $occupation = $_POST['q1'];
-        $workDescription = $_POST['q3'];
-        $profilePicture = "";
-        $homePagePicture = "";
-        $aboutMe = $_POST['q2'];
-        
-        //execute statement
-        $status = $stmt->execute();
-        
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
-        } else {
-            header('Location: entertainerPortfolio.php');
-            mysqli_close($connection);
-        }
-
-        //close statement
-        $stmt->close();
-    }
+    if ( isset($_POST['q0']) && isset($_POST['q1']) && isset($_POST['q2']) && isset($_POST['q3'])) {
+        $result = ProfileStatus::COMPLETE;
+    } else if ( isset($_POST['q0']) || isset($_POST['q1']) || isset($_POST['q2']) || isset($_POST['q3'])) {
+        $result = ProfileStatus::INCOMPLETE;
+    } 
     
-    else {
-       //  $fmsg = "Invalid Login Credentials.";
-    }
-    //close connection
-    //$connection->close();  
+    return $result;
 }
+
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        
+        $query = "UPDATE entertainers
+                  SET ratePerHour = ?, occupation = ?, workDescription = ?, profilePicture = ?, homePagePicture = ?, aboutMe = ?, myQuote = ?, profileStatus = ?
+                  WHERE  authid = ?";
+        
+        if ($stmt = $connection->prepare( $query)) {
+            $profileStatus = profileStatus();
+            
+            $stmt->bind_param( "dssssssii", $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus, $authId);
+            
+            //Set params
+            $ratePerHour = $_POST['q0'];
+            $occupation = $_POST['q1'];
+            $workDescription = $_POST['q3'];
+            $profilePicture = "";
+            $homePagePicture = "";
+            $aboutMe = $_POST['q2'];
+            $myQuote = $_POST['q4'];
+            
+            
+            //execute statement
+            $status = $stmt->execute();
+            
+            if ($status === false) {
+                trigger_error($stmt->error, E_USER_ERROR);
+            } else {
+                header('Location: entertainerPortfolio.php');
+                mysqli_close($connection);
+            }
+    
+            //close statement
+            $stmt->close();
+        }
+        
+        else {
+           //  $fmsg = "Invalid Login Credentials.";
+        }
+        //close connection
+        //$connection->close();  
+    }
+    
 
 ?>
 
@@ -85,12 +100,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				<div class="fs-title">
 					<h2 class ="title-01__title">CREATE PORTFOLIO</h2>
 				</div>
-				<form id="myform" class="fs-form fs-form-full" autocomplete="off" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+				<form id="myform" class="fs-form fs-form-full" autocomplete="off" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
 					<ol class="fs-fields">
 					
 						<li>
 							<label class="fs-field-label fs-anim-upper" for="q0" style="font-family:'Archivo', sans-serif; font-size: 25px;">What's your rate per hour?</label>
-							<input class="fs-anim-lower" id="q0" name="q0" type="text" placeholder="First name" required/>
+							<input class="fs-anim-lower" id="q0" name="q0" type="text" placeholder="Your rate per hour" required/>
 						</li>
 						<li>
 							<label class="fs-field-label fs-anim-upper" for="q1" data-info="Just so people know" style="font-family:'Archivo', sans-serif; font-size: 25px;">What's your occupation as an entertainer?</label>
@@ -98,15 +113,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 						</li>			
 						
 						<li data-input-trigger>
-							<label class="fs-field-label fs-anim-upper" for="q2" data-info="This will help us know who you are" style="font-family:'Archivo', sans-serif; font-size: 25px;">Tell us about yourself.</label>
+							<label class="fs-field-label fs-anim-upper" for="q2" data-info="This will help us know who you are" style="font-family:'Archivo', sans-serif; font-size: 25px;">Tell us about yourself</label>
 							<textarea class="fs-anim-lower" style="border:solid 3px #fac668;" id="q2" name="q2" placeholder="Describe here"></textarea>
 						</li>
 						<li>
 							<label class="fs-field-label fs-anim-upper" for="q3" style="font-family:'Archivo', sans-serif; font-size: 25px;">Describe your work/gigs</label>
 							<textarea class="fs-anim-lower" style="border:solid 3px #fac668;" id="q3" name="q3" placeholder="Describe here"></textarea>
 						</li>
+						<li>
+							<label class="fs-field-label fs-anim-upper" for="q3" style="font-family:'Archivo', sans-serif; font-size: 25px;">Your inspirational quote</label>
+							<textarea class="fs-anim-lower" style="border:solid 3px #fac668;" id="q4" name="q4" placeholder="Describe here"></textarea>
+						</li>
 						<li data-input-trigger>
 							<label class="fs-field-label fs-anim-upper" data-info="Upload your profile picture" style="font-family:'Archivo', sans-serif; font-size: 25px;">Upload your profile picture.</label>
+							
 							<select class="cs-select cs-skin-boxes fs-anim-lower">
 								<option value="" disabled selected>Pick a color</option>
 								<option value="#588c75" data-class="color-588c75">#588c75</option>
@@ -130,6 +150,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 								<option value="#fbdfc9" data-class="color-fbdfc9">#fbdfc9</option>
 								<option value="#f1c1bd" data-class="color-f1c1bd">#f1c1bd</option>
 							</select>
+							
+
 						</li>
 						<li data-input-trigger>
 							<label class="fs-field-label fs-anim-upper" data-info="Upload your homepage picture" style="font-family:'Archivo', sans-serif; font-size: 25px;">Upload your homepage picture.</label>

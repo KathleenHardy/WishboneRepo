@@ -43,14 +43,11 @@
 <?php 
 include ('../config.php');
 require_once ('../dto/gig.php');
-session_start();
-include "navigationheaderEntertainer.php" ;
-
+include "navigationheaderEntertainer.php";
 
 $authId = $_SESSION['authId'];
-// $entId = $_SESSION['authId'];
 
-$query = "SELECT entid, firstName, lastName, ratePerHour, occupation, workDescription, profilePicture, homePagePicture, aboutMe 
+$query = "SELECT entid, firstName, lastName, ratePerHour, occupation, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus 
           FROM entertainers
           WHERE  authid = ?";
 
@@ -62,7 +59,7 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->execute();
 
     //bind result variables
-    $stmt->bind_result($entid, $firstName, $lastName, $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe);
+    $stmt->bind_result($entid, $firstName, $lastName, $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
     
     // fetch values
     $stmt->fetch();
@@ -72,55 +69,92 @@ if ($stmt = $connection->prepare( $query)) {
       
 }
 
+
 $_SESSION['entertainerfirstname'] = $firstName;
 $_SESSION['entertainerlastname'] = $lastName;
 $_SESSION['entertainerid'] = $entid;
 
 $myGigs = array();
-$query2 = "SELECT * 
+$query2 = "SELECT gigsid, gigsName, gigsCategory, gigsLabel, gigsArtType, gigsDetails, notes
            FROM gigs 
            WHERE  entid = ?";
 
 if ($stmt2 = $connection->prepare( $query2)) {
-    
+
     $stmt2->bind_param( "i", $entid);
     
     //execute statement
     $stmt2->execute();
     
     //bind result variables
-    $stmt2->bind_result($gigsid, $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes);
+    $stmt2->bind_result($gigsid, $gigsName, $gigsCategory, $gigsLabel,  $gigsArtType, $gigsDetails, $gigsNotes);
     
     // fetch values
-    while( $stmt2->fetch()) {       
-        $myGigs[] = new Gig( $gigsid, $gigsName, $gigsCategory, $gigsArtType, $gigsDetails, $gigsNotes);
+    while( $stmt2->fetch()) {     
+        
+        $myGigs[] = new Gig( $gigsid, $gigsName, $gigsCategory, $gigsLabel, $gigsArtType, $gigsDetails, $gigsNotes);
+ 
     }
     
     //close statement
-    $stmt2->close();
+    $stmt2->close(); 
+}
+
+$myGigsPictures = array();
+
+foreach( $myGigs as $gigs) {
+    $query3 = "SELECT gigsImageLocation
+              FROM gigsImages
+              WHERE  gigsid = ?";
     
+    if ($stmt3 = $connection->prepare( $query3)) {
+        $gigsId = $gigs->getGigsID();
+        
+        $stmt3->bind_param( "i", $gigsId);
+        
+        //execute statement
+        $stmt3->execute();
+        
+        //bind result variables
+        $stmt3->bind_result($gigsImageLocation);
+        
+        // fetch values
+        while( $stmt3->fetch()) {
+            $myGigsPictures[] = $gigsImageLocation;
+        }
+        
+        $gigs->addGigsPictures($myGigsPictures);
+        
+        unset($myGigsPictures);
+        $myGigsPictures = array();
+
+        //close statement
+        $stmt3->close();
+        
+    }
 }
 
 
-$query3 = "SELECT email
+
+$query4 = "SELECT email
           FROM authentication
           WHERE  authid = ?";
 
-if ($stmt3 = $connection->prepare( $query3)) {
+if ($stmt4 = $connection->prepare( $query4)) {
     
-    $stmt3->bind_param( "i", $authId);
+    $stmt4->bind_param( "i", $authId);
     
     //execute statement
-    $stmt3->execute();
+    $stmt4->execute();
     
     //bind result variables
-    $stmt3->bind_result($email);
+    $stmt4->bind_result($email);
     
     // fetch values
-    $stmt3->fetch();
+    $stmt4->fetch();
     
     //close statement
-    $stmt3->close();
+    $stmt4->close();
     
 }
 
@@ -195,8 +229,8 @@ $connection->close();
             <div class="col-lg-12" style="text-align: center;">
               <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">ABOUT ME</h2>
               <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;"><?= $aboutMe ?></p>
-              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">Success to me comes from staying true to yourself and straying from the pack.</p>
-              <p class="blockquote-footer">Jane Moris, Musician</p>
+              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;"><?= $myQuote ?></p>
+              <p class="blockquote-footer"> <?= $firstName . ' ' . $lastName . ', ' . $occupation?></p>
               <br/>
               <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">CONTACT ME</h2>
               <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">EMAIL: <?= $email ?></p>
@@ -223,24 +257,56 @@ $connection->close();
 
           <ul class="js-shuffle-controls u-portfolio-controls text-center mb-5">
             <li class="u-portfolio-controls__item"><a href="#!" data-group="all" class="active">ALL</a></li>
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="its-illustration">PERSONAL</a></li>
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="its-design">PROFESSIONAL</a></li>
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="its-graphic">BEST</a></li>
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="its-logo">OTHER</a></li>
+            <li class="u-portfolio-controls__item"><a href="#!" data-group="Personal">PERSONAL</a></li>
+            <li class="u-portfolio-controls__item"><a href="#!" data-group="Professional">PROFESSIONAL</a></li>
+            <li class="u-portfolio-controls__item"><a href="#!" data-group="Best">BEST</a></li>
+            <li class="u-portfolio-controls__item"><a href="#!" data-group="Other">OTHER</a></li>
           </ul>
 
           <!-- Work Content -->
           <div class="js-shuffle u-portfolio row no-gutters mb-6">
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-illustration"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img1.jpg" alt="Image Description">
+          
+          
+          <?php 
+          foreach( $myGigs as $gigs) {
+              $picArray = $gigs->getGigsPictures();
+              $imgSrc = reset( $picArray);
+              
+              print
+              '<figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups=' . "[\"" . $gigs->getGigsLabel() . "\"]" . '>
+    		      <img class="u-portfolio__image" src=' ."../assets/img-temp/portfolio/" . $imgSrc . ' alt="Image Description">
+    				 <figcaption class="u-portfolio__info">
+                        <h6 class="mb-0">' . $gigs->getGigsName() . '</h6>
+                        <small class="d-block">' . $gigs->getGigsCategory() . '</small>
+    				 </figcaption>
+                     <a class="js-popup-image u-portfolio__zoom" href=' ."../assets/img-temp/portfolio/" . $imgSrc . '>Zoom</a>
+               </figure>
+               ';
+          }
+          
+          ?>
+          
+		<!-- 
+            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Personal"]'>
+              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/v-1.jpg" alt="Image Description">
               <figcaption class="u-portfolio__info">
                 <h6 class="mb-0">Gig Name</h6>
                 <small class="d-block">Gig Category</small>
               </figcaption>
-              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img1.jpg">Zoom</a>
+              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img7.jpg">Zoom</a>
+            </figure>
+            
+            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Personal"]'>
+              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img7.jpg" alt="Image Description">
+              <figcaption class="u-portfolio__info">
+                <h6 class="mb-0">Bottle Design</h6>
+                <small class="d-block">Mockup</small>
+              </figcaption>
+              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img2.jpg">Zoom</a>
             </figure>
 
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-design"]'>
+             
+            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Personal"]'>
               <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img2.jpg" alt="Image Description">
               <figcaption class="u-portfolio__info">
                 <h6 class="mb-0">Bottle Design</h6>
@@ -249,7 +315,7 @@ $connection->close();
               <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img2.jpg">Zoom</a>
             </figure>
 
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-graphic"]'>
+            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Best"]'>
               <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img3.jpg" alt="Image Description">
               <figcaption class="u-portfolio__info">
                 <h6 class="mb-0">App Developement</h6>
@@ -258,7 +324,7 @@ $connection->close();
               <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img3.jpg">Zoom</a>
             </figure>
 
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-logo"]'>
+            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Personal"]'>
               <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img4.jpg" alt="Image Description">
               <figcaption class="u-portfolio__info">
                 <h6 class="mb-0">Just Bored</h6>
@@ -267,7 +333,7 @@ $connection->close();
               <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img4.jpg">Zoom</a>
             </figure>
 
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-illustration"]'>
+            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Professional"]'>
               <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img5.jpg" alt="Image Description">
               <figcaption class="u-portfolio__info">
                 <h6 class="mb-0">Cake Lab</h6>
@@ -276,7 +342,7 @@ $connection->close();
               <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img5.jpg">Zoom</a>
             </figure>
 
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-graphic"]'>
+            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["Best"]'>
               <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img6.jpg" alt="Image Description">
               <figcaption class="u-portfolio__info">
                 <h6 class="mb-0">NB Project</h6>
@@ -284,6 +350,8 @@ $connection->close();
               </figcaption>
               <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img6.jpg">Zoom</a>
             </figure>
+            
+            -->
 
             <!-- sizer -->
             <figure class="col-sm-6 col-md-4 u-portfolio__item shuffle_sizer"></figure>

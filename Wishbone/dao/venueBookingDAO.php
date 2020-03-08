@@ -11,7 +11,7 @@ class VenueBookingDAO extends AbstractDAO
             parent::__construct();
         } catch (mysqli_sql_exception $e) {
             throw $e;
-        }
+       }
     }
 
     public function createNewBooking($bookedVenue)
