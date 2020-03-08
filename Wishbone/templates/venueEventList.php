@@ -40,6 +40,7 @@ include ('../dto/venue.php');
 include ('../dto/availability.php');
 
 session_start();
+
 // $authId = $_SESSION['authId'];
 
 // $query = "SELECT venueOwnerId
