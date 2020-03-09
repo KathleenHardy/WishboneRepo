@@ -222,7 +222,7 @@ $connection->close();
           <div class="row">
             <div class="col-md-4 mx-auto">
               <div class="u-pull-half text-center">
-                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="auto" src="../assets/img-temp/200x200/img1.jpg" alt="Image Description">
+                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="200" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="Image Description">
               </div>
             </div>
           </div>
@@ -288,66 +288,6 @@ $connection->close();
           }
           
           ?>
-          <!--
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-illustration"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img1.jpg" alt="Image Description">
-              <figcaption class="u-portfolio__info">
-                <h6 class="mb-0">Gig Name</h6>
-                <small class="d-block">Gig Category</small>
-              </figcaption>
-              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img1.jpg">Zoom</a>
-            </figure>
-
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-design"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img2.jpg" alt="Image Description">
-              <figcaption class="u-portfolio__info">
-                <h6 class="mb-0">Bottle Design</h6>
-                <small class="d-block">Mockup</small>
-              </figcaption>
-              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img2.jpg">Zoom</a>
-            </figure>
-
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-graphic"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img3.jpg" alt="Image Description">
-              <figcaption class="u-portfolio__info">
-                <h6 class="mb-0">App Developement</h6>
-                <small class="d-block">Åpp</small>
-              </figcaption>
-              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img3.jpg">Zoom</a>
-            </figure>
-
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-logo"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img4.jpg" alt="Image Description">
-              <figcaption class="u-portfolio__info">
-                <h6 class="mb-0">Just Bored</h6>
-                <small class="d-block">Freetime</small>
-              </figcaption>
-              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img4.jpg">Zoom</a>
-            </figure>
-
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-illustration"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img5.jpg" alt="Image Description">
-              <figcaption class="u-portfolio__info">
-                <h6 class="mb-0">Cake Lab</h6>
-                <small class="d-block">Graphic</small>
-              </figcaption>
-              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img5.jpg">Zoom</a>
-            </figure>
-
-            <figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups='["its-graphic"]'>
-              <img class="u-portfolio__image" src="../assets/img-temp/portfolio/img6.jpg" alt="Image Description">
-              <figcaption class="u-portfolio__info">
-                <h6 class="mb-0">NB Project</h6>
-                <small class="d-block">Logo</small>
-              </figcaption>
-              <a class="js-popup-image u-portfolio__zoom" href="../assets/img-temp/portfolio/img6.jpg">Zoom</a>
-            </figure>
-            -->
-
-
-
-            <!-- sizer -->
-            
             <figure class="col-sm-6 col-md-4 u-portfolio__item shuffle_sizer"></figure>
           </div>
           <!-- End Work Content -->

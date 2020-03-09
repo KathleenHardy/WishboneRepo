@@ -39,31 +39,6 @@ include ('../dto/venue.php');
 include ('../dto/availability.php');
 
 session_start();
-// $authId = $_SESSION['authId'];
-
-// $query = "SELECT venueOwnerId
-// FROM venueowners
-// WHERE authid = ?";
-
-// if ($stmt = $connection->prepare( $query)) {
-
-// $stmt->bind_param( "i", $authId);
-
-// //execute statement
-// $stmt->execute();
-
-// //bind result variables
-// $stmt->bind_result( $venueOwnerId);
-
-// // fetch values
-// $stmt->fetch();
-
-// //close statement
-// $stmt->close();
-
-// }
-
-// $_SESSION['venueOwnerId'] = $venueOwnerId;
 
 $venueDTO = array();
 
@@ -78,7 +53,7 @@ if ($count >= 1) {
 
     while ($row = mysqli_fetch_array($result)) {
 
-        $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince']);
+        $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);
     }
 } else {
     // $fmsg = "No venues for this user";
@@ -134,15 +109,18 @@ mysqli_close($connection);
 				</div>
 				<div class="consult-project">
 					<div class="row">
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
+						
 
 							<!-- post-02 -->
 <?php
     foreach ($venueDTO as $venue) {
-        print '<div class="post-02 post-02__style-02 js-post-effect">
+        print '
+                <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
+					style="padding-left: 5px; padding-right: 5px;">
+
+                        <div class="post-02 post-02__style-02 js-post-effect">
 								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
+									<a href="#"><img src='."../assets/img-temp/portfolio/" .$venue->getVenuePicture().' alt="" /></a>
 								</div>
 								<div class="post-02__body">
 									<h2 class="post-02__title" style="font-weight:bold; color:white;">
@@ -152,118 +130,14 @@ mysqli_close($connection);
 									<div class="post-02__content">
 									<div class="post-02__department">' . $venue->getVenueState() . '</div>
 									<div class="post-02__department">' . $venue->getVenueProvince() . '</div>
-												<div class="post-02__description">DESCRIPTION: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
+												<div class="post-02__description">DESCRIPTION: ' . $venue->getVenueDescription() . '</div>
 									</div>
 									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 								</div>
-							</div>';
+                           </div>
+				  </div>';
     }
 ?>
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title"
-										style="color: white; font-weight: bold;">VENUE NAME</h2>
-									<div class="post-02__department">LOCATION</div>
-									<div class="post-02__content">
-										<div class="post-02__department">VENUE TYPE</div>
-										<div class="post-02__department">VENUE CONTACT INFO</div>
-										<div class="post-02__description">DESCRIPTION: Etiam non
-											varius justo, vel tempor mi. Nulla facilisi. Fusce at tortor
-											arcu. Suspendisse maximus ac nisl eu porta. Praesent eget
-											consequat nisi, at mollis turpis. Quisque sed venenatis
-											neque, at molli</div>
-									</div>
-								</div>
-							</div>
-							<!-- End / post-02 -->
-
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<!-- post-02 -->
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title"
-										style="color: white; font-weight: bold;">VENUE NAME</h2>
-									<div class="post-02__department">LOCATION</div>
-									<div class="post-02__content">
-										<div class="post-02__department">VENUE TYPE</div>
-										<div class="post-02__department">VENUE CONTACT INFO</div>
-										<div class="post-02__description">DESCRIPTION: Etiam non
-											varius justo, vel tempor mi. Nulla facilisi. Fusce at tortor
-											arcu. Suspendisse maximus ac nisl eu porta. Praesent eget
-											consequat nisi, at mollis turpis. Quisque sed venenatis
-											neque, at molli</div>
-									</div>
-								</div>
-							</div>
-							<!-- End / post-02 -->
-
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<!-- post-02 -->
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title"
-										style="color: white; font-weight: bold;">VENUE NAME</h2>
-									<div class="post-02__department">LOCATION</div>
-									<div class="post-02__content">
-										<div class="post-02__department">VENUE TYPE</div>
-										<div class="post-02__department">VENUE CONTACT INFO</div>
-										<div class="post-02__description">DESCRIPTION: Etiam non
-											varius justo, vel tempor mi. Nulla facilisi. Fusce at tortor
-											arcu. Suspendisse maximus ac nisl eu porta. Praesent eget
-											consequat nisi, at mollis turpis. Quisque sed venenatis
-											neque, at molli</div>
-									</div>
-								</div>
-							</div>
-							<!-- End / post-02 -->
-
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<!-- post-02 -->
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title"
-										style="color: white; font-weight: bold;">VENUE NAME</h2>
-									<div class="post-02__department">LOCATION</div>
-									<div class="post-02__content">
-										<div class="post-02__department">VENUE TYPE</div>
-										<div class="post-02__department">VENUE CONTACT INFO</div>
-										<div class="post-02__description">DESCRIPTION: Etiam non
-											varius justo, vel tempor mi. Nulla facilisi. Fusce at tortor
-											arcu. Suspendisse maximus ac nisl eu porta. Praesent eget
-											consequat nisi, at mollis turpis. Quisque sed venenatis
-											neque, at molli</div>
-									</div>
-								</div>
-							</div>
-							<!-- End / post-02 -->
-
-						</div>
-					</div>
-				</div>
 			</section>
 			<div class="container">
 				<div class="row">

@@ -151,8 +151,7 @@ if(isset($_FILES['bgimage'])){
             if ($status === false) {
                 trigger_error($stmt->error, E_USER_ERROR);
             } else {
-                //header("Location:".ADMIN_URL."/index.php");
-                //echo("<script>location.href = 'entertainerPortfolio.php?msg=$msg';</script>");
+                echo("<script>location.href = 'entertainerPortfolio.php?msg=$msg';</script>");
                 mysqli_close($connection);
             }
     

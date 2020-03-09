@@ -79,7 +79,7 @@ if ($stmt2 = $connection->prepare( $query2)) {
     
     //fetch values
     while( $stmt2->fetch()) {        
-        $bookedGigDetailsDT0[] = new BookedGigDetails( $gigsName, $gigsDetails, $event_date, $venueName, $venueCity, $venueProvince, $firstName, $lastName, $email);     
+        $bookedGigDetailsDT0[] = new BookedGigDetails( $gigsName, $gigsDetails, $event_date,"", $venueName, $venueCity, $venueProvince, $firstName, $lastName, $email, "");     
     }
 
     //close statement

@@ -36,8 +36,6 @@ include "navigationheaderVenueHost.php";
 include ('../config.php');
 include ('../dto/entertainer.php');
 
-
-
 $entertainersDT0 = array();
 
 $query1 = "SELECT entid, firstName, lastName, occupation, profilePicture, aboutMe
@@ -116,10 +114,10 @@ if ($stmt1 = $connection->prepare( $query1)) {
         									</h2>
         									<div class="post-02__department">' . $entertainers->getOccupation() . '</div>
         									<div class="post-02__content">
-        												<div class="post-02__description">ABOUT ME: ' . $entertainers->getAboutMe() . '</div>
+        									<div class="post-02__description">ABOUT ME: ' . $entertainers->getAboutMe() . '</div>
         									</div>
         									<span style="display: inline;"><a href="venueEntertainerPortfolio.php?entid=' . $entertainers->getEntID() . '"><button type="button">View More</button></a></span>
-        									<span style="display: inline;"><a href="venueEventForm.php"><button type="button">Book Now</button></a></span>
+        									<span style="display: inline;"><a href="venueEventForm.php?entid=' . $entertainers->getEntID() . '"><button type="button">Book Now</button></a></span>
         								</div>
         							</div>
         						</div>
@@ -127,179 +125,6 @@ if ($stmt1 = $connection->prepare( $query1)) {
                             ';
     					}
     				?>
-
-						<!-- 
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
-										ENTERTAINER NAME
-									</h2>
-									<div class="post-02__department">OCCUPATION</div>
-									<div class="post-02__content">
-												<div class="post-02__description">ABOUT ME: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<span style="display: inline;"><a href="venueEntertainerPortfolio.php"><button type="button">View More</button></a></span>
-									<span style="display: inline;"><a href="venueEventForm.php"><button type="button">Book Now</button></a></span>
-								</div>
-							</div>
-						</div>
-						
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="media-entertainer">
-									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
-										ENTERTAINER NAME
-									</h2>
-									<div class="post-02__department">OCCUPATION</div>
-									<div class="post-02__content">
-												<div class="post-02__description">ABOUT ME: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<span style="display: inline;"><a href="venueEntertainerPortfolio.php"><button type="button">View More</button></a></span>
-									<span style="display: inline;"><a href="venueEventForm.php"><button type="button">Book Now</button></a></span>
-								</div>
-								
-						</div>
-						</div>
-						
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
-										ENTERTAINER NAME
-									</h2>
-									<div class="post-02__department">OCCUPATION</div>
-									<div class="post-02__content">
-												<div class="post-02__description">ABOUT ME: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<span style="display: inline;"><a href="venueEntertainerPortfolio.php"><button type="button">View More</button></a></span>
-									<span style="display: inline;"><a href="venueEventForm.php"><button type="button">Book Now</button></a></span>
-								</div>
-							</div>
-
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
-										ENTERTAINER NAME
-									</h2>
-									<div class="post-02__department">OCCUPATION</div>
-									<div class="post-02__content">
-												<div class="post-02__description">ABOUT ME: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<span style="display: inline;"><a href="venueEntertainerPortfolio.php"><button type="button">View More</button></a></span>
-									<span style="display: inline;"><a href="venueEventForm.php"><button type="button">Book Now</button></a></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
-										ENTERTAINER NAME
-									</h2>
-									<div class="post-02__department">OCCUPATION</div>
-									<div class="post-02__content">
-												<div class="post-02__description">ABOUT ME: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<span style="display: inline;"><a href="venueEntertainerPortfolio.php"><button type="button">View More</button></a></span>
-									<span style="display: inline;"><a href="venueEventForm.php"><button type="button">Book Now</button></a></span>
-								</div>
-
-															</div>
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
-										ENTERTAINER NAME
-									</h2>
-									<div class="post-02__department">OCCUPATION</div>
-									<div class="post-02__content">
-												<div class="post-02__description">ABOUT ME: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<span style="display: inline;"><a href="venueEntertainerPortfolio.php"><button type="button">View More</button></a></span>
-									<span style="display: inline;"><a href="venueEventForm.php"><button type="button">Book Now</button></a></span>
-									
-								</div>
-								</div>
-
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="color: white;">
-										ENTERTAINER NAME
-									</h2>
-									<div class="post-02__department">OCCUPATION</div>
-									<div class="post-02__content">
-												<div class="post-02__description">ABOUT ME: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<span style="display: inline;"><a href="venueEntertainerPortfolio.php"><button type="button">View More</button></a></span>
-									<span style="display: inline;"><a href="venueEventForm.php"><button type="button">Book Now</button></a></span>
-								</div>
-							</div>
-                             -->
-
 						</div>
 					</div>
 				</div>
@@ -312,11 +137,9 @@ if ($stmt1 = $connection->prepare( $query1)) {
 		
 			
 			<!-- End / Section -->
-<?php include "footer.php" ?>
-<?php
+<?php include "footer.php"; 
 $_SESSION['entid']=$entertainers->getEntID(); 
 ?>
-
 	</div>
 	<!-- Vendors-->
 	<script type="text/javascript"

@@ -8,7 +8,9 @@
 <meta name="format-detection" content="telephone=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 		<?php include "navigationHeadInclude1.php" ?>
-
+		<?php
+		session_start();
+		 ?>
 <!-- for date time widget -->
 <!--  jQuery -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -57,7 +59,198 @@
 </head>
 
 <body>
-<?php include "navigationheaderVenueHost.php" ?>
+<?php 
+
+include ('../dto/venue.php');
+include ('../dto/gig.php');
+include ('../dto/eventPlanner.php');
+
+include ('../dao/authenticationDAO.php');
+include ("navigationheaderVenueHost.php");
+require_once ("../config.php");
+
+//get selected entainer id
+if(isset($_GET["entid"]))
+{
+	$entid = $_GET["entid"];
+	$_SESSION['entid'] = $entid;
+}else
+{
+	$entid = $_SESSION['entid'];
+}
+
+
+ //get logged in auth id
+ $authId = $_SESSION['authId'];
+
+ //echo $authId;
+ //fetch eventPlannerId based on authId
+ $querya = 'SELECT venueOwnerId FROM venueowners WHERE authid = ?';
+ $stmta =mysqli_prepare ($connection,$querya);
+ $stmta->bind_param('s', $authId);
+ $stmta->execute();
+ $stmta->bind_result($venueOwnerID);
+ $stmta->fetch();
+ 
+ $stmta->close();
+
+$venuesDTO = array();
+
+$query2 = "SELECT * 
+		FROM venues where venueOwnerId=".$venueOwnerID;
+
+		
+$result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+		
+if ($count >= 1) {
+		
+	while ($row = mysqli_fetch_array($result)) {
+	    $venuesDTO[] = new Venue ($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'],$row['venuePicture']);
+	}
+} else {
+			// $fmsg = "No venues for this user";
+}
+
+$_SESSION['myVenues'] = $venuesDTO;
+
+//gigs
+$gigsDTO = array();
+
+$query3 = "SELECT * 
+		FROM gigs where entid=".$entid;
+		
+$result2 = mysqli_query($connection, $query3) or die(mysqli_error($connection));
+
+$count2 = mysqli_num_rows($result2);
+		
+if ($count2 >= 1) {
+		
+	while ($row = mysqli_fetch_array($result2)) {
+		
+		$gigsDTO[] = new Gig  ($row['gigsid'], $row['gigsName'], $row['gigsCategory'], $row['gigsLabel'], $row['gigsArtType'], $row['gigsDetails'],$row['notes']);
+	
+	}
+} else {
+			// $fmsg = "No venues for this user";
+}
+
+$_SESSION['myGigs'] = $gigsDTO;
+
+//event planner
+
+$eventPlannerDTO = array();
+
+$query4 = "SELECT * FROM eventplanners;";
+		
+$result4 = mysqli_query($connection, $query4) or die(mysqli_error($connection));
+
+$count3 = mysqli_num_rows($result4);
+		
+if ($count3 >= 1) {
+		
+	while ($row = mysqli_fetch_array($result4)) {
+		$eventPlannerDTO[] = new EventPlanner  ($row['eventPlannerId'], $row['authid'], $row['firstName'], $row['lastName'], $row['imageLocation']);
+	
+	}
+} else {
+			// $fmsg = "No venues for this user";
+}
+
+$_SESSION['myEventPlanners'] = $eventPlannerDTO;
+
+
+
+
+
+//connection object from config file
+
+$hasError = false;
+$errorMessages = Array();
+
+//cehcks if value is set after button clic or not
+if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eventDescription"]))   
+{
+  
+    
+    if ($_POST["eventName"] == "") {
+        $hasError = true;
+        $errorMessages['eventName'] = 'Please enter event name';
+    }
+
+    if ($_POST["eventDate"] == "") {
+        $hasError = true;
+        $errorMessages['eventDate'] = 'Please enter event date';
+    }
+
+    if ($_POST["eventDescription"] == "") {
+        $hasError = true;
+        $errorMessages['eventDescription'] = 'Please enter event description';
+    }
+    
+    
+  
+        if (! $hasError) {
+           
+
+			
+
+            //fetch venueOwnerId from vanues based on venueId
+            $venue_id = $_POST["venueSelection"];
+            $queryVenueOwner = 'SELECT venueOwnerId FROM venues WHERE venueId = ?';
+            $stmta = mysqli_prepare ($connection,$queryVenueOwner);
+            $stmta->bind_param('s', $venue_id);
+            $stmta->execute();
+            $stmta->bind_result($venueOwnerId);
+            $stmta->fetch();
+            $stmta->close();
+            
+			$resAvailId = '1';
+            
+            //get selected gig id
+			$gigsid = $_POST["gigSelection"];
+			
+			$eventplannerID = $_POST["eventplannerSelection"];
+            
+            //get evenet name
+            $event_name = $_POST["eventName"];
+            
+            //get event date
+            $event_date = date($_POST["eventDate"]);
+            
+            //get event description
+            $event_description = $_POST["eventDescription"];
+            
+            //query to insrt into bookedgigs
+            $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,resAvailId,event_name,event_date,event_description) 
+values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$venue_id.",".$resAvailId.",'".$event_name."','".$event_date."','".$event_description."');";
+            echo $query;
+           //if success then show success msg else show error msg
+           if( mysqli_query($connection,$query) === TRUE)
+           {
+			
+		
+              ?> 
+<script type="text/javascript">
+               window.location.href = 'http://localhost/WishboneRepo/wishbone/templates/venueEventConfirmation.php';
+               </script>
+				
+
+               <?php
+           }else {
+               echo "<script type='text/javascript'>alert('".mysqli_error($connection)."');</script>";
+               echo mysqli_error($connection);
+           }
+            
+         }
+    
+    //testing.test@1.com
+    
+}
+
+
+?>
 	<div class="page-wrap">
 
 		<!-- header -->
@@ -78,41 +271,57 @@
 							<div class="title-01 title-01__style-04">
 								<h2 class="title-01__title">PLAN YOUR EVENT</h2>
 							</div>
-							<form action="entertainerAddGig.php" method="POST">
+							<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>"  method="POST">
 
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventName" class="control-label title2">Event Name</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventName" name="gigs_name" placeholder="Enter a name for your event">
+											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventName" name="eventName" placeholder="Enter a name for your event">
 										</div>	
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventDate" class="control-label title2">Event Date/Time</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventDate" name="gigs_name" placeholder="Enter the date/time of event">
+											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
 										</div>	
 									
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
-											<label for="entertainerSelection" class="control-label title2">Select Your Entertainer</label>
-											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="entertainerSelection" name="entertainerSelection">
-												<option value="Option1">Jack</option>
-												<option value="Option2">Melody</option>
-												<option value="Option3">Moonstruck</option>
-												<option value="Option4">Bob</option>
-												<option value="Option5">Andrew Archibald</option>
-											</select>					
-										</div>																				<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="gigSelection" class="control-label title2">Select Your Gig (based on entertainer)</label>
 											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="gigSelection" name="gigSelection">
-												<option value="Option1">Gig 1</option>
-												<option value="Option2">Gig 2</option>
-												<option value="Option3">Gig 3</option>
-												<option value="Option4">Gig 4</option>
-												<option value="Option5">Gig 5</option>
+											<?php
+
+											foreach($gigsDTO as $gig){
+											?>
+											<option value="<?php echo $gig->getGigsID() ?>"><?php echo $gig->getGigsName(); ?></option>
+											<?php
+											}
+											?>
 											</select>					
-										</div>										
-										<div class="form-group"> <!-- Event Name -->
-											<label for="venue-yourown" class="control-label title2">Venue Name</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="venue-yourown" name="venue-yourown">
+										</div>		
+										<div class="form-group" style="padding: 20px;"> <!-- Event Planner -->
+										<label for="eventplannerSelection" class="control-label title2">Select Your EventPlanner</label>
+											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="eventplannerSelection" name="eventplannerSelection">
+											<?php
+
+												foreach($eventPlannerDTO as $eventplanner){
+												?>
+												<option value="<?php echo $eventplanner->getEventPlannerID() ?>"><?php echo $eventplanner->getFirstName()." ".$eventplanner->getLastName() ?></option>
+												<?php
+												}
+												?>
+
+											</select>					
+										</div>									
+										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
+											<label for="venueSelection" class="control-label title2">Select Your Venue</label>
+											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="venueSelection" name="venueSelection">
+											<?php
+
+											foreach($venuesDTO as $venue){
+											?>
+											<option value="<?php echo $venue->getVenueID() ?>"><?php echo $venue->getVenueName(); ?></option>
+											<?php
+											}
+											?>
+			
 										</div>
-										
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="eventDescription" class="title2">Event Description</label>
 											<textarea class="form-control" style="border: 3px solid #fac668;" rows="5" id="eventDescription" name="eventDescription" placeholder ="Enter details"></textarea>
@@ -139,12 +348,13 @@
 												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
 										</div>
 										for later -->
-										<div style="text-align:center;">
-										<a href="venueEventConfirmation.php"><button type="button" class="btn-all" style="display:inline;">Submit</button></a>
 										 
+										<input  class="btn-all" style="display:inline;" type=SUBMIT value="Submit">
+										 
+										
 										 
 										<a href="venueEventList.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
-										</div>
+										
 										<!-- Replace buttons with below code -->
 										<!--<div class="form-group" style="display:inline;"> 
 											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>

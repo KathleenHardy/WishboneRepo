@@ -90,6 +90,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
                 $_SESSION['authId'] = $authentication->getAuthId();
                 header('Location: entertainerPortfolioEmpty.php');
             } else if ( $_POST["userType"] == UserType::VENUE_OWNER) {
+                $_SESSION['authId'] = $authentication->getAuthId();
                 header('Location: venueProfileView.php');
             }
             

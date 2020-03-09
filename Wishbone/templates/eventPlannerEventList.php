@@ -36,7 +36,51 @@ function closewindow() {
 </head>
 
 <body>
-<?php include "navigationheaderEventPlanner.php" ?>
+
+<?php 
+session_start();
+
+include ('../config.php');
+include ('../dto/bookedGigDetails.php');
+include ("navigationheaderEventPlanner.php");
+
+$bookedGigsDTO = array();
+
+$authId =  $_SESSION['authId'];
+echo $authId;
+//fetch eventPlannerId based on authId
+$querya = 'SELECT eventPlannerId FROM eventPlanners WHERE authid = ?';
+$stmta =mysqli_prepare ($connection,$querya);
+$stmta->bind_param('s', $authId);
+$stmta->execute();
+$stmta->bind_result($eventplannerID);
+$stmta->fetch();
+$stmta->close();
+
+$query2 = "select * from bookedgigsdetails where eventPlannerId = ". $eventplannerID;
+
+$result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+		
+if ($count >= 1) {
+		
+	while ($row = mysqli_fetch_array($result)) {
+	
+		$bookedGigsDTO[] = new BookedGigDetails ($row['gigsName'], $row['gigsDetails'], $row['event_date'], $row['event_description'], $row['venueName'],$row['venueCity'],$row['venueProvince'],$row['firstName'],$row['lastName'], $row['event_name'], "");
+		
+	}
+} else {
+			// $fmsg = "No venues for this user";
+}
+
+$_SESSION['myBookedGigs'] = $bookedGigsDTO;
+		
+mysqli_close($connection);
+
+
+
+?>
 	<div class="page-wrap">
 
 		<!-- header -->
@@ -64,117 +108,41 @@ function closewindow() {
 				</div>
 				<div class="consult-project">
 					<div class="row">
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
 
-							<!-- post-02 -->
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color:white;">
-										EVENT NAME
-									</h2>
-									<div class="post-02__department">DATE TIME</div>
-									<div class="post-02__content">
-									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
-												<div class="post-02__description">DESCRIPTION: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
-								</div>
+						<?php
+						
+						foreach($bookedGigsDTO as $bookedgig)
+						
+						print '<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
+						style="padding-left: 5px; padding-right: 5px;">
+
+						<!-- post-02 -->
+						<div class="post-02 post-02__style-02 js-post-effect">
+							<div class="post-02__media">
+								<a href="#"><img src="../assets/img/projects/v-1.jpg" alt="" /></a>
 							</div>
-							<!-- End / post-02 -->
-
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
-
-							<!-- post-02 -->
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-2.jpg" alt="" /></a>
+							<div class="post-02__body">
+								<h2 class="post-02__title" style="font-weight:bold; color:white;">
+									'. $bookedgig->getEventName() .'
+								</h2>
+								<div class="post-02__department">DATE: '. $bookedgig->getEventDate() .'</div>
+								<div class="post-02__content">
+								<div class="post-02__department">VENUE: '. $bookedgig->getVenueName() .'</div>
+								<div class="post-02__department">ENTERTAINER NAME '. $bookedgig->getFirstName()." ".$bookedgig->getLastName()  .'</div>
+											<div class="post-02__description">DESCRIPTION: '. $bookedgig->getEventDescription() .'</div>
 								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color:white;">
-										EVENT NAME
-									</h2>
-									<div class="post-02__department">DATE TIME</div>
-									<div class="post-02__content">
-									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
-												<div class="post-02__description">DESCRIPTION: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-									<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>								
-								</div>
+								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>
 							</div>
-							<!-- End / post-02 -->
-
 						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
+						<!-- End / post-02 -->
 
-							<!-- post-02 -->
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-3.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color:white;">
-										EVENT NAME
-									</h2>
-									<div class="post-02__department">DATE TIME</div>
-									<div class="post-02__content">
-									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
-												<div class="post-02__description">DESCRIPTION: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>	
-								</div>
-								
-					</div>
-							<!-- End / post-02 -->
+					</div>';
+						
+						
+						?>
 
-						</div>
-						<div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "
-							style="padding-left: 5px; padding-right: 5px;">
 
-							<!-- post-02 -->
-							<div class="post-02 post-02__style-02 js-post-effect">
-								<div class="post-02__media">
-									<a href="#"><img src="../assets/img/projects/v-4.jpg" alt="" /></a>
-								</div>
-								<div class="post-02__body">
-									<h2 class="post-02__title" style="font-weight:bold; color:white;">
-										EVENT NAME
-									</h2>
-									<div class="post-02__department">DATE TIME</div>
-									<div class="post-02__content">
-									<div class="post-02__department">VENUE NAME</div>
-									<div class="post-02__department">ENTERTAINER NAME & CONTACT INFO</div>
-												<div class="post-02__description">DESCRIPTION: Etiam non varius
-											justo, vel tempor mi. Nulla facilisi. Fusce at tortor arcu.
-											Suspendisse maximus ac nisl eu porta. Praesent eget consequat
-											nisi, at mollis turpis. Quisque sed venenatis neque, at molli</div>
-									</div>
-								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>	
-								</div>
-							</div>
-							<!-- End / post-02 -->
 
-						</div>
-					</div>
-				</div>
 			</section>
 		
 <!-- Past Events -->
@@ -306,7 +274,6 @@ function closewindow() {
 
 						</div>
 					</div>
-					
 				</div>
 			</section>
 		
@@ -317,30 +284,39 @@ function closewindow() {
 <?php include "footer.php" ?>
 	</div>
 	
-	    <!--Event Details Modal Window -->
+
+
+	    <!-- Event Details Modal Window
     <div class="modal fade" id="eventDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <form action="#">
+		  <?php 
+
+			function getEventDetails(int $id)
+			{	
+				?>
             <div class="modal-header">
-              <h3 class="modal-title" id="modalTitle">EVENT NAME HERE</h5>
+              <h3 class="modal-title" id="modalTitle"><?php $booked[$id]->getEventName(); ?></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-			<h5>Event Date/Time</h5>
-			<h5>Venue Name</h5>
-			<h5>Venue Location</h5>
-			<h5>Entertainer Name</h5>				
-			<h5>Entertainer Email</h5>			
-			<h5>Event Description Here</h5>
+			<h5>Event Date/Time: <?php $booked[$id]->getEventDate();  ?></h5>
+			<h5>Venue Name: <?php $booked[$id]-> getVenueName(); ?></h5>
+			<h5>Venue Location: <?php $booked[$id]-> getVenueCity(); ?></h5>
+			<h5>Entertainer Name: <?php $booked[$id]-> getFirstName(); ?></h5>				
+			<h5>Entertainer Email: <?php $booked[$id]-> getEmail(); ?></h5>			
+			<h5>Event Description Here: <?php $booked[$id]->getEventDescription();  ?></h5>
               </div>
-            </div>
+			</div>
+			
+			<?php } ?>
           </form>
         </div>
       </div>
-    </div>
+    </div> -->
 	<!-- Vendors-->
 	<script type="text/javascript"
 		src="../assets/vendors/jquery/jquery.min.js"></script>

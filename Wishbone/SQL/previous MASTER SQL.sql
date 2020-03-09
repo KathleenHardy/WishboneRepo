@@ -1,5 +1,6 @@
 drop table if exists bookedVenues;
 drop table if exists bookedGigs;
+drop table if exists resourceAvailability;
 drop table if exists bookingRequests;
 drop table if exists venues;
 drop table if exists eventPlanners;
@@ -437,6 +438,23 @@ CREATE TABLE bookingRequests (
 );
 
 
+
+/*
+Resource Availability table - stores details about a specific entertainer's nad venue's availability
+*/
+CREATE TABLE resourceAvailability (
+    resAvailId int not null auto_increment,
+    entid int,
+    availId int not null,
+    venueId int,
+
+    FOREIGN KEY (entid) REFERENCES entertainers(entid),
+    FOREIGN KEY (availId) REFERENCES availability(availId),
+    FOREIGN KEY (venueId) REFERENCES venues(venueId),
+    primary key (resAvailId)
+);
+
+
 /*
 Booked Gigs table - stores details about a specific entertainer gig that has been booked by an event planner or venue
 */
@@ -444,6 +462,7 @@ CREATE TABLE bookedGigs (
     bookedGigsId int not null auto_increment,
     entid int not null,
     gigsid int not null,
+    resAvailId int not null,
     eventPlannerId int,
     venueOwnerId int,
     venueId int,
@@ -453,6 +472,7 @@ CREATE TABLE bookedGigs (
 
     FOREIGN KEY (entid) REFERENCES entertainers(entid),
     FOREIGN KEY (gigsid) REFERENCES gigs(gigsid),
+    FOREIGN KEY (resAvailId) REFERENCES resourceAvailability(resAvailId),
     FOREIGN KEY (eventPlannerId) REFERENCES eventPlanners(eventPlannerId),
     FOREIGN KEY (venueOwnerId) REFERENCES venueOwners(venueOwnerId),
     primary key (bookedGigsId)
@@ -464,18 +484,34 @@ Booked Venues table - stores details about a specific venue that has been booked
 */
 CREATE TABLE bookedVenues (
     bookedVenuesId int not null auto_increment,
+    resAvailId int not null,
     eventPlannerId int not null,
     venueId int not null,
 
+    FOREIGN KEY (resAvailId) REFERENCES resourceAvailability(resAvailId),
     FOREIGN KEY (eventPlannerId) REFERENCES eventPlanners(eventPlannerId),
     FOREIGN KEY (venueId) REFERENCES venues(venueId),
     primary key (bookedVenuesId)
 );
 
 
+ALTER TABLE bookedGigs ADD FOREIGN KEY (resAvailId) REFERENCES resourceAvailability(resAvailId);
+
+
+CREATE View gigsDetails as 
+(SELECT availStartDate, availEndDate, availStartTime, availEndTime, entertainers.entid, firstName, lastName, ratePerHour, aboutMe, gigsName, gigsCategory, gigsArtType, gigsDetails, notes, event_description, event_name 
+FROM entertainers INNER JOIN gigs ON
+entertainers.entid = gigs.entid INNER JOIN bookedgigs ON
+gigs.gigsid = bookedgigs.gigsid INNER JOIN resourceavailability ON
+resourceavailability.resAvailId = bookedgigs.resAvailId INNER JOIN availability ON
+availability.availId = resourceavailability.availId
+);
+
+
+
 CREATE View bookedGigsDetails as 
 (
-select bookedGigsId, eventplanners.eventPlannerId, gigs.gigsId, bookedgigs.entid, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName, email, event_description, event_name  
+select bookedGigsId, gigs.gigsId, bookedgigs.entid, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName, email, event_description 
 from bookedgigs INNER JOIN gigs ON 
 gigs.gigsid = bookedgigs.gigsid inner join eventplanners ON 
 bookedgigs.eventPlannerId = eventplanners.eventPlannerId JOIN venues ON 
@@ -828,6 +864,9 @@ INSERT INTO availability (availStartDate, availEndDate, availStartTime, availEnd
 							('2020-02-12','2020-03-12', '15:00', '16:00'); 	
 							
 
+INSERT INTO resourceavailability (entid, availId) VALUES (1, 1);
+INSERT INTO resourceavailability (entid, availId) VALUES (2, 1);
+
 INSERT INTO venueOwners ( authid, firstName, lastName) VALUES 
 					    (17, 'Madison', 'Kindler');
 					    
@@ -845,29 +884,33 @@ INSERT INTO venues (venueOwnerId, venueName, venueCity, venueState, venueProvinc
 				
 INSERT INTO venues (venueOwnerId, venueName, venueCity, venueProvince, venueDescription, venuePicture) VALUES 
                      (1, 'TestVenue', 'Ottawa', 'Ontario', 'a description', 'NAC.jpg');
+                     
 					 
 					 
-INSERT INTO bookedvenues (eventPlannerId, venueId) VALUES 
-					     (1, 1);
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 1, 1);
 					     
-INSERT INTO bookedvenues (eventPlannerId, venueId) VALUES 
-					     (2, 2);
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 2, 2);
 					     
-INSERT INTO bookedvenues (eventPlannerId, venueId) VALUES 
-					     (3, 1);
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 3, 1);
 					 
-INSERT INTO bookedvenues (eventPlannerId, venueId) VALUES 
-					     (4, 2);
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 4, 2);
 					     
-INSERT INTO bookedvenues (eventPlannerId, venueId) VALUES 
-					     (5, 1);
+INSERT INTO bookedvenues (resAvailId, eventPlannerId, venueId) VALUES 
+					     (1, 5, 1);
 					 
 
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (1,3, 1,1,1); 
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (2,3, 2,1,2);	
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (2,2, 3,2,1);
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (3,4, 1,2,2);
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,1, 2,1,1);
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (1,3, 1, 1,1,1); 
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (2,3, 1, 2,1,2);	
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (2,2, 1, 3,2,1);
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (3,4, 1, 1,2,2);
+INSERT INTO bookedgigs (entid, gigsid, resAvailId, eventPlannerId, venueOwnerId, venueId) VALUES (4,1, 1, 2,1,1);
+
+
+INSERT INTO resourceavailability (venueId, availId) VALUES (1, 1);
 
 			 
 					 
