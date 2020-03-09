@@ -117,7 +117,8 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
     $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection));
     ?>
     <script type="text/javascript">
-    window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
+    //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
+    window.location.href = 'entertainerAvailabilityList.php';
     </script>
 <?php
 

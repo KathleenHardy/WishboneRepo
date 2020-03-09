@@ -159,7 +159,7 @@ $connection->close();
           </div>
 		
 									<div class="profileInfo" style ="padding: 20px; text-align: center;">
-										<form action="eventPlannerProfileUpdate.php" method="POST">
+										<form action="venueProfileUpdate.php" method="POST">
 
     										<div class="form-group"> <!-- Event Name -->
     											<label for="firstName" class="control-label title2">First Name</label>

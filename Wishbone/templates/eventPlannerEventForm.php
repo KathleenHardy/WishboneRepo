@@ -76,7 +76,8 @@ if(isset($_GET["id"]))
 {
 	$entid = $_GET["id"];
 	$_SESSION['entid'] = $entid;
-}else
+}
+else
 {
 	$entid = $_SESSION['entid'];
 }

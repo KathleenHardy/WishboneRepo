@@ -116,10 +116,6 @@ if(isset($_FILES['fileToUpload'])) {
         }
         
         if(empty($errors)==true){
-            echo $file_tmp; 
-            echo "          ";
-            echo $file_name;
-            
             move_uploaded_file($file_tmp, $file_path.$file_name);
         }else{
             print_r($errors);

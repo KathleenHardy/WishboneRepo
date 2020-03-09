@@ -85,11 +85,15 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
             $addSuccess = $authenticationDAO->addNewRegistrant($authentication);
                        
             if ( $_POST["userType"] == UserType::EVENT_PLANNER) {
-                header('Location: eventPlannerProfile.php');
+                $_SESSION['authId'] = $authentication->getAuthId();
+                $_SESSION['useremail'] = $authentication->getRegistrantEmail();
+                header('Location: eventPlannerProfileView.php');
             } else if ( $_POST["userType"] == UserType::ENTERTAINER) {
                 $_SESSION['authId'] = $authentication->getAuthId();
+                $_SESSION['useremail'] = $authentication->getRegistrantEmail();
                 header('Location: entertainerPortfolioEmpty.php');
             } else if ( $_POST["userType"] == UserType::VENUE_OWNER) {
+                $_SESSION['useremail'] = $authentication->getRegistrantEmail();
                 $_SESSION['authId'] = $authentication->getAuthId();
                 header('Location: venueProfileView.php');
             }
