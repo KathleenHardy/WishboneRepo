@@ -23,9 +23,11 @@
               <li class="nav-item mr-4 mb-2 mb-lg-0">
                 <a class="nav-link" href="eventPlannerEventList.php">My Events</a>
               </li>
+              <!--  
               <li class="nav-item mr-4 mb-2 mb-lg-0">
                 <a class="nav-link" href="eventPlannerEventForm.php">Plan Event</a>
               </li>
+              -->
               <li class="nav-item mr-4 mb-2 mb-lg-0">
                 <a class="nav-link" href="eventPlannerEntertainerList.php">Search Entertainers</a>
               </li>

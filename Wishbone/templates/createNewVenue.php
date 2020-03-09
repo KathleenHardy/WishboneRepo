@@ -103,7 +103,7 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
     mysqli_close($connection);
     ?>
      <script type="text/javascript">
-       window.location.href = 'http://localhost:7331/Wishbone/templates/venueEventList.php';
+       window.location.href = 'venueEventList.php';
      </script>
 <?php
 }

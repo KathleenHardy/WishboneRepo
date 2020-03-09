@@ -511,7 +511,7 @@ availability.availId = resourceavailability.availId
 
 CREATE View bookedGigsDetails as 
 (
-select bookedGigsId, gigs.gigsId, bookedgigs.entid, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName, email, event_description 
+select bookedGigsId, eventplanners.eventPlannerId, gigs.gigsId, bookedgigs.entid, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName, email, event_description 
 from bookedgigs INNER JOIN gigs ON 
 gigs.gigsid = bookedgigs.gigsid inner join eventplanners ON 
 bookedgigs.eventPlannerId = eventplanners.eventPlannerId JOIN venues ON 

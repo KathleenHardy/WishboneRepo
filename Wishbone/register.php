@@ -85,7 +85,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
             
             
             if ( $_POST["userType"] == UserType::EVENT_PLANNER) {
-                header('Location: eventPlannerProfile.php');
+                header('Location: eventPlannerProfileView.php');
             } else if ( $_POST["userType"] == UserType::ENTERTAINER) {
                 $_SESSION['useremail'] = $authentication->getRegistrantEmail();
                 header('Location: entertainerHome.php');
