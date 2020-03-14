@@ -12,6 +12,7 @@ class Entertainer {
     private $workDescription;
     
     function __construct() {
+        
     }
     
 

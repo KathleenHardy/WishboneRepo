@@ -1,14 +1,23 @@
 drop table if exists bookedVenues;
 drop table if exists bookedGigs;
 drop table if exists bookingRequests;
+drop table if exists venueVideos;
 drop table if exists venues;
+drop table if exists venuePendingBookings;
 drop table if exists eventPlanners;
 drop table if exists venueOwners;
-drop table if exists availability;
+drop table if exists entertainerAvailability;
+drop table if exists venueAvailability;
+drop table if exists gigsVideos;
 drop table if exists gigsImages;
 drop table if exists gigs;
+drop table if exists gigsPendingBookings;
 drop table if exists entertainers; 
+drop table if exists entertainerBookingNotifications; 
+drop table if exists venueBookingNotifications; 
+drop table if exists venueOwnerNotifications; 
 drop view  if exists gigsDetails;
+drop view  if exists occupation;
 
 
 drop table if exists experience;
@@ -314,10 +323,10 @@ CREATE TABLE entertainers (
     firstName varchar(50),
     lastName varchar(50),
     ratePerHour decimal(15,2),
-    occupation varchar(15),
     workDescription varchar(200),
     profilePicture varchar(100),
     homePagePicture varchar(100),
+    homePageVideo varchar(100),
     aboutMe varchar(400),
     myQuote varchar(400),
     profileStatus int,
@@ -345,6 +354,29 @@ CREATE TABLE gigs (
     primary key (gigsid)
 );
 
+CREATE TABLE gigsPendingBookings (
+    pendingBookingId int not null auto_increment,
+    gigsid int not null,
+    
+    FOREIGN KEY (gigsid) REFERENCES gigs(gigsid),
+    primary key (pendingBookingId)
+);
+
+
+
+
+/*
+Occupation table - stores a list of entertainers occupation eg, Musician, Singer etc
+*/
+CREATE TABLE occupation (
+    occid int not null auto_increment,
+    entid int not null,
+    occupation varchar(30) not null,
+
+    FOREIGN KEY (entid) REFERENCES entertainers(entid),
+    primary key (occid)
+);
+
 
 /*
 Gigs Image table - stores the location of a gigs images
@@ -359,18 +391,30 @@ CREATE TABLE gigsImages (
 );
 
 
+CREATE TABLE gigsVideos (
+    gigsVideoid int not null auto_increment,
+    gigsid int not null,
+    gigsVideoLocation varchar(100),
+    
+    FOREIGN KEY (gigsid) REFERENCES gigs(gigsid),
+    primary key (gigsVideoid)
+);
+
+
 
 
 /*
-Availability table - stores all the available dates and times for all entertainers and or venues
+entertainerAvailability table - stores all the available dates and times for all entertainers and or venues
 */
-CREATE TABLE availability (
+CREATE TABLE entertainerAvailability (
     availId int not null auto_increment,
+    entid int not null,
     availStartDate date not null,
     availEndDate date,
     availStartTime time not null,
     availEndTime time not null,
 
+	FOREIGN KEY (entid) REFERENCES entertainers(entid),
     primary key (availId)
 );
 
@@ -418,6 +462,38 @@ CREATE TABLE venues (
 	FOREIGN KEY (venueOwnerId) REFERENCES venueOwners(venueOwnerId),
     PRIMARY KEY (venueId)
 );
+
+
+CREATE TABLE venueVideos (
+    venueVideoid int not null auto_increment,
+    venueId int not null,
+    venueVideoLocation varchar(100),
+    
+    FOREIGN KEY (venueId) REFERENCES venues(venueId),
+    primary key (venueVideoid)
+);
+
+CREATE TABLE venuePendingBookings (
+    pendingBookingId int not null auto_increment,
+    venueId int not null,
+    
+    FOREIGN KEY (venueId) REFERENCES venues(venueId),
+    primary key (pendingBookingId)
+);
+
+
+CREATE TABLE venueAvailability (
+    availId int not null auto_increment,
+    venueId int not null,
+    availStartDate date not null,
+    availEndDate date,
+    availStartTime time not null,
+    availEndTime time not null,
+
+	FOREIGN KEY (venueId) REFERENCES venues(venueId),
+    primary key (availId)
+);
+
 
 
 /*
@@ -471,6 +547,80 @@ CREATE TABLE bookedVenues (
     FOREIGN KEY (venueId) REFERENCES venues(venueId),
     primary key (bookedVenuesId)
 );
+
+
+CREATE TABLE entertainerBookingNotifications (
+    notificationId int not null auto_increment,
+    notificationType int not null,
+    entid int not null,
+    gigsid int not null,
+    venue varchar(20) not null,
+    event_date date not null,
+    requestorEmail varchar(20) not null,
+    message varchar(100),
+
+    FOREIGN KEY (entid) REFERENCES entertainers(entid),
+    FOREIGN KEY (gigsid) REFERENCES gigs(gigsid),
+    primary key (notificationId)
+);
+
+CREATE TABLE venueBookingNotifications (
+    notificationId int not null auto_increment,
+    notificationType int not null,
+    venueId int not null,
+    requestorEmail varchar(20) not null,
+    message varchar(100),
+
+    FOREIGN KEY (venueId) REFERENCES venues(venueId),
+    primary key (notificationId)
+);
+
+
+CREATE TABLE venueOwnerNotifications (
+    notificationId int not null auto_increment,
+    notificationType int not null,
+    venueOwnerId int not null,
+    entid int not null,
+    message varchar(100),
+
+    FOREIGN KEY (venueOwnerId) REFERENCES venueOwners(venueOwnerId),
+    primary key (notificationId)
+);
+
+
+CREATE TABLE eventPlannerNotifications (
+    notificationId int not null auto_increment,
+    notificationType int not null,
+    eventPlannerId int not null,
+    entid int not null,
+    message varchar(100),
+
+    FOREIGN KEY (eventPlannerId) REFERENCES eventPlanners(eventPlannerId),
+    primary key (notificationId)
+);
+
+
+
+
+
+
+CREATE View gigsDetails as 
+(SELECT availStartDate, availEndDate, availStartTime, availEndTime, entertainers.entid, firstName, lastName, ratePerHour, aboutMe, gigsName, gigsCategory, gigsArtType, gigsDetails, notes 
+FROM entertainers INNER JOIN gigs ON
+entertainers.entid = gigs.entid INNER JOIN entertainerAvailability ON
+entertainerAvailability.entid = entertainers.entid
+);
+
+
+/*
+SELECT availStartDate, availEndDate, availStartTime, availEndTime, entertainers.entid, firstName, lastName, ratePerHour, aboutMe, gigsName, gigsCategory, gigsArtType, gigsDetails, notes
+
+FROM entertainerAvailability INNER JOIN entertainers ON
+entertainerAvailability.entid = entertainers.entid INNER JOIN gigs ON
+entertainers.entid = gigs.entid INNER JOIN gigsimages ON
+gigs.gigsid = gigsimages.gigsid
+*/
+
 
 
 CREATE View bookedGigsDetails as 
@@ -824,8 +974,20 @@ INSERT INTO gigs (entid, gigsName, gigsCategory, gigsArttype, gigsDetails, notes
     
     	                       
 
-INSERT INTO availability (availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
-							('2020-02-12','2020-03-12', '15:00', '16:00'); 	
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
+							(1, '2020-02-12','2020-03-12', '15:00', '16:00'); 
+							
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
+							(2, '2020-05-12','2020-06-12', '16:00', '16:00'); 	
+							
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
+							(3, '2020-06-12','2020-09-12', '17:00', '16:00');	
+							
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
+							(4, '2020-12-12','2021-01-12', '17:00', '16:00');	
+							
+							
+											
 							
 
 INSERT INTO venueOwners ( authid, firstName, lastName) VALUES 
@@ -869,15 +1031,25 @@ INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VA
 INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (3,4, 1,2,2);
 INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,1, 2,1,1);
 
+
+INSERT INTO occupation (entid, occupation) VALUES (1, "Dancer");
+INSERT INTO occupation (entid, occupation) VALUES (1, "Singer");
+INSERT INTO occupation (entid, occupation) VALUES (2, "Model");
+INSERT INTO occupation (entid, occupation) VALUES (4, "Photographer");
+INSERT INTO occupation (entid, occupation) VALUES (4, "Model");
+INSERT INTO occupation (entid, occupation) VALUES (3, "Model");
+INSERT INTO occupation (entid, occupation) VALUES (1, "Comedian");
+INSERT INTO occupation (entid, occupation) VALUES (3, "DJ");
+
 			 
 					 
 /*
 INSERT INTO `eventplanners` (`authid`, `firstName`, `lastName`, `imageLocation`) VALUES 
                             ('1', 'Andrew', 'Archibald', NULL);
 
-INSERT INTO `availability` (`availStartDate`, `availEndDate`, `availStartTime`, `availEndTime`) VALUES 
+INSERT INTO `entertainerAvailability` (`availStartDate`, `availEndDate`, `availStartTime`, `availEndTime`) VALUES 
                            ('2020-02-09', '2020-02-09', '18:00:00', '21:00:00');
 
-INSERT INTO `resourceavailability` (`entid`, `availId`, `venueId`) VALUES 
+INSERT INTO `resourceentertainerAvailability` (`entid`, `availId`, `venueId`) VALUES 
 								(NULL, '1', '1');
 */
