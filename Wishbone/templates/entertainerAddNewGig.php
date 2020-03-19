@@ -181,7 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>Add Gig</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -217,6 +217,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Style.css -->
     		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+    		<link rel="stylesheet" type="text/css" href="..assets/css2/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="..assets/css2/demo.css" />
+		<link rel="stylesheet" type="text/css" href="..assets/css2/component.css" />
 </head>
 
 <body>
@@ -576,24 +579,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 											<textarea class="form-control" rows="5" style="border: 2px solid #faa828;" id="gigs_notes-id" name="gigs_notes" placeholder="Add notes"></textarea>
 										</div>
 										
-										<div class="form-group">
-										<label for="gigPhoto" class="title2">Upload Gig Image</label>
-										 
-                                        <div class="input-group">
-                                       	  <!--
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                                          </div>
-                                          <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="gigPhoto"
-                                              aria-describedby="inputGroupFileAddon01">
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                          </div>
-                                           -->
-                                            <input type="file" name="fileToUpload" id="fileToUpload">
-                                            <input type="submit" value="Upload Image" name="submit">                                          
-                                        </div>
-                                        </div>
+		<div class="form-group">
+				<label for ="gigimage" class="title2">Upload Your Gig Image</label>
+					<input type="file" name="file-1[]" id="gigimage" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
+					<label for="gigimage"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose image&hellip;</span></label>
+										
+										</div>
                                         
 										<!--
 										<div class="input-group">
@@ -698,6 +689,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- menu js -->
     <script src="../assets/javascript/pcoded.min.js"></script>
     <script src="../assets/javascript/vertical/vertical-layout.min.js "></script>
+		<script src="../assets/js-other/custom-file-input.js"></script>
 
     <script type="text/javascript" src="../assets/javascript/script.js "></script>
 </body>

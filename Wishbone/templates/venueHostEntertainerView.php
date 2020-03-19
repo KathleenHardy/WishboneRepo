@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>Entertainer Portfolio</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -412,6 +412,13 @@ $connection->close();
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="">
+                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Calendar</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>                                
                                 <li class="">
                                     <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>

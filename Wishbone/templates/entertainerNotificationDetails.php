@@ -328,7 +328,7 @@
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
- <h1 class="main-title">Your Booking Details</h1>      
+ <h1 class="main-title">Your Booking Notification</h1>      
  <br/>
  <br/>   
   <div class="center" style ="padding: 30px;">
