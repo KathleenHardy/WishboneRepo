@@ -6,6 +6,7 @@ include ('../enums/profileStatus.php');
 
 class AuthenticationDAO extends AbstractDAO
 {
+    private $salt;
 
     function __construct()
     {
@@ -43,6 +44,8 @@ class AuthenticationDAO extends AbstractDAO
             $userType = UserType::VENUE_OWNER;
             $email = $Registrant->getRegistrantEmail();
             $pass = $Registrant->getRegistrantPassword();
+            //$salt = uniqid(mt_rand(), true);
+            //$crypted_pass = crypt($pass, $salt);
             $stmt = $this->mysqli->prepare($query1);
             $stmt->bind_param('ssi', $email, $pass, $userType);
             $stmt->execute();
@@ -83,6 +86,8 @@ class AuthenticationDAO extends AbstractDAO
             $userType = UserType::ENTERTAINER;
             $email = $Registrant->getRegistrantEmail();
             $pass = $Registrant->getRegistrantPassword();
+            //$salt = uniqid(mt_rand(), true);
+            //$crypted_pass = crypt($pass, $salt);
             $stmt = $this->mysqli->prepare($query1);
             $stmt->bind_param('ssi', $email, $pass,$userType);
             $stmt->execute();
@@ -125,6 +130,8 @@ class AuthenticationDAO extends AbstractDAO
             $userType = UserType::EVENT_PLANNER;
             $email = $Registrant->getRegistrantEmail();
             $pass = $Registrant->getRegistrantPassword();
+            //$salt = uniqid(mt_rand(), true);
+            //$crypted_pass = crypt($pass, $salt);
             $stmt = $this->mysqli->prepare($query1);
             $stmt->bind_param('sss', $email, $pass,$userType);
             $stmt->execute();
@@ -157,4 +164,15 @@ class AuthenticationDAO extends AbstractDAO
         }
     }
 }
+
+/**
+ * $currentPassword = '$2a$15$Ku2hb./9aA71tPo/E015h.LsNjXrZe8pyRwXOCpSnGb0nPZuxeZP2';
+$checkPassword = 'passwords1';
+
+if(crypt($checkPassword, $currentPassword) === $currentPassword){
+    echo 'You are in!';
+}else{
+    echo 'You entered the wrong password';
+}
+ */
 ?>

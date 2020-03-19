@@ -178,27 +178,27 @@ $connection->close();
                 <ul class="list-inline text-center mb-0">
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Facebook">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-facebook"></i>
+                      <i class="fab fa-facebook fa-2x"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Dribbble">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-dribbble"></i>
+                      <i class="fab fa-dribbble fa-2x"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Linkedin">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-linkedin"></i>
+                      <i class="fab fa-linkedin fa-2x"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Twitter">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-twitter"></i>
+                      <i class="fab fa-twitter fa-2x"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Twitter">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-instagram"></i>
+                      <i class="fab fa-instagram fa-2x"></i>
                     </a>
                   </li>
                 </ul>
@@ -220,7 +220,7 @@ $connection->close();
           <div class="row">
             <div class="col-md-4 mx-auto">
               <div class="u-pull-half text-center">
-                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="200" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="Image Description">
+                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="300" height="300" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="Image Description">
               </div>
             </div>
           </div>

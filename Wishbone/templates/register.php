@@ -25,6 +25,7 @@
 	<link rel="stylesheet" type="text/css" href="../assets/vendors/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="../assets/css/util.css">
+	
 	<link rel="stylesheet" type="text/css" href="../assets/css/mainLogin.css">
 	<link href="https://fonts.googleapis.com/css?family=Archivo&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Playfair+Display&display=swap" rel="stylesheet">
@@ -34,7 +35,7 @@
 
 <?php
 include ('../dao/authenticationDAO.php');
-include ('../navigationheaderHome.php');
+include ('navigationBeforeLogin.php');
 require_once ("../config.php");
 
 session_start();
@@ -87,7 +88,7 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
             if ( $_POST["userType"] == UserType::EVENT_PLANNER) {
                 $_SESSION['authId'] = $authentication->getAuthId();
                 $_SESSION['useremail'] = $authentication->getRegistrantEmail();
-                header('Location: eventPlannerProfileView.php');
+                header('Location: venueHostProfileView.php');
             } else if ( $_POST["userType"] == UserType::ENTERTAINER) {
                 $_SESSION['authId'] = $authentication->getAuthId();
                 $_SESSION['useremail'] = $authentication->getRegistrantEmail();
@@ -191,6 +192,8 @@ if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_P
 				</form>
 			</div>
 		</div>
+	<?php include ("footer.php"); ?>		
+
 	</div>
 	
 
