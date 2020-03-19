@@ -300,7 +300,7 @@
                                     </a>
                                 </li> 
                                 <li class="">
-                                    <a href="venueHostAllVenues.php" class="waves-effect waves-dark">
+                                    <a href="venueHostVenueList.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fas fa-building"></i><b>D</b></span>
                                         <span class="pcoded-mtext">My Venues</span>
                                         <span class="pcoded-mcaret"></span>

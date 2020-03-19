@@ -47,7 +47,7 @@ File: style.css
 }
 
 body {
-	background-color: #f4f1de;
+	background-color: #f8f7eb;
 	font-size: 0.875em;
 	overflow-x: hidden;
 	color: #2b373e;
@@ -66,6 +66,9 @@ body {
 }
 /* other custom */
 
+.button-lone {
+	padding: 25px;
+}
 .add-button-list {
 	background: #faa828;
 	color: white;
@@ -92,11 +95,7 @@ body {
     color:#AD8D5A;
 }
 
-.u-pull-half img {
-	width: 300px;
-	height: 300px;
-	border-radius: 50%;
-}
+
 .plain-text {
 	color: #36454f;
 	text-align: center;
@@ -112,6 +111,29 @@ body {
     border-radius: 20px;
     color: #fff;
     font-size: 13px;
+}
+
+.outer button {
+        padding: 8px 20px;
+    background: #faa828;
+    border: 0;
+    outline: none;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 13px;	
+	
+}
+
+.outer a {
+	color: white;
+}
+
+.outer a:hover {
+    color: #AD8D5A;
+}
+.pg-start {
+	text-align: center;
+	
 }
 .card a {
 	color: white;
@@ -132,7 +154,7 @@ body {
 	color: #005BAD;
 }
 option {
-	background-color: #f4f1de;
+	background-color: #f8f7eb;
 	color: #36454f;
 }
 .title2 {
@@ -509,7 +531,7 @@ code {
 }
 
 .card .card-block code {
-	background-color: #f4f1de;
+	background-color: #f8f7eb;
 	margin: 5px;
 	display: inline-block;
 }
@@ -549,7 +571,7 @@ code {
 }
 
 .card .card-block .dropdown-menu .dropdown-divider {
-	background-color: #f4f1de;
+	background-color: #f8f7eb;
 	margin: 3px 0;
 }
 
@@ -857,7 +879,7 @@ code {
 }
 
 .location-selector .bit:hover {
-	background-color: #f4f1de;
+	background-color: #f8f7eb;
 }
 
 .location-selector .bit.bottom,
@@ -908,7 +930,7 @@ button.close {
 	display: block;
 	color: #222222;
 	padding: 14px 20px;
-	border-top: 1px solid #f4f1de;
+	border-top: 1px solid #f8f7eb;
 	font-weight: 500;
 	cursor: pointer;
 }
@@ -1018,7 +1040,7 @@ a.bg-danger:hover {
 }
 
 .tab-below {
-	border-top: 1px solid #f4f1de;
+	border-top: 1px solid #f8f7eb;
 	border-bottom: none;
 }
 
@@ -2573,7 +2595,7 @@ img.comment-img {
 }
 
 .ie-warning .iew-download>li>a:hover {
-	background-color: #f4f1de;
+	background-color: #f8f7eb;
 }
 
 
@@ -5588,7 +5610,7 @@ table tbody .border-bottom-info td {
 
 .pcoded .pcoded-navbar .pcoded-item:after {
 	content: "";
-	background-color: #f4f1de;
+	background-color: #f8f7eb;
 	width: 80%;
 	height: 1px;
 	position: absolute;
@@ -8820,7 +8842,7 @@ body.menu-bottom #collapse-menu {
 }
 
 .border-checkbox-section .border-checkbox-group .border-checkbox:checked+.border-checkbox-label:after .border-checkbox-label:before {
-	border-color: #f4f1de;
+	border-color: #f8f7eb;
 }
 
 .border-checkbox-section .border-checkbox-group .border-checkbox-label {
@@ -8839,8 +8861,8 @@ body.menu-bottom #collapse-menu {
 	width: 6px;
 	height: 12px;
 	opacity: 0.9;
-	border-right: 2px solid #f4f1de;
-	border-top: 2px solid #f4f1de;
+	border-right: 2px solid #f8f7eb;
+	border-top: 2px solid #f8f7eb;
 	position: absolute;
 	left: 4px;
 	top: 11px;
@@ -9263,7 +9285,7 @@ body.menu-bottom #collapse-menu {
 }
 
 .checkbox-color input[type="checkbox"]:disabled+label::before {
-	background-color: #f4f1de;
+	background-color: #f8f7eb;
 	cursor: not-allowed;
 }
 

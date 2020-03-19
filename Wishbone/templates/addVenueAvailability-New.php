@@ -1,187 +1,129 @@
 <?php
-$authId = $_SESSION['authId'];
 
-/*
- if(isset($_FILES['fileToUpload'])) {
- 
- //'../assets/img-temp/gigs/'
- $target_dir = "../assets/img-temp/portfolio/";
- $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
- $uploadOk = 1;
- $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
- // Check if image file is a actual image or fake image
- if(isset($_POST["submit"])) {
- $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
- if($check !== false) {
- echo "File is an image - " . $check["mime"] . ".";
- $uploadOk = 1;
- } else {
- echo "File is not an image.";
- $uploadOk = 0;
- }
- }
- // Check if file already exists
- 
- if (file_exists($target_file)) {
- echo "Sorry, file already exists.";
- $uploadOk = 0;
- }
- 
- 
- // Check file size
- if ($_FILES["fileToUpload"]["size"] > 500000) {
- echo "Sorry, your file is too large.";
- $uploadOk = 0;
- }
- 
- // Allow certain file formats
- if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
- && $imageFileType != "gif" ) {
- echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
- $uploadOk = 0;
- }
- // Check if $uploadOk is set to 0 by an error
- if ($uploadOk == 0) {
- echo "Sorry, your file was not uploaded.";
- // if everything is ok, try to upload file
- } else {
- if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
- echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded to ". $target_file;
- } else {
- echo "Sorry, there was an error uploading your file.";
- }
- }
- }
- */
+require_once ('../config.php');
+require_once ('../dto/venue.php');
+session_start();
+?>
+<?php
 
-if(isset($_FILES['fileToUpload'])){
-    $errors= array();
-    $file_name = $_FILES['fileToUpload']['name'];
-    $file_size =$_FILES['fileToUpload']['size'];
-    $file_tmp =$_FILES['fileToUpload']['tmp_name'];
-    $file_type=$_FILES['fileToUpload']['type'];
-    //$file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
-    //$file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
+
+$venueDTO = $_SESSION['myVenues'];
+
+// $authId = $_SESSION['authId'];
+
+// $query = "SELECT venueOwnerId
+// FROM venueowners
+// WHERE authid = ?";
+
+// if ($stmt = $connection->prepare( $query)) {
+
+// $stmt->bind_param( "i", $authId);
+
+// //execute statement
+// $stmt->execute();
+
+// //bind result variables
+// $stmt->bind_result( $venueOwnerId);
+
+// // fetch values
+// $stmt->fetch();
+
+// //close statement
+// $stmt->close();
+
+// }
+
+// $_SESSION['venueOwnerId'] = $venueOwnerId;
+
+if (! empty($_POST)) {
+
+    echo "Posting";
+
+    $venueName = $_POST['venueName'];
+    $startDate = $_POST['startDate'];
+    $endDate = $_POST['endDate'];
+    $startTime = $_POST['startTime'];
+    $endTime = $_POST['endTime'];
     
-    $file_path = "../assets/img-temp/portfolio/";
+
+    $sql = "INSERT INTO availability(availStartDate, availEndDate, availStartTime, availEndTime) 
+VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
     
-    /*
-     $file_ext=strtolower(end(explode('.', $file_name)));
-     
-     $extensions= array("jpeg","jpg","png");
-     
-     if(in_array($file_ext,$extensions)=== false){
-     $errors[]="extension not allowed, please choose a JPEG or PNG file.";
-     }
-     */
-    
-    if($file_size > 2097152){
-        $errors[]='File size must be excatly 2 MB';
+
+    if (mysqli_query($connection, $sql)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
     
-    if(empty($errors)==true){
-        move_uploaded_file($file_tmp, $file_path.$file_name);
-    }else{
-        print_r($errors);
-    }
-}
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //mysqli_close($connection);
     
-    $query = "SELECT entid
-               FROM entertainers
-               WHERE  authid = ?";
-    
-    if ($stmt = $connection->prepare( $query)) {
+//     $sql2 = "SELECT venueID 
+//             FROM venues 
+//             WHERE venueName=$venueName";
+//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
+    $sql2 = "SELECT venueID
+            FROM venues
+            WHERE venueName=?";
+
+    if ($stmt = $connection->prepare( $sql2)) {
         
-        $stmt->bind_param( "i", $authId);
+        $stmt->bind_param( "i", $venueName);
         
         //execute statement
         $stmt->execute();
         
         //bind result variables
-        $stmt->bind_result($entid);
+        $stmt->bind_result( $chosenVenueId);
         
         // fetch values
         $stmt->fetch();
         
         //close statement
         $stmt->close();
+        
     }
     
+    $sql3="SELECT availId
+            FROM availability
+            WHERE availStartDate=? AND availEndDate=? AND availStartTime=? AND availEndTime=?";
     
-    
-    $query2 = "INSERT INTO gigs
-                  ( entid, gigsName, gigscategory, gigslabel, gigsArttype, gigsdetails, notes)
-                  VALUES
-                  (?,?,?,?,?,?,?)";
-    
-    if ($stmt2 = $connection->prepare( $query2)) {
+    if ($stmt = $connection->prepare( $sql3)) {
         
-        $stmt2->bind_param( "issssss", $entid, $gigsName, $gigsCategory, $gigsLabel, $gigsArtType, $gigsDetails, $gigsNotes);
-        //Set params
-        $gigsName = $_POST['gigs_name'];
-        $gigsCategory = $_POST['gigs_category'];
-        $gigsLabel = $_POST['gigs_label'];
-        $gigsArtType = $_POST['gigs_artType'];
-        $gigsDetails = $_POST['gigs_details'];
-        $gigsNotes = $_POST['gigs_notes'];
+        $stmt->bind_param( "ssss", $startDate, $endDate, $startTime, $endTime);
         
         //execute statement
-        $status = $stmt2->execute();
+        $stmt->execute();
         
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
-        } else {
-            $insertedId = $stmt2->insert_id;
-        }
+        //bind result variables
+        $stmt->bind_result( $availId);
+        
+        // fetch values
+        $stmt->fetch();
+        
         //close statement
-        $stmt2->close();
+        $stmt->close();
+        
     }
+    $sql4="INSERT INTO resourceAvailability(availId, venueId)
+            VALUES ($availId, $chosenVenueId)";
     
-    
-    //upload gigs Image
-    $query3 = "INSERT INTO gigsimages
-                  ( gigsid, gigsImageLocation)
-                  VALUES
-                  (?,?)";
-    
-    if ($stmt3 = $connection->prepare( $query3)) {
-        
-        $stmt3->bind_param( "is", $insertedId, $gigsImageLocation);
-        
-        //Set params
-        
-        //$gigsImageLocation = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-        
-        //$gigsImageLocation = $target_file; //---------------------------------------
-        
-        
-        $gigsImageLocation = basename($_FILES["fileToUpload"]["name"]);
-        
-        //execute statement
-        $status = $stmt3->execute();
-        
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
-        } else {
-            //header('Location: entertainerPortfolio.php');
-            mysqli_close($connection);
-        }
-        //close statement
-        $stmt3->close();
-    }
+    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection));
+    ?>
+    <script type="text/javascript">
+    window.location.href = 'http://localhost:7331/Wishbone/templates/venueEventList.php';
+    </script>
+<?php
+
     
 }
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>Create Venue</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -215,8 +157,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
-    		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
+        <link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
+    
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'mm/dd/yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+</script>    
 </head>
 
 <body>
@@ -294,8 +250,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                             </div>
                         </div>
-                        <a href="entertainerDashboardHome.php">
-                            <h4 style="color:white;">WISHBONE</h4>
+                        <a href="venueDashboardHome.php">
+                            <h4 style="color: white;">WISHBONE</h4>
                         </a>
                         <a class="mobile-options waves-effect waves-light">
                             <i class="ti-more"></i>
@@ -368,7 +324,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="user-profile.html">
+                                        <a href="eventPlannerProfileView.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
@@ -399,7 +355,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="eventPlannerProfileView.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -456,14 +412,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class=" ">
-                                            <a href="entertainerUpcomingEvents.php" class="waves-effect waves-dark">
+                                            <a href="venueHostUpcomingEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Upcoming</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
                                         <li class=" ">
-                                            <a href="entertainerPastEvents.php" class="waves-effect waves-dark">
+                                            <a href="venueHostPastEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Past</span>
                                                 <span class="pcoded-mcaret"></span>
@@ -472,19 +428,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Calendar</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>
-                                <li class="">
-                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
+                                    <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Portfolio</span>
+                                        <span class="pcoded-mtext">Book Entertainers</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>                                                                
+                                </li> 
+                                <li class="">
+                                    <a href="venueHostVenueList.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fas fa-building"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">My Venues</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>                                                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">
@@ -515,87 +471,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
-
 				<div class="container">
 					<div class="row">
 						<div
 							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 ">
 
-							<!-- title-01 -->
-							<div class="title-01 title-01__style-04">
-								<h1 class="main-title">Add New Gig</h1>
+							<div class="row">
+								<div class="col-md-4 mx-auto">
+									<div class="u-pull-half text-center">
+										<img
+											class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3"
+											width="200" height="auto"
+											src="../assets/img-temp/200x200/img1.jpg"
+											alt="Image Description">
+									</div>
+								</div>
 							</div>
-							<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
+							<form action="addVenueAvailability.php" method="POST">
 
-										<div class="form-group"> <!-- Gig Name -->
-											<label for="gig_name_id" class="control-label title2">Gig Name</label>
-											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="gig_name_id" name="gigs_name" placeholder="Enter a name for your Gig">
-										</div>	
-										
-										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
-											<label for="gigs_category_id" class="control-label title2">Gig Category</label>
-											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigs_category_id" name="gigs_category">
-												<option value="Event">Event</option>
-												<option value="Music">Music</option>
-												<option value="Concert">Concert</option>
-												<option value="Festival">Festival</option>
-												<option value="Party">Party</option>
-											</select>					
-										</div>
-										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
-											<label for="gigs_label_id" class="control-label title2">Gig Label</label>
-											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigs_label_id" name="gigs_label">
-												<option value="Personal">Personal</option>
-												<option value="Professional">Professional</option>
-												<option value="Best">Best</option>
-												<option value="Other">Other</option>
-											</select>					
-										</div>
-										
-										<div class="form-group"> <!-- Gigs category -->
-											<label for="gigs_artType_id" class="control-label title2">Gig Art Type</label>
-											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigs_artType_id" name="gigs_artType">
-												<option value="Musician">Musician</option>
-												<option value="Dancer">Dancer</option>
-												<option value="Painter">Painter</option>
-												<option value="Actor">Actor</option>
-												<option value="Model">Model</option>
-												<option value="Singer">Singer</option>
-												<option value="Photographer">Photographer</option>
-												<option value="Blogger">Blogger</option>
-											</select>					
-										</div>
-										
-										<div class="form-group"> <!-- Gigs details -->
-											<label for="gigs_details-id" class="title2">Gigs Details</label>
-											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="gigs_details-id" name="gigs_details" placeholder ="Enter details"></textarea>
-										</div>
-										
-										<div class="form-group"> <!-- Gigs details -->
-											<label for="gigs_notes-id" class="title2">Notes</label>
-											<textarea class="form-control" rows="5" style="border: 2px solid #faa828;" id="gigs_notes-id" name="gigs_notes" placeholder="Add notes"></textarea>
-										</div>
-										
-										<div class="form-group">
-										<label for="gigPhoto" class="title2">Upload Gig Image</label>
-										 
-                                        <div class="input-group">
-                                       	  <!--
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                                          </div>
-                                          <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="gigPhoto"
-                                              aria-describedby="inputGroupFileAddon01">
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                          </div>
-                                           -->
-                                            <input type="file" name="fileToUpload" id="fileToUpload">
-                                            <input type="submit" value="Upload Image" name="submit">                                          
-                                        </div>
-                                        </div>
-                                        
-										<!--
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueName" class="control-label title2">Venue Name</label>
+										<select name="venueName">
+        <option selected="venueName">Choose a Venue</option>
+        <?php
+
+        foreach($venueDTO as $venue){
+        ?>
+        <option value="<?php echo strtolower($venue->getVenueName()); ?>"><?php echo $venue->getVenueName(); ?></option>
+        <?php
+        }
+        ?>
+    </select>
+								</div>
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueCity" class="control-label title2">Availability Start Date</label>
+									<input type="date" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="startDate"
+										name="startDate" placeholder="Enter the start date of the avilability">
+								</div>
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueCity" class="control-label title2">Availability End Date</label>
+									<input type="date" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="endDate"
+										name="endDate" placeholder="Enter the end date of the avilability">
+								</div>
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueState" class="control-label title2">Availability Start Time
+										</label> <input type="time" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="startTime"
+										name="startTime">
+								</div>
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueProvince" class="control-label title2">Availability End Time
+										</label> <input type="time" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="endTime"
+										name="endTime">
+								</div>
+
+								<!--
 										<div class="input-group">
 											  <div class="input-group-prepend">
 												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
@@ -603,29 +541,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
 										</div>
 										for later -->
-										 
-										 <!--  
-										<a href="entertainerPortfolio.php"><button type="button" class="btn-all" style="display:inline;">Create</button></a>
-										 
-										 
-										<a href="entertainerPortfolio.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
-										-->
-										
-										<br/>										
-										<!-- Replace buttons with below code -->
-										<div class="form-group" style="display:inline;"> 
-											<a href="entertainerPortfolio.php"><button type="submit" name="submit" class="btn-all">Finish</button></a>
+
+								<a href="venueHostVenueList.php"><button type="submit" class="btn-all" style="display: inline;">Add</button></a>
+
+
+								<a href="venueHostVenueList.php"><button class="btn-all"
+										type="button" style="display: inline;">Cancel</button></a>
+
+								<!-- Replace buttons with below code -->
+								<!--<div class="form-group" style="display:inline;"> 
+											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>
 										</div> 
 										<div class="form-group" style="display:inline;"> 
 											<button class="btn-all">Cancel</button>
-										</div>
-										
-										 
-							</form>
-							</div>
-							</div>
-							</div>
+										</div>   -->
 
+
+							</form>
+
+						</div>
+					</div>
+				</div>
                                     </div>
                                     <!-- Page-body end -->
                                 </div>

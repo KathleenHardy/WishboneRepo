@@ -215,6 +215,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
+    <!-- for the upload file css link -->
+		<link rel="stylesheet" type="text/css" href="..assets/css2/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="..assets/css2/demo.css" />
+		<link rel="stylesheet" type="text/css" href="..assets/css2/component (2).css" />
+<!-- end -->		
+
     		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
     <script type="text/javascript">
@@ -568,6 +574,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 											<label for="quote" class="title2">An inspirational quote or your favourite one</label>
 											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="quote" name="quote" placeholder ="Anything you want"></textarea>
 										</div>
+										
+										
+										<!-- Code for creative file upload -->
+								
+										<!-- end -->
+										
+										
                                         <div class="form-group">
                                         <label for="profilepic" class="title2">Upload Your Portfolio Image</label>
                                         <br/>
@@ -678,6 +691,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- menu js -->
     <script src="../assets/javascript/pcoded.min.js"></script>
     <script src="../assets/javascript/vertical/vertical-layout.min.js "></script>
+		<script src="../assets/js-other/custom-file-input.js"></script>
 
     <script type="text/javascript" src="../assets/javascript/script.js "></script>
 </body>
