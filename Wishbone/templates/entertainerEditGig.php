@@ -1,4 +1,5 @@
 <?php
+session_start();
 $authId = $_SESSION['authId'];
 
 /*

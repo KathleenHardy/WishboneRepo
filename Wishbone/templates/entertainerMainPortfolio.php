@@ -44,13 +44,14 @@
 
 <body>
 <?php 
+Session_start();
 include ('../config.php');
 require_once ('../dto/gig.php');
 
 
 $authId = $_SESSION['authId'];
 
-$query = "SELECT entid, firstName, lastName, ratePerHour, occupation, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus 
+$query = "SELECT entid, firstName, lastName, ratePerHour, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus 
           FROM entertainers
           WHERE  authid = ?";
 
@@ -62,7 +63,7 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->execute();
 
     //bind result variables
-    $stmt->bind_result($entid, $firstName, $lastName, $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
+    $stmt->bind_result($entid, $firstName, $lastName, $ratePerHour, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
     
     // fetch values
     $stmt->fetch();
@@ -467,7 +468,7 @@ $connection->close();
             <div class="col-12">
               <div class="text-center">
                 <h1 class="display-sm-4 display-lg-3"><?= $firstName . ' ' . $lastName  ?></h1>
-                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= $occupation ?></p>
+                <p class="h6 text-uppercase u-letter-spacing-sm mb-2">Occupation Here</p>
 
                 <ul class="list-inline text-center mb-0">
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Facebook">

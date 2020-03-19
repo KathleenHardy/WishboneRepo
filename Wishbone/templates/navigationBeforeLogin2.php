@@ -35,7 +35,7 @@
         <a class="nav-link" href="contact.php" style="color: #36454f;">Contact</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="login-register.php" style="color: #36454f;">Login/Register</a>
+        <a class="nav-link" href="login.php" style="color: #36454f;">Login/Register</a>
       </li>      
     </ul>
     <!-- Links -->

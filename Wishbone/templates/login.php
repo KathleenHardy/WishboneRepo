@@ -73,13 +73,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset(
         $_SESSION['authId'] = $authid;
         
         if ($userType == UserType::EVENT_PLANNER) {
-            header('Location: eventPlannerEventList.php');
+            header('Location: eventPlannerDashboardHome.php');
             mysqli_close($connection);
         } else if ( $userType == UserType::ENTERTAINER) {
-            header('Location: entertainerEventList.php');
+            header('Location: entertainerDashboardHome.php');
             mysqli_close($connection);
         } else if ( $userType == UserType::VENUE_OWNER) {
-            header('Location: venueProfileView.php');
+            header('Location: venueDashboardHome.php');
             mysqli_close($connection);
         }
         //close statement

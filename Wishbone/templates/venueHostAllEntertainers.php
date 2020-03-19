@@ -351,6 +351,8 @@ Entertainers
 
 <div class="card-deck spacing1">
 <div class="row">
+
+
   <div class="card text-center">
     <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
     <div class="card-body">
@@ -360,6 +362,8 @@ Entertainers
 	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
     </div>
   </div>
+  
+  
   <div class="card text-center">
     <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
     <div class="card-body">

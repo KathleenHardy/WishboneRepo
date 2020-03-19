@@ -38,7 +38,10 @@
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
 </head>
+<?php 
+Session_start();
 
+?>
 <body>
     <!-- Pre-loader start -->
     <div class="theme-loader">
