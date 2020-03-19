@@ -18,69 +18,76 @@
 		<!-- <link rel="stylesheet" type="text/css" href="assets/vendors/bootstrap4/bootstrap-grid.min.css"> -->
 		<!-- App & fonts-->
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i&amp;amp;subset=latin-ext">
-		<link rel="stylesheet" type="text/css" href="../assets/css/main.css"><!--[if lt IE 9]>
+		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
+			<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<![endif]-->
+<script>
+var TxtRotate = function(el, toRotate, period) {
+	  this.toRotate = toRotate;
+	  this.el = el;
+	  this.loopNum = 0;
+	  this.period = parseInt(period, 10) || 2000;
+	  this.txt = '';
+	  this.tick();
+	  this.isDeleting = false;
+	};
+
+	TxtRotate.prototype.tick = function() {
+	  var i = this.loopNum % this.toRotate.length;
+	  var fullTxt = this.toRotate[i];
+
+	  if (this.isDeleting) {
+	    this.txt = fullTxt.substring(0, this.txt.length - 1);
+	  } else {
+	    this.txt = fullTxt.substring(0, this.txt.length + 1);
+	  }
+
+	  this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+
+	  var that = this;
+	  var delta = 300 - Math.random() * 500;
+
+	  if (this.isDeleting) { delta /= 2; }
+
+	  if (!this.isDeleting && this.txt === fullTxt) {
+	    delta = this.period;
+	    this.isDeleting = true;
+	  } else if (this.isDeleting && this.txt === '') {
+	    this.isDeleting = false;
+	    this.loopNum++;
+	    delta = 500;
+	  }
+
+	  setTimeout(function() {
+	    that.tick();
+	  }, delta);
+	};
+
+	window.onload = function() {
+	  var elements = document.getElementsByClassName('txt-rotate');
+	  for (var i=0; i<elements.length; i++) {
+	    var toRotate = elements[i].getAttribute('data-rotate');
+	    var period = elements[i].getAttribute('data-period');
+	    if (toRotate) {
+	      new TxtRotate(elements[i], JSON.parse(toRotate), period);
+	    }
+	  }
+	  // INJECT CSS
+	  var css = document.createElement("style");
+	  css.type = "text/css";
+	  css.innerHTML = ".txt-rotate > .wrap { border-right: 0.08em solid #666 }";
+	  document.body.appendChild(css);
+	};
+	</script>
 	</head>
 	
 	<body>
+<?php
+include ("navigationBeforeLogin.php");
+?>
 		<div class="page-wrap">
-			
-			<!-- header -->
-			<header class="header header__style-02">
-				<div class="container">
-					<div class="header__logo"><a style="color: #f39c12; font-size: 25px; font-weight: 700;" href="index.php">WISHBONE</a></div>
-					<!-- consult-nav -->
-					<nav class="consult-nav">
 						
-						<!-- consult-menu -->
-						<ul class="consult-menu">
-							<li class="current-menu-item">
-								<a href="index.php">Home</a>
-							</li>
-
-							<!--
-							<li class="menu-item-has-children"><a href="#">page</a>
-								<ul class="sub-menu">
-									<li>
-										<a href="comming-soon.html">Comming Soon</a>
-									</li>
-									<li>
-										<a href="404.html">404</a>
-									</li>
-									<li>
-										<a href="typography.html">Typography</a>
-									</li>
-								</ul>
-							</li>
-							-->
-
-							<li class="menu-item-has-children">
-								<a href="entertainer.php">Entertainer</a>
-								<ul class="sub-menu">
-									<li>
-										<a href="entertainer.php">Find Entertainer</a>
-									</li>
-									<li>
-										<a href="register.php">Become Entertainer</a>
-									</li>
-								</ul>
-							</li>
-							
-							<li>
-								<a href="event.php">Events</a>
-							</li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="about.html">Contact</a></li>
-                            <li><a href="login.php">log in / Sign up</a></li>
-						</ul><!-- consult-menu -->
-						
-						<div class="navbar-toggle"><span></span><span></span><span></span></div>
-					</nav><!-- End / consult-nav -->
-					
-				</div>
-			</header><!-- End / header -->
-			
 			<!-- Content-->
 			<div class="md-content">
 				
@@ -94,20 +101,32 @@
 								<div class="md-tb__cell">
 									<div class="slider__content">
 										<div class="container">
-											<h3 style="color:white">Discover, Connect and Book at the thought of a wish</h3>
+											
 											<div class="row">
 												<div class="col-lg-12">
 													<div class="widget-text__content">	
 														<!-- form-search -->
 														<div class="form-search">
-                                                            <a style="color: #f39c12; font-size: 85px; font-weight: 700;"
-							href="index.php">WISHBONE</a>
+                                                    <div id="fly-in">
+                                                    <div>
+                                                        <a
+                                                            style="color: #FAA828; font-family: 'Averta'; font-size: 130px; font-weight: bold; opacity: 1;"
+                                                            href="index.php">WISHBONE</a>
+                                                            </div>
+                                                            </div>
 <!--
 															<form>
 																<input class="form-control" style="background: transparent; border-color:#c2c2c2; color:#c2c2c2" type="text" placeholder="Enter Location to find an entertainer..."/>
 															</form>
 -->
 														</div><!-- End / form-search -->
+                                                <br/>
+                                                <br/>
+                                                <br/>
+                                                <span style="color: white; font-size: 25px; font-family: 'Intro Script';">At
+                                                    The Thought Of A Wish</span>
+                                                <p style="color: #FAA828; font-family: 'Averta'; font-size: 40px;" id="changeTexts"
+     class="txt-rotate" data-period="2000" data-rotate='[ "Discover an exciting city.", "Connect with new talents.", "Hire great entertainment." ]'/>
 													</div>
 												</div>
 											</div>
@@ -515,79 +534,7 @@
 				
 			</div>
 			<!-- End / Content-->
-			
-			<!-- footer -->
-			<footer class="footer">
-				<div class="footer__main">
-					<div class="row row-eq-height">
-						<div class="col-8 col-sm-7 col-md-9 col-lg-3 ">
-							<div class="footer__item" style="top: -12px; position:relative;">
-								<a style="color: #f39c12; font-size: 35px; font-weight: 700;" href="index.php">WISHBONE</a>
-								<p>Wishbone handles the entire booking process, including Management, ratings/ reviews, communication and payments.</p>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-4 col-lg-3 col-xl-2 offset-0 offset-sm-0 offset-md-0 offset-lg-0 offset-xl-1 ">
-							<div class="footer__item">
-									
-									<!-- widget-text__widget -->
-									<section class="widget-text__widget widget">
-										<div class="widget-text__content">
-											<ul>
-												<li><a href="#">Term of Services </a></li>
-												<li><a href="#">Privacy Policy </a></li>
-												<li><a href="#">Sitemap </a></li>
-												<li><a href="#">Help</a></li>
-											</ul>
-										</div>
-									</section><!-- End / widget-text__widget -->
-									
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-4 col-lg-2 col-xl-2 ">
-							<div class="footer__item">
-									
-									<!-- widget-text__widget -->
-									<section class="widget-text__widget widget">
-										<div class="widget-text__content">
-											<ul>
-												<li><a href="#">How It Works </a></li>
-												<li><a href="#">Carrier </a></li>
-												<li><a href="#">Pricing </a></li>
-												<li><a href="#">Support</a></li>
-											</ul>
-										</div>
-									</section><!-- End / widget-text__widget -->
-									
-							</div>
-						</div>
-						<div class="col-md-4 col-lg-2 col-xl-2 ">
-							<div class="footer__item">
-									
-									<!-- form-sub -->
-									<div class="form-sub">
-										<a href="#" class="form-sub__title">Our Newsletter</a>
-										<!--
-										<form class="form-sub__form">
-											<div class="form-item">
-												<input class="form-control" type="email" placeholder="Enter Your Email Address..."/>
-											</div>
-											<div class="form-submit">
-												<button class="form-button" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-											</div>
-										</form>
-										-->
-									</div><!-- End / form-sub -->
-									
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-4 col-lg-2 col-xl-2  consult_backToTop">
-							<div class="footer__item"><a href="#" id="back-to-top"> <i class="fa fa-angle-up" aria-hidden="true"> </i><span>Back To Top</span></a></div>
-						</div>
-					</div>
-				</div>
-				<div class="footer__copyright">2017 &copy; Copyright Wishbone. All rights Reserved.</div>
-			</footer><!-- End / footer -->
-			
+	<?php include ("footer.php"); ?>		
 		</div>
 		<!-- Vendors-->
 		<script type="text/javascript" src="../assets/vendors/jquery/jquery.min.js"></script>

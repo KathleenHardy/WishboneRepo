@@ -166,7 +166,7 @@ $connection->close();
     
     
     
-
+<div>
       <!-- Promo Block -->
       <section class="js-parallax u-promo-block u-promo-block--mheight-500 u-overlay u-overlay--dark text-white" style="background-image: url(../assets/img-temp/1920x1080/img5.jpg);">
         <!-- Promo Content -->
@@ -301,7 +301,7 @@ $connection->close();
     </div>
     </div>
     </main>
-
+</div>
     <!-- Footer -->
         <?php include "footer.php" ?>
     <!-- End Call Us Modal Window -->

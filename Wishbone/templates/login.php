@@ -34,7 +34,7 @@
 <?php
 session_start();
 session_unset();
-include ('navigationheaderHome.php');
+include ('navigationBeforeLogin.php');
 
 ?>
 <?php
@@ -145,7 +145,7 @@ function test_input($data)
 
 					<div class="text-center">
 						<span class="txt1">
-							Create an account?
+							Not registered?
 						</span>
 
 						<a href="register.php" class="txt2 hov1">
@@ -155,6 +155,8 @@ function test_input($data)
 				</form>
 			</div>
 		</div>
+	<?php include ("footer.php"); ?>		
+
 	</div>
 	
 
