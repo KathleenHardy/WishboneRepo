@@ -182,7 +182,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>Entertainer Edit Gig</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -369,12 +369,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="user-profile.html">
+                                        <a href="entertainerViewProfile-New.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="auth-normal-sign-in.html">
+                                        <a href="../logout.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -524,7 +524,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 							<!-- title-01 -->
 							<div class="title-01 title-01__style-04">
-								<h1 class="main-title">Edit Existing Gig</h1>
+								<h1 class="main-title">Update or Remove Existing Gig</h1>
 							</div>
 							<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->

@@ -1,8 +1,39 @@
+<?php
+include ('../config.php');
+require_once ('../dto/gig.php');
+session_start();
+
+$user_check = $_SESSION['useremail'];
+
+$infoQuery = "SELECT entertainers.profilePicture, entertainers.entid, entertainers.firstName, entertainers.lastName
+		FROM entertainers JOIN authentication
+ 			ON authentication.authid = entertainers.authid
+ 			WHERE authentication.email = '$user_check'";
+
+$result = mysqli_query($connection, $infoQuery) or die(mysqli_error($connection));
+
+$row = mysqli_fetch_array($result);
+
+$Login_user_imagelocation = $row['profilePicture'];
+$login_user_firstname = $row['firstName'];
+$login_user_lastname = $row['lastName'];
+$login_user_userid = $row['entid'];
+
+
+$_SESSION['entertainerfirstname'] = $login_user_firstname;
+$_SESSION['entertainerlastname'] = $login_user_lastname;
+$_SESSION['entertainerid'] = $login_user_userid;
+
+
+mysqli_close($connection);
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Entertainers</title>
+    <title>Dashboard</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -36,9 +67,14 @@
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
+        <link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
+    
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
 </head>
+<?php 
+Session_start();
 
+?>
 <body>
     <!-- Pre-loader start -->
     <div class="theme-loader">
@@ -114,8 +150,8 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="venueDashboardHome.php">
-                            <h4 style="color:white;">WISHBONE</h4>
+                        <a href="entertainerDashboardHome.php">
+                            <h4>WISHBONE</h4>
                         </a>
                         <a class="mobile-options waves-effect waves-light">
                             <i class="ti-more"></i>
@@ -147,8 +183,8 @@
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                <h5 class="notification-user">Event Planner: John Doe</h5>
+                                                <p class="notification-msg"><a href="entertainerNotificationDetails.php">View New Event Booking Request</a></p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
                                         </div>
@@ -188,13 +224,13 @@
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="venueHostProfileView.php">
+                                        <a href="entertainerViewProfile-New.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="auth-normal-sign-in.html">
-                                            <i class="../logout.php"></i> Logout
+                                        <a href="../logout.php">
+                                            <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
                                 </ul>
@@ -219,7 +255,7 @@
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
+                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -276,14 +312,14 @@
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class=" ">
-                                            <a href="venueHostUpcomingEvents.php" class="waves-effect waves-dark">
+                                            <a href="entertainerUpcomingEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Upcoming</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
                                         <li class=" ">
-                                            <a href="venueHostPastEvents.php" class="waves-effect waves-dark">
+                                            <a href="entertainerPastEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Past</span>
                                                 <span class="pcoded-mcaret"></span>
@@ -299,19 +335,12 @@
                                     </a>
                                 </li>                                
                                 <li class="">
-                                    <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
+                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Book Entertainers</span>
+                                        <span class="pcoded-mtext">Portfolio</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li> 
-                                <li class="">
-                                    <a href="venueHostVenueList.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fas fa-building"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">My Venues</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>                                                                                                
+                                </li>                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">
@@ -342,102 +371,45 @@
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
+				<div class="container">
+					<div class="row">
+						<div
+							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 ">
 
-<h1 class="main-title">
-Entertainers
-
-</h1>
-
-
-<div class="card-deck spacing1">
-<div class="row">
-
-
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
-  
-  
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>  
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event1.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
+							<!-- title-01 -->
+							<div class="title-01 title-01__style-04" style="padding: 20px;">
+								<h2 class="title-01__title"><?= $login_user_firstname.' '.$login_user_lastname ?></h2>
+							</div>
+          <div class="row">
+            <div class="col-md-4 mx-auto">
+              <div class="u-pull-half text-center">
+                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="auto" src="../assets/img-temp/200x200/img1.jpg" alt="Image Description">
+              </div>
+            </div>
           </div>
-  </div>
- </div> 
- <br/>
- <br/>
-<div class="row">
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event3.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-      </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
- </div> 
+		
+										<div class="profileInfo" style ="padding: 20px; text-align: center;">		
+										<form action="eventPlannerProfileUpdate.php" method="POST">
 
-
-
-</div>
-
-
+    										<div class="form-group"> <!-- Event Name -->
+    											<label for="firstName" class="control-label title2">First Name</label>
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="firstName" name="firstName" value="<?php echo $login_user_firstname;?>">
+    										</div>	
+    										<div class="form-group"> <!-- Event Name -->
+    											<label for="lastName" class="control-label title2">Last Name</label>
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="lastName" name="lastName" value="<?php echo $login_user_lastname;?>">
+    										</div>	
+    																											
+    										
+                                            </div>										
+										 <button type="submit" class="btn-all" style="display:inline;">Update</button>
+										</form>										
+										
+											
+										
+							</div>
+							</div>
+							</div></div>
                                     </div>
                                     <!-- Page-body end -->
                                 </div>

@@ -35,7 +35,7 @@
                 <a class="nav-link" href="eventPlannerVenueList.php">Search Venues</a>
               </li>                            
               <li class="nav-item mr-4 mb-2 mb-lg-0">
-                <a class="nav-link" href="eventPlannerProfileView.php">Profile</a>
+                <a class="nav-link" href="venueHostProfileView.php">Profile</a>
               </li>              
               <li class="nav-item mr-4 mb-2 mb-lg-0">
                 <a class="nav-link" href="index.php">Logout</a>
