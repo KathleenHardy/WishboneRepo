@@ -188,12 +188,12 @@
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="eventPlannerProfileView.php">
+                                        <a href="venueHostProfileView.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="auth-normal-sign-in.html">
+                                        <a href="../logout.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -219,9 +219,9 @@
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="eventPlannerProfileView.php"><i class="ti-user"></i>View Profile</a>
+                                            <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -323,7 +323,7 @@
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="form-elements-component.html" class="waves-effect waves-dark">
+                                    <a href="../logout.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>
@@ -358,6 +358,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
     </div>
   </div>
   <div class="card text-center">
@@ -368,6 +370,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
     </div>
   </div>
   <div class="card text-center">
@@ -378,6 +382,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
           </div>
   </div>
  </div> 
@@ -392,6 +398,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
     </div>
   </div>
   <div class="card text-center">
@@ -401,7 +409,9 @@ Upcoming Events
       <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>    
+      <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p> 
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+         
       </div>
   </div>
   <div class="card text-center">
@@ -412,6 +422,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
     </div>
   </div>
  </div> 

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>Upcoming Events</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -192,12 +192,12 @@
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="user-profile.html">
+                                        <a href="entertainerViewProfile-New.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="auth-normal-sign-in.html">
+                                        <a href="../logout.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -313,7 +313,7 @@
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="form-elements-component.html" class="waves-effect waves-dark">
+                                    <a href="../logout.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>
@@ -349,6 +349,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact Mike Smith at mike@smith.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
     </div>
   </div>
   <div class="card text-center">
@@ -359,6 +361,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact Mike Smith at mike@smith.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
     </div>
   </div>
   <div class="card text-center">
@@ -369,6 +373,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact Mike Smith at mike@smith.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
           </div>
   </div>
  </div> 
@@ -383,6 +389,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact Mike Smith at mike@smith.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
     </div>
   </div>
   <div class="card text-center">
@@ -392,7 +400,9 @@ Upcoming Events
       <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>    
+      <p class="card-text">Contact Mike Smith at mike@smith.com</p>  
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+        
       </div>
   </div>
   <div class="card text-center">
@@ -403,6 +413,8 @@ Upcoming Events
       <p class="card-text">Macy's Backyard</p>
       <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
       <p class="card-text">Contact Mike Smith at mike@smith.com</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      
     </div>
   </div>
  </div> 

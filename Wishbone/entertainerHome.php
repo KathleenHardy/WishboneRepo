@@ -110,7 +110,7 @@ mysqli_close($connection);
 						<li><a href="about.html">About Me</a>
 						<li><a href="create-gig.php">Add a Gig</a></li>
 						<li><a href="post-availability.php">Set my Availability</a></li>
-						<li><a href="logout.php">Log out</a></li>
+						<li><a href="../logout.php">Log out</a></li>
 						
 					</ul>
 					<!-- consult-menu -->

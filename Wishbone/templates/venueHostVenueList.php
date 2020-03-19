@@ -188,12 +188,12 @@
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="eventPlannerProfileView.php">
+                                        <a href="venueHostProfileView.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="auth-normal-sign-in.html">
+                                        <a href="../logout.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -219,9 +219,9 @@
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="eventPlannerProfileView.php"><i class="ti-user"></i>View Profile</a>
+                                            <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -323,7 +323,7 @@
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="form-elements-component.html" class="waves-effect waves-dark">
+                                    <a href="../logout.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>

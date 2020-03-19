@@ -365,7 +365,7 @@ values(".$_SESSION['entid'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="eventPlannerProfileView.php">
+                                        <a href="venueHostProfileView.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
@@ -396,7 +396,7 @@ values(".$_SESSION['entid'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="eventPlannerProfileView.php"><i class="ti-user"></i>View Profile</a>
+                                            <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
