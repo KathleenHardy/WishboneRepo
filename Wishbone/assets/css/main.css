@@ -1,3 +1,29 @@
+@font-face {
+    font-family:'Averta';
+    src: url('../webfonts/AvertaRegular.eot');
+    src: url('../webfonts/AvertaRegular.eot?#iefix') format('embedded-opentype'),
+        url('../webfonts/AvertaRegular.woff2') format('woff2'),
+        url('../webfonts/AvertaRegular.woff') format('woff'),
+        url('../webfonts/AvertaRegular.svg#AvertaRegular') format('svg');
+    font-weight: 400;
+    font-style: normal;
+    font-stretch: normal;
+    unicode-range: U+0020-00FE;
+}
+
+@font-face {
+    font-family: 'Intro Script';
+    src: url('../webfonts/IntroScriptDemo-Medium.eot');
+    src: url('../webfonts/IntroScriptDemo-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../webfonts/IntroScriptDemo-Medium.woff2') format('woff2'),
+        url('../webfonts/IntroScriptDemo-Medium.woff') format('woff'),
+        url('../webfonts/IntroScriptDemo-Medium.ttf') format('truetype'),
+        url('../webfonts/IntroScriptDemo-Medium.svg#IntroScriptDemo-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+}
+
+
 /*------------------------------------------------------------------------
 # Consult Free HTML5 Template 1.0 - Nov 16, 2017
 # ------------------------------------------------------------------------
@@ -190,7 +216,7 @@ img {
 
 a:hover {
 	text-decoration: none;
-	color: #f39c12;
+	color: #faa828;
 }
 
 a:focus {
@@ -336,14 +362,14 @@ a.btn.disabled, fieldset[disabled] a.btn {
 
 .btn-primary {
 	color: #fff;
-	background-color: #f39c12;
+	background-color: #faa828;
 	border-color: transparent;
 }
 
 .btn-primary.btn-outline {
 	color: #c87f0a;
 	background-color: transparent;
-	border-color: #f39c12;
+	border-color: #faa828;
 }
 
 .btn-primary.btn-white {
@@ -390,12 +416,12 @@ a.btn.disabled, fieldset[disabled] a.btn {
 	.btn-primary[disabled].focus, fieldset[disabled] .btn-primary:hover,
 	fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary.focus
 	{
-	background-color: #f39c12;
+	background-color: #faa828;
 	border-color: transparent;
 }
 
 .btn-primary .badge {
-	color: #f39c12;
+	color: #faa828;
 	background-color: #fff;
 }
 
@@ -656,7 +682,7 @@ a.btn.disabled, fieldset[disabled] a.btn {
 }
 
 .btn-link {
-	color: #f39c12;
+	color: #faa828;
 	font-weight: normal;
 	border-radius: 0;
 }
@@ -770,8 +796,8 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 	padding: 0 15px;
 	height: 46px;
 	line-height: 44px;
-	border: 1px solid #f39c12;
-	background-color: #f39c12;
+	border: 1px solid #faa828;
+	background-color: #faa828;
 }
 
 .btn-w180 {
@@ -855,7 +881,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 	input[type="week"]:focus, input[type="number"]:focus, input[type="email"]:focus,
 	input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus,
 	input[type="color"]:focus {
-	border-color: #f39c12;
+	border-color: #faa828;
 }
 
 .form-control:focus::-webkit-input-placeholder, select:focus::-webkit-input-placeholder,
@@ -969,7 +995,7 @@ body {
 	line-height: 1.875;
 	font-size: 14px;
 	font-weight: 400;
-	font-family: "Roboto", sans-serif;
+	font-family: 'Averta';
 	color: #626262;
 }
 
@@ -1007,7 +1033,7 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 
 h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
-	color: #f39c12;
+	color: #faa828;
 	text-decoration: none;
 }
 
@@ -1069,7 +1095,7 @@ blockquote:before {
 	content: '';
 	width: 5px;
 	height: 100%;
-	background-color: #f39c12;
+	background-color: #faa828;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -1092,7 +1118,7 @@ blockquote cite {
 	display: block;
 	font-size: 16px;
 	font-style: normal;
-	font-family: "Roboto", sans-serif;
+	font-family: 'Averta';
 	margin-top: 15px;
 }
 
@@ -1108,7 +1134,7 @@ abbr {
 }
 
 mark, .mark {
-	background-color: #f39c12;
+	background-color: #faa828;
 	color: #fff;
 }
 
@@ -1119,13 +1145,13 @@ mark, .mark {
 }
 
 .box-number__number {
-	color: #f39c12;
+	color: #faa828;
 }
 
 .box-number__number>h2 {
 	font-size: 30px;
 	font-weight: 300;
-	color: #f39c12;
+	color: #faa828;
 	margin-bottom: 5px;
 	line-height: 1.333;
 	display: inline-block;
@@ -1229,7 +1255,7 @@ mark, .mark {
 }
 
 .owl-dot.active {
-	background-color: #f39c12;
+	background-color: #faa828;
 }
 
 .owl-prev, .owl-next {
@@ -1246,7 +1272,7 @@ mark, .mark {
 
 .owl-prev:after, .owl-next:after {
 	font-size: 36px;
-	font-family: FontAwesome;
+	font-family: 'Averta';
 	line-height: 1;
 }
 
@@ -1310,7 +1336,7 @@ mark, .mark {
 
 .comment-heading>span {
 	margin-left: 10px;
-	color: #f39c12;
+	color: #faa828;
 }
 
 .fn {
@@ -1350,7 +1376,7 @@ mark, .mark {
 }
 
 .comment-button>a:hover {
-	background-color: #f39c12;
+	background-color: #faa828;
 	color: white;
 }
 
@@ -1422,7 +1448,7 @@ mark, .mark {
 .countdown__module span {
 	font-size: 30px;
 	font-weight: 400;
-	color: #f39c12;
+	color: #faa828;
 	display: block;
 	margin: 5px;
 	height: 100px;
@@ -1711,7 +1737,7 @@ mark, .mark {
 }
 
 .form-sub__form .form-button {
-	color: #f39c12;
+	color: #faa828;
 	height: 46px;
 	border: 1px solid #ebebeb;
 	border-left: none;
@@ -1722,8 +1748,8 @@ mark, .mark {
 }
 
 .form-sub__form .form-button:hover, .form-sub__form .form-button:focus {
-	background-color: #f39c12;
-	border-color: #f39c12;
+	background-color: #faa828;
+	border-color: #faa828;
 	color: white;
 }
 
@@ -2481,7 +2507,7 @@ mark, .mark {
 	background-color: white;
 	box-shadow: 0 10px 30px 0 rgba(0, 0, 0, .2);
 	margin-bottom: 30px;
-	color: #f39c12;
+	color: #faa828;
 	font-size: 24px;
 }
 
@@ -2519,13 +2545,13 @@ mark, .mark {
 
 .iconbox__style-03:hover .iconbox__icon, .iconbox__style-03:focus .iconbox__icon
 	{
-	color: #f39c12;
+	color: #faa828;
 }
 
 .iconbox__style-04 .iconbox__icon {
 	display: inline-block;
 	font-size: 48px;
-	color: #f39c12;
+	color: #faa828;
 	text-align: left;
 	position: relative;
 	line-height: 1;
@@ -2596,7 +2622,7 @@ mark, .mark {
 }
 
 .pagination__item.active {
-	color: #f39c12;
+	color: #faa828;
 	text-decoration: underline;
 }
 
@@ -2617,7 +2643,7 @@ mark, .mark {
 }
 
 .post-01__categories a {
-	color: #f39c12;
+	color: #faa828;
 	text-transform: uppercase;
 }
 
@@ -2914,7 +2940,7 @@ mark, .mark {
 }
 
 .post-03__link {
-	color: #f39c12;
+	color: #faa828;
 	text-transform: uppercase;
 	font-weight: 700;
 }
@@ -3042,7 +3068,7 @@ mark, .mark {
 }
 
 .social-01__style-02 .social-01__item:hover {
-	background-color: #f39c12;
+	background-color: #faa828;
 	color: white;
 }
 
@@ -3082,7 +3108,7 @@ mark, .mark {
 }
 
 .tagclould>a:hover {
-	color: #f39c12;
+	color: #faa828;
 	text-decoration: underline;
 }
 
@@ -3107,7 +3133,7 @@ mark, .mark {
 
 .testimonial__info:after {
 	content: "\E67E";
-	font-family: 'themify';
+	font-family: 'Averta';
 	font-size: 48px;
 	color: #c2c2c2;
 	top: -15px;
@@ -3235,7 +3261,7 @@ mark, .mark {
 }
 
 .title-01__title>span, .title-01__title>a {
-	color: #f39c12;
+	color: #faa828;
 }
 
 .title-01__style-02 .title-01__title {
@@ -3356,8 +3382,8 @@ mark, .mark {
 }
 
 .video-button:hover, .video-button:focus {
-	border-color: #f39c12;
-	background-color: #f39c12;
+	border-color: #faa828;
+	background-color: #faa828;
 }
 
 .video {
@@ -3428,7 +3454,7 @@ mark, .mark {
 .widget-text__style-02 ul li:before, .widget-text__style-03 ul li:before
 	{
 	content: "\F105";
-	font-family: FontAwesome;
+	font-family: 'Averta';
 	display: inline-block;
 	top: 50%;
 	left: 0;
@@ -3439,7 +3465,7 @@ mark, .mark {
 .widget-text__style-02 ul li:hover, .widget-text__style-02 ul li:focus,
 	.widget-text__style-03 ul li:hover, .widget-text__style-03 ul li:focus
 	{
-	color: #f39c12;
+	color: #faa828;
 }
 
 .widget-text__style-03 ul li a {
@@ -3448,7 +3474,7 @@ mark, .mark {
 
 .widget-text__style-03 ul li a:hover, .widget-text__style-03 ul li a:focus
 	{
-	color: #f39c12;
+	color: #faa828;
 }
 
 .widget-text__style-04 .widget-text__content>* {
@@ -3480,7 +3506,7 @@ mark, .mark {
 }
 
 .footer .widget-text__widget ul li a:hover {
-	color: #f39c12;
+	color: #faa828;
 }
 
 .footer__main {
@@ -3526,7 +3552,7 @@ mark, .mark {
 }
 
 .consult_backToTop a {
-	color: #f39c12 !important;
+	color: #faa828 !important;
 	padding-right: 0;
 }
 
@@ -3730,7 +3756,7 @@ mark, .mark {
 
 .header__style-02:not (.shrink ) .consult-nav .consult-menu .current-menu-item>a
 	{
-	color: #f39c12;
+	color: #faa828;
 }
 
 .header__style-02:not (.shrink ) .dropdown__toggle {
@@ -3832,7 +3858,7 @@ mark, .mark {
 		background-color: #fff;
 		text-align: left;
 		border: 1px solid rgba(0, 0, 0, .1);
-		border-top: 3px solid #f39c12;
+		border-top: 3px solid #faa828;
 	}
 	.consult-nav .consult-menu .sub-menu a {
 		padding: 10px 15px;
@@ -3868,11 +3894,11 @@ mark, .mark {
 	}
 	.consult-nav .consult-menu .sub-menu .current-menu-parent>a,
 		.consult-nav .consult-menu .sub-menu .current-menu-item>a {
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .current-menu-parent>a, .consult-nav .consult-menu .current-menu-item>a
 		{
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .sub-menu {
 		width: 250px;
@@ -3887,7 +3913,7 @@ mark, .mark {
 		left: 100%;
 	}
 	.consult-nav .consult-menu .sub-menu li.menu-item-has-children>a:after {
-		font-family: "FontAwesome";
+		font-family: 'Averta';
 		content: "\F105";
 		position: absolute;
 		top: 50%;
@@ -3906,11 +3932,11 @@ mark, .mark {
 		box-shadow: none;
 	}
 	.consult-nav .consult-menu .sub-menu li:hover>a {
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .sub-menu li .current-menu-parent>a,
 		.consult-nav .consult-menu .sub-menu li .current-menu-item>a {
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .navbar-toggle {
 		display: none;
@@ -3968,7 +3994,7 @@ mark, .mark {
 		position: relative;
 	}
 	.consult-nav .consult-menu li.menu-item-has-children>a:after {
-		font-family: "FontAwesome";
+		font-family: 'Averta';
 		content: "\F107";
 		position: absolute;
 		top: 50%;
@@ -3980,30 +4006,30 @@ mark, .mark {
 		font-size: 14px;
 	}
 	.consult-nav .consult-menu a:hover {
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .active>a {
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .current-menu-parent>a, .consult-nav .consult-menu .current-menu-item>a
 		{
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .sub-menu a {
 		padding: 12px 15px;
 	}
 	.consult-nav .consult-menu .sub-menu .menu-item-has-children>a:hover {
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .sub-menu .menu-item-has-children.active>a {
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .sub-menu .menu-item-has-children.current-menu-parent>a
 		{
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .consult-menu .sub-menu .current-menu-item>a {
-		color: #f39c12;
+		color: #faa828;
 	}
 	.consult-nav .navbar-toggle {
 		display: block;
@@ -4201,7 +4227,7 @@ mark, .mark {
 }
 
 .filter__list>li.current>a {
-	color: #f39c12;
+	color: #faa828;
 }
 
 .filter__list a {
@@ -4210,7 +4236,7 @@ mark, .mark {
 }
 
 .filter__list a:hover {
-	color: #f39c12;
+	color: #faa828;
 }
 
 .consult_logo {
@@ -4224,7 +4250,7 @@ mark, .mark {
 }
 
 .consult-phone {
-	color: #f39c12;
+	color: #faa828;
 	text-align: center;
 	margin-bottom: 50px;
 	font-size: 30px;
@@ -4255,13 +4281,13 @@ mark, .mark {
 	margin-bottom: 60px;
 	transition: all ease .3s;
 	font-size: 18px;
-	color: #f39c12;
+	color: #faa828;
 	text-align: center;
 }
 
 .consult-back:hover {
-	border-color: #f39c12;
-	background-color: #f39c12;
+	border-color: #faa828;
+	background-color: #faa828;
 	color: white;
 }
 
@@ -4298,7 +4324,7 @@ mark, .mark {
 .consult-404__content>h1 {
 	font-size: 80px;
 	font-weight: 400;
-	color: #f39c12;
+	color: #faa828;
 	letter-spacing: 20px;
 	margin-bottom: 5px;
 }
@@ -4320,7 +4346,7 @@ mark, .mark {
 }
 
 .consult-404__content a {
-	color: #f39c12;
+	color: #faa828;
 	font-weight: 700;
 	text-decoration: underline;
 }
