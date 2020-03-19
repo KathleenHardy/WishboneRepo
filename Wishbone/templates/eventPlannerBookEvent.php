@@ -56,6 +56,7 @@
 
 <body>
 <?php
+session_start();
 include ('../dto/venue.php');
 include ('../dto/gig.php');
 include ('../dao/authenticationDAO.php');
