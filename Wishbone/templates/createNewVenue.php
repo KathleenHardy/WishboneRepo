@@ -103,7 +103,7 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
     mysqli_close($connection);
     ?>
      <script type="text/javascript">
-       window.location.href = 'venueEventList.php';
+       window.location.href = 'venueHostVenueList.php';
      </script>
 <?php
 }
@@ -250,10 +250,10 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
 								</div>
 
 
-								 <a href="venueEventList.php"><button type="submit" class="btn-all" style="display: inline;">Add</button></a>
+								 <a href="venueHostVenueList.php"><button type="submit" class="btn-all" style="display: inline;">Add</button></a>
 
 
-								<a href="venueEventList.php"><button class="btn-all"
+								<a href="venueHostVenueList.php"><button class="btn-all"
 										type="button" style="display: inline;">Cancel</button></a>
 
 

@@ -40,6 +40,59 @@
 </head>
 
 <body>
+
+<?php
+include ('../config.php');
+//include "navigationheaderVenueHost.php";
+include ('../dto/venue.php');
+include ('../dto/availability.php');
+
+session_start();
+$venueOwnerId = $_SESSION['venueOwnerId'];
+$venueDTO = array();
+
+$query2 = "SELECT *
+        FROM venues
+        WHERE venueOwnerId=$venueOwnerId";
+
+$result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+
+if ($count >= 1) {
+    
+    while ($row = mysqli_fetch_array($result)) {
+        
+        $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);
+    }
+} else {
+    // $fmsg = "No venues for this user";
+}
+$_SESSION['myVenues'] = $venueDTO;
+
+/* $availabilityDTO = array();
+$query3 = "SELECT *
+        FROM availability";
+
+$result2 = mysqli_query($connection, $query3) or die(mysqli_error($connection));
+
+$count2 = mysqli_num_rows($result2);
+
+if ($count2 >= 1) {
+    
+    while ($row = mysqli_fetch_array($result2)) {
+        
+        $availabilityDTO[] = new Availability($row['availId'], $row['availStartDate'], $row['availEndDate'], $row['availStartTime'], $row['availEndTime']);
+    }
+} else { */
+    // $fmsg = "No availabilities";
+//}
+$_SESSION['myVenues'] = $venueDTO;
+//$_SESSION['avails'] = $availabilityDTO;
+
+mysqli_close($connection);
+
+?>
     <!-- Pre-loader start -->
     <div class="theme-loader">
         <div class="loader-track">
@@ -346,43 +399,27 @@
 <h1 class="main-title">
 My Venues
 
-</h1>
 
+</h1>
 
 <div class="card-deck spacing1" style = "text-align: center;">
 <div class="row">
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
+<?php
+foreach ($venueDTO as $venue) {
+    print '
+    <div class="card text-center">
+    <img class="card-img-top event-img-size" src='."../assets/img-temp/portfolio/" .$venue->getVenuePicture().' alt="event img">
     <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Venue Location Details Here</p>
-	<button type="button"><a href="venueHostBookEvent.php">Delete Venue</a></button>
+    <h5 class="card-title title2">' . $venue->getVenueName() . '</h5>
+    <p class="card-text">' . $venue->getVenueCity() . '</p>
+    <button type="button"><a href="venueHostBookEvent.php">Delete Venue</a></button>
     </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Venue Location Details Here</p>
-	<button type="button"><a href="venueHostBookEvent.php">Delete Venue</a></button>
     </div>
-  </div>  
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event1.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Venue Location Details Here</p>
-	<button type="button"><a href="venueHostBookEvent.php">Delete Venue</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Venue Location Details Here</p>
-	<button type="button"><a href="venueHostBookEvent.php">Delete Venue</a></button>
-          </div>
-  </div>
+';
+}
+?>
+
+
  </div>
  </div>
   <div class="outer">

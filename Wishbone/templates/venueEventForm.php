@@ -353,7 +353,7 @@ values(".$_SESSION['entid'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 										 
 										
 										 
-										<a href="venueEventList.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
+										<a href="venueHostVenueList.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
 										
 										<!-- Replace buttons with below code -->
 										<!--<div class="form-group" style="display:inline;"> 
