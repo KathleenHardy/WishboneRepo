@@ -1,138 +1,8 @@
-
-<?php
-session_start();
-?>
-
-<?php
-
-require_once ("config.php");
-include ('../enums/userType.php');
-include ('../enums/profileStatus.php');
-
-$authId = $_SESSION['authId'];
-
-if(isset($_FILES['profilepic'])){
-    $errors= array();
-    $profilePic_file_name = $_FILES['profilepic']['name'];
-    $profilePic_file_size =$_FILES['profilepic']['size'];
-    $profilePic_file_tmp =$_FILES['profilepic']['tmp_name'];
-    $profilePic_file_type=$_FILES['profilepic']['type'];
-    
-    $profilePic_file_path = "../assets/img/profile/";
-    
-    if($profilePic_file_size > 2097152){
-        $errors[]='File size must be excatly 2 MB';
-    }
-    
-    if(empty($errors)==true){
-        move_uploaded_file($profilePic_file_tmp, $profilePic_file_path.$profilePic_file_name);
-    }else{
-        print_r($errors);
-    }
-}
-
-
-if(isset($_FILES['bgimage'])){
-    $errors= array();
-    $bgPic_file_name = $_FILES['bgimage']['name'];
-    $bgPic_file_size =$_FILES['bgimage']['size'];
-    $bgPic_file_tmp =$_FILES['bgimage']['tmp_name'];
-    $bgPic_file_type=$_FILES['bgimage']['type'];
-    
-    //$bgPic_file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img/backgrounds/";
-    $bgPic_file_path = "../assets/img/backgrounds/";
-    
-    
-    if($bgPic_file_size > 2097152){
-        $errors[]='File size must be excatly 2 MB';
-    }
-    
-    if(empty($errors)==true){
-        move_uploaded_file($bgPic_file_tmp, $bgPic_file_path.$bgPic_file_name);
-    }else{
-        print_r($errors);
-    }
-}
-
-
-function profileStatus() {
-    
-    if ( isset($_POST['hourlyrate']) && isset($_POST['occupation']) && isset($_POST['aboutme']) && isset($_POST['gigsdetails'])) {
-        $result = ProfileStatus::COMPLETE;
-    } else if ( isset($_POST['hourlyrate']) || isset($_POST['occupation']) || isset($_POST['aboutme']) || isset($_POST['gigsdetails'])) {
-        $result = ProfileStatus::INCOMPLETE;
-    }
-    
-    return $result;
-}
-
-
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    $query = "UPDATE entertainers
-                  SET ratePerHour = ?, workDescription = ?, profilePicture = ?, homePagePicture = ?, aboutMe = ?, myQuote = ?, profileStatus = ?
-                  WHERE  authid = ?";
-    
-    if ($stmt = $connection->prepare( $query)) {
-        $profileStatus = profileStatus();
-        
-        $stmt->bind_param( "dsssssii", $ratePerHour, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus, $authId);
-        
-        //Set params
-        $ratePerHour = $_POST['hourlyrate'];
-        $workDescription = $_POST['gigsdetails'];
-        $profilePicture = basename($_FILES["profilepic"]["name"]);
-        $homePagePicture = basename($_FILES["bgimage"]["name"]);
-        $aboutMe = $_POST['aboutme'];
-        $myQuote = $_POST['quote'];
-        
-        
-        //execute statement
-        $status = $stmt->execute();
-        
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
-        } else {
-            //echo("<script>location.href = 'entertainerMainPortfolio.php?msg=$msg';</script>");
-            //header("Location: entertainerMainPortfolio.php");
-            mysqli_close($connection);
-        }
-        
-        //close statement
-        $stmt->close();
-    }
-    
-    else {
-        //  $fmsg = "Invalid Login Credentials.";
-    }
-    //close connection
-    //$connection->close();   
-  
-    //echo $_REQUEST
-    
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Something posted
-        echo "i am here";
-        if (isset($_POST['myOccupation'])) {
-            // btnDelete
-            echo "i am here - 2";
-        } else {
-            // Assume btnSubmit
-        }
-    }
-  
-}
-
-// Handle AJAX request (start)
-//print_r($_POST);
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>Upcoming Events</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -142,12 +12,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />  
     <meta name="keywords" content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
     <meta name="author" content="Codedthemes" />
     <!-- Favicon icon -->
     <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
+    <!-- bootstrap -->
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
     <!-- waves.css -->
@@ -166,23 +36,426 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
-    <!-- for the upload file css link 
-		<link rel="stylesheet" type="text/css" href="..assets/css2/normalize.css" />
-		<link rel="stylesheet" type="text/css" href="..assets/css2/demo.css" />
-		<link rel="stylesheet" type="text/css" href="..assets/css2/component (2).css" />
-		
-		<script src="/code.jquery.com/jquery-2.1.0.min.js" type="text/javascript" ></script>
-		-->
-		
-<!-- end -->		
-
-    		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
-    <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">    
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-     
+  <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+  
+    <link href='../assets/css/fullcalendar.css' rel='stylesheet' />
+    <link href='../assets/css/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <script src='../assets/js/jquery-1.10.2.js' type="text/javascript"></script>
+    <script src='../assets/js/jquery-ui.custom.min.js' type="text/javascript"></script>
+    <script src='../assets/js/fullcalendar.js' type="text/javascript"></script>
+    <script src="/code.jquery.com/jquery-2.1.0.min.js" type="text/javascript" ></script>
+
+<?php 
+
+session_start();
+include ('../config.php');
+include ('../dto/availability.php');
+
+$authId=$_SESSION['authId'];
+
+$query0 = "SELECT entid
+          FROM entertainers
+          WHERE  authid = ?";
+
+if ($stmt0 = $connection->prepare( $query0)) {
+    
+    $stmt0->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt0->execute();
+    
+    //bind result variables
+    $stmt0->bind_result($entid);
+    
+    // fetch values
+    $stmt0->fetch();
+    
+    //close statement
+    $stmt0->close();    
+}
+
+
+$availabilityDTO = array();
+
+$query = "SELECT availid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle
+          FROM entertaineravailability
+          WHERE  entid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $entid);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $availid, $availStartDate, $availEndDate, $availStartTime, $availEndTime, $availTitle);
+    
+    // fetch values
+    while( $stmt->fetch()) {
+        $availabilityDTO[] = new Availability( $availid, $availStartDate, $availEndDate, $availStartTime, $availEndTime, $availTitle);
+    }
+    
+    //close statement
+    $stmt->close();
+       
+}
+
+?>
+
+
+
+<script>
+
+	$(document).ready(function() {
+	    var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();
+
+		var events = [];
+
+		<?php foreach( $availabilityDTO as $availability) { ?>
+
+    		var myEvent = new Object();
+    		myEvent.title = "<?= $availability->getAvailTitle() ?>";
+
+    		myEvent.start = new Date(
+    	       <?=substr( $availability->getAvailStartDate(), 0, 4)?>, 
+    	       <?=substr( $availability->getAvailStartDate(), 5, 2)-1?>, 
+    	       <?=substr( $availability->getAvailStartDate(), 8, 2)?>);
+
+    		myEvent.end = new Date(
+    	    	       <?=substr( $availability->getAvailEndDate(), 0, 4)?>, 
+    	    	       <?=substr( $availability->getAvailEndDate(), 5, 2)-1?>, 
+    	    	       <?=substr( $availability->getAvailEndDate(), 8, 2)?>);
+
+    		myEvent.className = 'info';
+
+    	    events.push( myEvent);
+
+		<?php } ?>
+		
+		/*  className colors
+		className: default(transparent), important(red), chill(pink), success(green), info(blue)
+		*/
+
+		/* initialize the external events
+		-----------------------------------------------------------------*/
+
+		$('#external-events div.external-event').each(function() {
+
+			// create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+			// it doesn't need to have a start or end
+			var eventObject = {
+				title: $.trim($(this).text()) // use the element's text as the event title
+			};
+
+			// store the Event Object in the DOM element so we can get to it later
+			$(this).data('eventObject', eventObject);
+
+			// make the event draggable using jQuery UI
+			$(this).draggable({
+				zIndex: 999,
+				revert: true,      // will cause the event to go back to its
+				revertDuration: 0  //  original position after the drag
+			});
+
+		});
+
+
+		/* initialize the calendar
+		-----------------------------------------------------------------*/
+
+		var calendar =  $('#calendar').fullCalendar({
+			header: {
+				left: 'title',
+				center: 'agendaDay,agendaWeek,month',
+				right: 'prev,next today'
+			},
+			editable: true,
+			firstDay: 1, //  1(Monday) this can be changed to 0(Sunday) for the USA system
+			selectable: true,
+			defaultView: 'month',
+
+			axisFormat: 'h:mm',
+			columnFormat: {
+                month: 'ddd',    // Mon
+                week: 'ddd d', // Mon 7
+                day: 'dddd M/d',  // Monday 9/7
+                agendaDay: 'dddd d'
+            },
+            titleFormat: {
+                month: 'MMMM yyyy', // September 2009
+                week: "MMMM yyyy", // September 2009
+                day: 'MMMM yyyy'                  // Tuesday, Sep 8, 2009
+            },
+			allDaySlot: false,
+			selectHelper: true,
+			select: function(start, end, allDay) {
+				var title = prompt('Event Title:');
+
+				if (title) {
+					$.ajax({
+	                    type: "POST",
+	                    url: 'entertainerEventsCalendar.php',
+	                    data: {title: title, start: start, end: end },
+	                    success: function(data)
+	                    {
+	                    }
+
+	        		});
+
+					calendar.fullCalendar('renderEvent',
+						{
+							title: title,
+							start: start,
+							end: end,
+							allDay: allDay
+						},
+						true // make the event "stick"
+
+					);
+				}
+				calendar.fullCalendar('unselect');
+			},
+			droppable: true, // this allows things to be dropped onto the calendar !!!
+			drop: function(date, allDay) { // this function is called when something is dropped
+
+				// retrieve the dropped element's stored Event Object
+				var originalEventObject = $(this).data('eventObject');
+
+				// we need to copy it, so that multiple events don't have a reference to the same object
+				var copiedEventObject = $.extend({}, originalEventObject);
+
+				// assign it the date that was reported
+				copiedEventObject.start = date;
+				copiedEventObject.allDay = allDay;
+
+				// render the event on the calendar
+				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+				$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+				/**
+				$.ajax({
+                    type: "POST",
+                    url: 'entertainerEventsCalendar.php',
+                    data: {copiedTitle: copiedEventObject.title, copiedStart: copiedEventObject.start, copiedEnd: copiedEventObject.end },
+                    success: function(data)
+                    {
+                    }
+
+        		});
+        		*/
+
+				// is the "remove after drop" checkbox checked?
+				if ($('#drop-remove').is(':checked')) {
+					// if so, remove the element from the "Draggable Events" list
+					$(this).remove();
+				}
+
+			},
+
+			events,
+			
+			/**
+			events: [
+				{
+					title: 'All Day Event',
+					start: new Date(y, m, 1)
+				}
+				],
+			
+			
+			events: [
+				{
+					title: 'All Day Event',
+					start: new Date(y, m, 1)
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: new Date(y, m, d-3, 16, 0),
+					allDay: false,
+					className: 'info'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: new Date(y, m, d+4, 16, 0),
+					allDay: false,
+					className: 'info'
+				},
+				{
+					title: 'Meeting',
+					start: new Date(y, m, d, 10, 30),
+					allDay: false,
+					className: 'important'
+				},
+				{
+					title: 'Lunch',
+					start: new Date(y, m, d, 12, 0),
+					end: new Date(y, m, d, 14, 0),
+					allDay: false,
+					className: 'important'
+				},
+				{
+					title: 'Birthday Party',
+					start: new Date(y, m, d+1, 19, 0),
+					end: new Date(y, m, d+1, 22, 30),
+					allDay: false,
+				},
+				{
+					title: 'Click for Google',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 30),
+					url: 'http://google.com/',
+					className: 'success'
+				}
+			],
+			*/
+			
+			
+		});
+
+
+	});
+
+</script>
+<?php 
+if (isset($_POST['title'])) {
+
+    $query2 = "INSERT INTO entertaineravailability
+              (entid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle)
+              VALUES
+              (?,?,?,?,?,?)";
+    
+    if ($stmt2 = $connection->prepare( $query2)) {
+        
+        $stmt2->bind_param( "isssss", $entid_, $availStartDate, $availEndDate, $availStartTime, $availEndTime, $availTitle);
+        
+        //Set params
+        $entid_ = $entid;
+        $availStartDate = formatDate($_POST['start']);
+        $availEndDate = formatDate($_POST['end']);
+        $availStartTime = '00:00:00';
+        $availEndTime = '00:00:00';
+        $availTitle = $_POST['title'];
+        
+        //execute statement
+        $stmt2->execute();
+        
+        //close statement
+        $stmt2->close();
+    }
+}
+
+
+function formatDate(string $date) {
+
+    $year=substr( $date, 11, 4);
+    
+    $month=0;
+    
+    if ( substr( $date, 4, 3) == "Jan") {
+        $month=1;
+    } else if ( substr( $date, 4, 3) == "Feb") {
+        $month=2;
+    } else if ( substr( $date, 4, 3) == "Mar") {
+        $month=3;
+    } else if ( substr( $date, 4, 3) == "Apr") {
+        $month=4;
+    } else if ( substr( $date, 4, 3) == "May") {
+        $month=5;
+    } else if ( substr( $date, 4, 3) == "Jun") {
+        $month=6;
+    } else if ( substr( $date, 4, 3) == "Jul") {
+        $month=7;
+    } else if ( substr( $date, 4, 3) == "Aug") {
+        $month=8;
+    } else if ( substr( $date, 4, 3) == "Sep") {
+        $month=9;
+    } else if ( substr( $date, 4, 3) == "Oct") {
+        $month=10;
+    } else if ( substr( $date, 4, 3) == "Nov") {
+        $month=11;
+    } else if ( substr( $date, 4, 3) == "Dec") {
+        $month=12;
+    }
+    
+    $day = substr( $date, 8, 2);
+    
+    return $year .'-'. $month . '-' . $day;
+}
+
+?>
+
+<style>
+
+	body {
+		/* margin-top: 40px; */
+		text-align: center;
+		font-size: 14px;
+		font-family: "Helvetica Nueue",Arial,Verdana,sans-serif;
+		background-color: #DDDDDD;
+		}
+
+	#wrap {
+		width: 1100px;
+		margin: 0 auto;
+		}
+
+	#external-events {
+		float: left;
+		width: 150px;
+		padding: 0 10px;
+		text-align: left;
+		}
+
+	#external-events h4 {
+		font-size: 16px;
+		margin-top: 0;
+		padding-top: 1em;
+		}
+
+	.external-event { /* try to mimick the look of a real event */
+		margin: 10px 0;
+		padding: 2px 4px;
+		background: #3366CC;
+		color: #fff;
+		font-size: .85em;
+		cursor: pointer;
+		}
+
+	#external-events p {
+		margin: 1.5em 0;
+		font-size: 11px;
+		color: #666;
+		}
+
+	#external-events p input {
+		margin: 0;
+		vertical-align: middle;
+		}
+
+	#calendar {
+/* 		float: right; */
+        margin: 0 auto;
+		width: 900px;
+		background-color: #FFFFFF;
+		  border-radius: 6px;
+        box-shadow: 0 1px 50px #C3C3C3;
+		}
+
+</style>
+
+
 </head>
- 
+
 <body>
     <!-- Pre-loader start -->
     <div class="theme-loader">
@@ -259,7 +532,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
                         </div>
                         <a href="entertainerDashboardHome.php">
-                            <h4 style="color:white;">WISHBONE</h4>
+                            <h4>WISHBONE</h4>
                         </a>
                         <a class="mobile-options waves-effect waves-light">
                             <i class="ti-more"></i>
@@ -365,7 +638,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <li class="more-details">
                                             <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -436,13 +709,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Calendar</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>
-                                <li class="">
                                     <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Portfolio</span>
@@ -479,98 +745,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
+<div id='wrap'>
 
-				<div class="container">
-					<div class="row">
-						<div
-							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 ">
+<div id='calendar'></div>
 
-							<!-- title-01 -->
-							<div class="title-01 title-01__style-04">
-								<h1 class="main-title">CREATE YOUR PORTFOLIO</h1>
-							</div>
-							<form  action="entertainerCreateNewPortfolio.php" method="post" enctype="multipart/form-data">
-
-										<div class="form-group"> <!-- Event Name -->
-											<label for="hourlyrate" class="control-label title2">What's your hourly rate?</label>
-											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="hourlyrate" name="hourlyrate">
-										</div>
-										<!--	 
-										<div class="form-group">   
-											<label for="occupation" class="control-label title2">What's your occupation as an entertainer?</label>
-											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="occupation" name="occupation">
-										</div>
-										-->	
-										<!-- code below is UI for adding more occupations -->
-<div class="form-group">
-<div class="occupations-list">
-<h1 class="control-label title2" style="text-align: left;">What are your occupations?</h1>
-<input type="text" id="occupationAdded" style="border-bottom: 2px solid #faa828;">
-<br>
-<p>Occupations Listed:</p>
-<ol class="list-occupations" #id = "occupation" name="occupation"></ol>
-<input class ="add-button-list" type='button' onclick='changeText2()' value='Add' />
+<div style='clear:both'></div>
 </div>
-</div>
-                                        <!-- end of occupations list -->
-                                 							
-										<div class="form-group"> <!-- Gigs details -->
-											<label for="aboutme" class="title2">Tell us about yourself</label>
-											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="aboutme" name="aboutme" placeholder ="Anything you want"></textarea>
-										</div>
-										<div class="form-group"> <!-- Gigs details -->
-											<label for="gigsdetails" class="title2">Tell us about your work</label>
-											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="gigsdetails" name="gigsdetails" placeholder ="Anything you want"></textarea>
-										</div>										
-										<div class="form-group"> <!-- Gigs details -->
-											<label for="quote" class="title2">An inspirational quote or your favourite one</label>
-											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="quote" name="quote" placeholder ="Anything you want"></textarea>
-										</div>
-										
-										
-										<!-- Code for creative file upload -->
-										<div class="form-group">
-				<label for ="eventpic" class="title2">Upload Your Profile Image</label>
-					<input type="file" name="profilepic" id="profilepic" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
-					<label for="profilepic"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose image&hellip;</span></label>
-										
-										</div>
-												<div class="form-group">
-				<label for ="eventpic" class="title2">Upload Your Background Image</label>
-					<input type="file" name="bgimage" id="bgimage" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
-					<label for="bgimage"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose image&hellip;</span></label>
-										
-										</div>
-										<!-- end -->
-										
-										
-                                                       
-										
-										<!--
-										<div class="input-group">
-											  <div class="input-group-prepend">
-												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-											  </div>
-												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
-										</div>
-										for later -->
-										<div style="text-align:center;">
 
-										<input class ="btn-all" style="display:inline;" type='submit' id='submit' name='submit' value='Submit' />
-										 
-										</div>
-										<!-- Replace buttons with below code -->
-										<!--<div class="form-group" style="display:inline;"> 
-											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>
-										</div> 
-										<div class="form-group" style="display:inline;"> 
-											<button class="btn-all">Cancel</button>
-										</div>   -->
-										
-										 
-							</form>
-							</div>
-							</div></div>
+
 
                                     </div>
                                     <!-- Page-body end -->
@@ -629,7 +811,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Warning Section Ends -->
 
     <!-- Required Jquery -->
-    <script type="text/javascript" src="../assets/javascript/jquery/jquery.min.js "></script>
+    <!--  <script type="text/javascript" src="../assets/javascript/jquery/jquery.min.js "></script> -->
     <script type="text/javascript" src="../assets/javascript/jquery-ui/jquery-ui.min.js "></script>
     <script type="text/javascript" src="../assets/javascript/popper.js/popper.min.js"></script>
     <script type="text/javascript" src="../assets/javascript/bootstrap/js/bootstrap.min.js "></script>
@@ -644,56 +826,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- menu js -->
     <script src="../assets/javascript/pcoded.min.js"></script>
     <script src="../assets/javascript/vertical/vertical-layout.min.js "></script>
-		<script src="../assets/js-other/custom-file-input.js"></script>
 
     <script type="text/javascript" src="../assets/javascript/script.js "></script>
-    
-    <script>    
-
-    var occupation = [];
-    
-    function changeText2() {
-    	var occupationToAdd = $('#occupationAdded').val();
-
-    	$('ol').append( '<li class = "items">' + occupationToAdd + '</li>' );
-
-    	occupation.push( occupationToAdd)
-    } 
-
-
-    $(document).ready(function(){
-
-    	$("#submit").on("click", function(){
-        	
-    		if ( occupation.length > 0) {
-           	 $.ajax({
-           			url: 'entertainerCreateNewPortfolio.php',
-                    type: 'POST',
-                    data: {myOccupation: occupation},
-                    success: function(){
-                   	console.log(occupation);
-                    }
-                   });
-            }
-    	 });
-         /**
-         $.ajax({
-         type: 'post',
-         url: 'entertainerCreateNewPortfolio.php',
-         data: {occupation: JSON.stringify( occupation) },
-         success: function(){
-         alert (occupation);
-         }
-        });
-
-         */   
-        
-      });
-
-    
-    </script> 
-    <?php 
-    
-    ?>
 </body>
+
 </html>
