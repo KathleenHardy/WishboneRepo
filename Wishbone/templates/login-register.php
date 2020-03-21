@@ -28,11 +28,157 @@
 	
 	
 </head>
-<body>	
+
+<body>
+
+<?php
+session_start();
+session_unset();
+?>
+
+<?php
+require_once ("config.php");
+
+
+
+if( $_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['sign-in'])){
+    include ('../enums/userType.php');
+    
+    $useremail = $userpassword = $fmsg = "";
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["useremail"]) && isset($_POST["userpassword"])) {
+        $useremail = test_input($_POST["useremail"]);
+        $userpassword = test_input($_POST["userpassword"]);
+        
+        
+        $query = "SELECT userType, authid
+              FROM authentication
+              WHERE email = ? AND pass = ?";
+        
+        if ($stmt = $connection->prepare( $query)) {
+            $_SESSION['useremail'] = $useremail;
+            
+            $stmt->bind_param( "ss", $useremail, $userpassword);
+            
+            //execute statement
+            $stmt->execute();
+            
+            //bind result variables
+            $stmt->bind_result($userType, $authid);
+            
+            // fetch values
+            $stmt->fetch();
+            
+            $_SESSION['authId'] = $authid;
+            
+            if ($userType == UserType::EVENT_PLANNER) {
+                header('Location: eventPlannerDashboardHome.php');
+                mysqli_close($connection);
+            } else if ( $userType == UserType::ENTERTAINER) {
+                header('Location: entertainerDashboardHome.php');
+                mysqli_close($connection);
+            } else if ( $userType == UserType::VENUE_OWNER) {
+                header('Location: venueDashboardHome.php');
+                mysqli_close($connection);
+            }
+            //close statement
+            $stmt->close();
+        }
+        
+        else {
+            $fmsg = "Invalid Login Credentials.";
+        }
+    }
+} elseif( $_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['sign-up'])){
+    include ('../dao/authenticationDAO.php');
+    
+    $hasError = false;
+    $authenticationDAO = new AuthenticationDAO();
+    $errorMessages = Array();
+    
+    
+    if (isset($_POST["userFirstName"]) || isset($_POST["userLastName"]) || isset($_POST["userEmail"]) || isset($_POST["userPwd"]) || isset($_POST["userConfirmPwd"])) {
+        
+        
+        if ($_POST["userFirstName"] == "") {
+            $hasError = true;
+            $errorMessages['firstNameError'] = 'Please enter your first name';
+        }
+        
+        if ($_POST["userLastName"] == "") {
+            $hasError = true;
+            $errorMessages['lastNameError'] = 'Please enter your last name';
+        }
+        
+        if ($_POST["userEmail"] == "" || ! preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i", $_POST['userEmail'])) {
+            $hasError = true;
+            $errorMessages['EmailError'] = 'Please enter your first name';
+        }
+        
+        if ($_POST["userPwd"] == "") {
+            $hasError = true;
+            $errorMessages['PasswordError'] = 'Please enter your password';
+        }
+        
+        if (! preg_match("/^(?=.*\d)(?=.*[A-Za-z])[0-9A-Za-z!@#$%]{8,12}$/", $_POST["userPwd"])) {
+            $hasError = true;
+            $errorMessages['PasswordError'] = 'The password must contain at least one number, one alphabetic character, one special character, and suggested length is between 8 and 12';
+        }
+        
+        if ($_POST["userPwd"] !== $_POST["userConfirmPwd"]) {
+            $hasError = true;
+            $errorMessages['userConfirmPwdError'] = 'Passwords need to be matched';
+        }
+        
+        
+        if (isset($_POST['sign-up'])) {
+            if (! $hasError) {
+                $authentication = new Authentication($_POST["userFirstName"], $_POST["userLastName"], $_POST["userEmail"], $_POST["userPwd"], $_POST["userType"]);
+                $authentication->setProfileStatus( ProfileStatus::NOT_CREATED);
+                $addSuccess = $authenticationDAO->addNewRegistrant($authentication);
+                
+                if ( $_POST["userType"] == UserType::EVENT_PLANNER) {
+                    $_SESSION['authId'] = $authentication->getAuthId();
+                    $_SESSION['useremail'] = $authentication->getRegistrantEmail();
+                    header('Location: venueHostProfileView.php');
+                } else if ( $_POST["userType"] == UserType::ENTERTAINER) {
+                    $_SESSION['authId'] = $authentication->getAuthId();
+                    $_SESSION['useremail'] = $authentication->getRegistrantEmail();
+                    header('Location: entertainerCreateNewPortfolio.php');
+                } else if ( $_POST["userType"] == UserType::VENUE_OWNER) {
+                    $_SESSION['useremail'] = $authentication->getRegistrantEmail();
+                    $_SESSION['authId'] = $authentication->getAuthId();
+                    header('Location: venueProfileView.php');
+                }
+                
+                echo $addSuccess;
+                
+            }
+        }
+           
+    }
+    
+}
+
+
+
+
+function test_input($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+?>
+
+
+
+	
 	<div class="page-wrap">
 	<div class="login-page">
   <div class="form">
-    <form class="register-form">
+    <form class="register-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
     <h1 class="main-login-title">REGISTER</h1>
     					<div class="buttonsRegister" style="text-align: center;">					
 					<span class="txt1" style="text-align: center;">Select a role:</span>
@@ -55,39 +201,45 @@
 <div class="label" style="align: left;">					
 <label for="fname" class="label-login">First Name</label>
 </div>
-<input type="text" name="fname" id="fname" placeholder="Enter your first name"/>
+<input type="text" name="userFirstName" id="fname" placeholder="Enter your first name"/>
 <div class="label">					
 <label for="lname" class="label-login">Last Name</label>
 </div>
-<input type="text" name="lname" id="lname" placeholder="Enter your last name"/>					
+<input type="text" name="userLastName" id="lname" placeholder="Enter your last name"/>					
 <div class="label">					
 <label for="email-signup" class="label-login">Email Address</label>
 </div>      
-<input type="text" name="email-signup" id="email-signup" placeholder="Enter your email"/>
+<input type="text" name="userEmail" id="email-signup" placeholder="Enter your email"/>
 <div class="label">					
 <label for="pass-signup" class="label-login">Password</label>
 </div>
-      <input type="password" name="pass-signup" id="pass-signup" placeholder="Create a password"/>
+      <input type="password" name="userPwd" id="pass-signup" placeholder="Create a password"/>
 <div class="label">					
 <label for="pass-confirm" class="label-login">Confirm Password</label>
 </div>      
-      <input type="password" name ="pass-confirm" id = "pass-confirm" placeholder="Confirm your password"/>
-      <button>SIGN UP</button>
+      <input type="password" name ="userConfirmPwd" id = "pass-confirm" placeholder="Confirm your password"/>
+      <input type="hidden" name="action" value="signup">
+      <button type="submit" id="sign-up" name="sign-up">SIGN UP</button>
       <p class="message">Already registered? <a href="#">Sign In</a></p>
     </form>
-    <form class="login-form">
+    
+    
+    <form class="login-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
         <h1 class="main-login-title">ACCOUNT LOGIN</h1>
-<div class="label">					
-<label for="email-login" class="label-login">Email Address</label>
-</div>
-      <input type="text" name="email-login" id="email-login" placeholder="Enter your email"/>
-<div class="label">					
-<label for="pass-login" class="label-login">Password</label>
-</div>      
-      <input type="password" name="pass-login" id="pass-login" placeholder="Enter your password"/>
-      <button>SIGN IN</button>
+            <div class="label">					
+            <label for="email-login" class="label-login">Email Address</label>
+            </div>
+                  <input type="text" name="useremail" id="email-login" placeholder="Enter your email"/>
+            <div class="label">					
+            <label for="pass-login" class="label-login">Password</label>
+            </div>      
+      <input type="password" name="userpassword" id="pass-login" placeholder="Enter your password"/>
+
+      <button type="submit" id="sign-in" name="sign-in">SIGN IN</button>
       <p class="message">Not registered? <a href="#">Create an account</a></p>
     </form>
+    
+    
   </div>
 </div>
 </div>

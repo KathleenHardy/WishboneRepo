@@ -413,6 +413,7 @@ CREATE TABLE entertainerAvailability (
     availEndDate date,
     availStartTime time not null,
     availEndTime time not null,
+    availTitle varchar(50),
 
 	FOREIGN KEY (entid) REFERENCES entertainers(entid),
     primary key (availId)
@@ -489,6 +490,7 @@ CREATE TABLE venueAvailability (
     availEndDate date,
     availStartTime time not null,
     availEndTime time not null,
+    availTitle varchar(50),
 
 	FOREIGN KEY (venueId) REFERENCES venues(venueId),
     primary key (availId)
@@ -974,19 +976,26 @@ INSERT INTO gigs (entid, gigsName, gigsCategory, gigsArttype, gigsDetails, notes
     
     	                       
 
-INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
-							(1, '2020-02-12','2020-03-12', '15:00', '16:00'); 
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
+							(1, '2020-03-12','2020-03-12', '15:00', '16:00', 'Birthday Party'); 
 							
-INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
-							(2, '2020-05-12','2020-06-12', '16:00', '16:00'); 	
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
+							(2, '2020-03-12','2020-06-12', '16:00', '16:00', 'Lunch'); 	
 							
-INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
-							(3, '2020-06-12','2020-09-12', '17:00', '16:00');	
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
+							(3, '2020-03-12','2020-09-12', '17:00', '16:00', 'Meeting');	
 							
-INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime) VALUES 
-							(4, '2020-12-12','2021-01-12', '17:00', '16:00');	
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
+							(4, '2020-03-12','2020-03-15', '17:00', '16:00', 'All Day Event');	
+	
+INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
+							(4, '2020-03-18','2020-03-20', '17:00', '16:00', 'Music Festival');		
 							
 							
+INSERT INTO venueAvailability (venueid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
+							(1, '2020-03-18','2020-03-20', '17:00', '16:00', 'Booked');						
+
+						
 											
 							
 
