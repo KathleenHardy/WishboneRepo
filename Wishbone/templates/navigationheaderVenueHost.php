@@ -21,7 +21,7 @@
 
             <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
               <li class="nav-item mr-4 mb-2 mb-lg-0">
-                <a class="nav-link" href="venueEventList.php">My Venues</a>
+                <a class="nav-link" href="venueHostVenueList.php">My Venues</a>
               </li>
               <li class="nav-item mr-4 mb-2 mb-lg-0">
                 <a class="nav-link" href="venueEntertainerList.php">Book Entertainers</a>
