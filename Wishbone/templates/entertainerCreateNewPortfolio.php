@@ -1,11 +1,11 @@
-
 <?php
 session_start();
 ?>
 
+
 <?php
 
-require_once ("config.php");
+require_once ("../config.php");
 include ('../enums/userType.php');
 include ('../enums/profileStatus.php');
 
@@ -70,6 +70,29 @@ function profileStatus() {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
+    $query0 = "SELECT entid
+               FROM entertainers
+               WHERE  authid = ?";
+    
+    if ($stmt0 = $connection->prepare( $query0)) {
+        
+        $stmt0->bind_param( "i", $authId);
+        
+        //execute statement
+        $stmt0->execute();
+        
+        //bind result variables
+        $stmt0->bind_result($entid);
+        
+        // fetch values
+        $stmt0->fetch();
+        
+        //close statement
+        $stmt0->close();
+    }
+    
+    
+    
     $query = "UPDATE entertainers
                   SET ratePerHour = ?, workDescription = ?, profilePicture = ?, homePagePicture = ?, aboutMe = ?, myQuote = ?, profileStatus = ?
                   WHERE  authid = ?";
@@ -86,6 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $homePagePicture = basename($_FILES["bgimage"]["name"]);
         $aboutMe = $_POST['aboutme'];
         $myQuote = $_POST['quote'];
+        $profileStatus = profileStatus();
         
         
         //execute statement
@@ -95,37 +119,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             trigger_error($stmt->error, E_USER_ERROR);
         } else {
             //echo("<script>location.href = 'entertainerMainPortfolio.php?msg=$msg';</script>");
-            //header("Location: entertainerMainPortfolio.php");
-            mysqli_close($connection);
+            header("Location: entertainerMainPortfolio.php");
         }
         
         //close statement
         $stmt->close();
     }
-    
-    else {
-        //  $fmsg = "Invalid Login Credentials.";
-    }
-    //close connection
-    //$connection->close();   
+      
   
-    //echo $_REQUEST
-    
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Something posted
-        echo "i am here";
-        if (isset($_POST['myOccupation'])) {
-            // btnDelete
-            echo "i am here - 2";
-        } else {
-            // Assume btnSubmit
+
+    if( isset( $_POST['str'])) {
+        
+        $occupations = json_decode($_POST['str'], true);
+        //print_r($occupations);
+        
+        foreach( $occupations as $occupation_) {
+
+            $query2 = "INSERT INTO occupation
+                  ( entid, occupation)
+                  VALUES
+                  ( ?,?)";
+            
+            if ( $stmt2 = $connection->prepare( $query2)) {
+                
+                $stmt2->bind_param( "is", $entid, $occupation);
+                //Set params
+                $occupation = $occupation_;
+                
+                //execute statement
+                $status = $stmt2->execute();
+
+                //close statement
+                $stmt2->close();
+            }
+            
         }
+  
     }
+    mysqli_close($connection);
   
 }
-
-// Handle AJAX request (start)
-//print_r($_POST);
 
 ?>
 <!DOCTYPE html>
@@ -442,13 +475,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <li class="">
-                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Portfolio</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>                                                                
+                                <?php
+                                    if ( $profileStatus == ProfileStatus::INCOMPLETE || $profileStatus == ProfileStatus::NOT_CREATED) {
+                                      print'
+                                           <li class="">
+                                                <a href="entertainerCreateNewPortfolio.php" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                                    <span class="pcoded-mtext">Create Portfolio</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li> 
+                                           '; 
+                                    } else {
+                                        print'
+                                            <li class="">
+                                                <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                                    <span class="pcoded-mtext">Portfolio</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                             ';
+                                        
+                                    }
+                                ?>                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">
@@ -489,7 +539,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 							<div class="title-01 title-01__style-04">
 								<h1 class="main-title">CREATE YOUR PORTFOLIO</h1>
 							</div>
-							<form  action="entertainerCreateNewPortfolio.php" method="post" enctype="multipart/form-data">
+							<form  id="myForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
 
 										<div class="form-group"> <!-- Event Name -->
 											<label for="hourlyrate" class="control-label title2">What's your hourly rate?</label>
@@ -509,7 +559,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <br>
 <p>Occupations Listed:</p>
 <ol class="list-occupations" #id = "occupation" name="occupation"></ol>
-<input class ="add-button-list" type='button' onclick='changeText2()' value='Add' />
+<input class ="add-button-list" type='button' name='addOccupation' onclick='changeText2()' value='Add' />
+<input type="hidden" id="str" name="str" value="" />
+
 </div>
 </div>
                                         <!-- end of occupations list -->
@@ -650,50 +702,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     <script>    
 
-    var occupation = [];
+    var myOccupation = [];
     
     function changeText2() {
     	var occupationToAdd = $('#occupationAdded').val();
 
     	$('ol').append( '<li class = "items">' + occupationToAdd + '</li>' );
 
-    	occupation.push( occupationToAdd)
+    	myOccupation.push( occupationToAdd);
+
+    	$('#str').val(JSON.stringify(myOccupation))
+    	
     } 
 
-
-    $(document).ready(function(){
-
-    	$("#submit").on("click", function(){
-        	
-    		if ( occupation.length > 0) {
-           	 $.ajax({
-           			url: 'entertainerCreateNewPortfolio.php',
-                    type: 'POST',
-                    data: {myOccupation: occupation},
-                    success: function(){
-                   	console.log(occupation);
-                    }
-                   });
-            }
-    	 });
-         /**
-         $.ajax({
-         type: 'post',
-         url: 'entertainerCreateNewPortfolio.php',
-         data: {occupation: JSON.stringify( occupation) },
-         success: function(){
-         alert (occupation);
-         }
-        });
-
-         */   
-        
-      });
-
-    
     </script> 
-    <?php 
-    
-    ?>
+
 </body>
 </html>

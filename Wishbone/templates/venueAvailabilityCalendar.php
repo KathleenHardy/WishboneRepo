@@ -267,8 +267,118 @@ if ($stmt = $connection->prepare( $query)) {
 					$(this).remove();
 				}
 
-			},
+			}, 
+			eventMouseover: function(event, element) {
+				var deviceType = $("#deviceType").val();
 
+				console.log(deviceType);
+				
+				if(deviceType == 0){
+					
+					var openClickPopup = 0;
+					$.each($('.popout'),function(){
+							if($(this).hasClass("open")){
+								openClickPopup = 1;
+							}
+					})
+				
+					if(openClickPopup == 1){
+						$('.tooltipevent').remove();
+					}else{
+						var calendar_custom_class = $("#calendar").attr("custom_class");
+						var popupWidth = "260px";
+							
+						
+						if(calendar_custom_class == "inner_calendar"){
+							popupWidth = "200px";
+						}
+
+						if ( event.isDeletable) {
+							var detailText = 
+    							'<div id="eventContent" class="eventPopup ">' + 
+    							  '<div class="">' + 
+    							    '<div class="row row-centered pos">' + 
+    							      '<div class="col-lg-12 col-xs-12 col-centered">' + 
+    							        '<img src="../assets/images/user-bg.jpg" class="img-responsive event_image " alt=""  hegiht="140px">' +
+    							          '<h3 id="event_sponcername">'+event.sponsor_name+'</h3>' + 
+    							          '<h3 id="event_heading">'+event.title+'</h3>' +
+    							              '<ul>' + 
+    							               	'<li> <i class="fa fa-calendar"></i> Start: <span id="startDate">'+event.start+'</span> <span id="startTime">START TIME</span></li>' + 
+    							               	'<li> <i class=" fa fa-map-marker"></i> Location:  <span id="eventLocation">'+event.location+'</span></li>' + 
+    							               	'<li class="short_description"> <i class=" fa fa-file-text"></i> Description: <span id="eventSponsorDescription">'+event.short_description+'</span></li>' + 
+    							              '</ul>' + 
+    							              '<input class ="btn-all" style="display:inline;" type="submit" id="submit" name="submit" value="Delete" /> <br>' +							              
+    							            '</div><div class="clearfix">' + 
+    							            '</div>'+
+    							         '</div>'+
+    							     '</div>'+
+    							  '</div>';
+						} else {
+    						var detailText = 
+    							'<div id="eventContent" class="eventPopup ">' + 
+    							  '<div class="">' + 
+    							    '<div class="row row-centered pos">' + 
+    							      '<div class="col-lg-12 col-xs-12 col-centered">' + 
+    							        '<img src="../assets/images/user-bg.jpg" class="img-responsive event_image " alt=""  hegiht="140px">' +
+    							          '<h3 id="event_sponcername">'+event.sponsor_name+'</h3>' + 
+    							          '<h3 id="event_heading">'+event.title+'</h3>' +
+    							              '<ul>' + 
+    							               	'<li> <i class="fa fa-calendar"></i> Start: <span id="startDate">'+event.start+'</span> <span id="startTime">START TIME</span></li>' + 
+    							               	'<li> <i class=" fa fa-map-marker"></i> Location:  <span id="eventLocation">'+event.location+'</span></li>' + 
+    							               	'<li class="short_description"> <i class=" fa fa-file-text"></i> Description: <span id="eventSponsorDescription">'+event.short_description+'</span></li>' + 
+    							              '</ul>' + 						              
+    							            '</div><div class="clearfix">' + 
+    							            '</div>'+
+    							         '</div>'+
+    							     '</div>'+
+    							  '</div>';
+						}
+						
+						var eventDetail = '<div class="showEventDetail '+calendar_custom_class+'_page'+'">'+detailText+'</div>';
+						
+						var tooltip = '<div class="tooltipevent" style="width:'+popupWidth+';background:#fff;padding-top:5px;padding-bottom:5px;border:4px solid #D9E0E7;position:absolute;z-index:10001;">' + eventDetail + '</div>';
+						$("body").append(tooltip);
+						
+							
+						$(this).mouseover(function(e) {
+							$(this).css('z-index', 10000);
+							$('.tooltipevent').fadeIn('500');
+							$('.tooltipevent').fadeTo('10', 1.9);
+							
+						}).mousemove(function(e) {
+							var offset = $(this).offset();
+							//alert(offset.top +'===>'+offset.left); 
+							var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+							var a = new Date(event.start_date);
+							var weekday = weekday[a.getDay()];
+							
+							var addExtraLeft = 50;
+							if(weekday == "Saturday"){
+								addExtraLeft = addExtraLeft * 2;
+							}else if(weekday == "Sunday"){
+								addExtraLeft = 0;
+							}
+							
+							$('.tooltipevent').css('top', e.pageY + 15);
+							$('.tooltipevent').css('left', Math.round(offset.left - addExtraLeft));
+						});
+					}
+				
+					}
+				
+			},
+			eventMouseout: function(event, element) {
+
+				//if ( event.isDeletable) {
+					
+				//} else {
+					var deviceType = $("#deviceType").val();
+					if(deviceType == 0){
+						 $(this).css('z-index', 8);
+						 $('.tooltipevent').remove();
+				//	}
+				}
+			},
 			events,
 			
 			/**
@@ -837,6 +947,7 @@ function formatDate(string $date) {
     <script src="../assets/javascript/vertical/vertical-layout.min.js "></script>
 
     <script type="text/javascript" src="../assets/javascript/script.js "></script>
+    <input type="hidden" id="deviceType" value="0">
 </body>
 
 </html>

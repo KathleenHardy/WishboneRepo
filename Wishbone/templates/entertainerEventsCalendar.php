@@ -47,15 +47,19 @@
     <script src='../assets/js/jquery-1.10.2.js' type="text/javascript"></script>
     <script src='../assets/js/jquery-ui.custom.min.js' type="text/javascript"></script>
     <script src='../assets/js/fullcalendar.js' type="text/javascript"></script>
-    <script src="/code.jquery.com/jquery-2.1.0.min.js" type="text/javascript" ></script>
+   
 
 <?php 
 
 session_start();
 include ('../config.php');
 include ('../dto/availability.php');
+include ('../enums/profileStatus.php');
+include ('../dto/bookedGigDetails.php');
+
 
 $authId=$_SESSION['authId'];
+
 
 $query0 = "SELECT entid
           FROM entertainers
@@ -105,8 +109,71 @@ if ($stmt = $connection->prepare( $query)) {
        
 }
 
-?>
 
+$bookedGigDetailsDT0 = array();
+$query2 = "SELECT bookedGigsId, gigsName, gigsDetails, event_date, event_description, venueName, venueCity, venueProvince, firstName, lastName, event_name,email
+          FROM bookedgigsdetails
+          WHERE  entid = ?";
+
+if ($stmt2 = $connection->prepare( $query2)) {
+    
+    $stmt2->bind_param( "i", $entid);
+    
+    //execute statement
+    $stmt2->execute();
+    
+    //bind result variables
+    $stmt2->bind_result( $bookedGigsId, $gigsName, $gigsDetails, $event_date, $event_description, $venueName, $venueCity, $venueProvince, $firstName, $lastName, $event_name, $email);
+    
+    //fetch values
+    while( $stmt2->fetch()) {
+        $bookedGig = new BookedGigDetails();
+        
+        $bookedGig->setBookedGigsId( $bookedGigsId);
+        $bookedGig->setGigsName( $gigsName);
+        $bookedGig->setGigsDetails($gigsDetails);
+        $bookedGig->setEventDate( $event_date);
+        $bookedGig->setVenueName( $venueName);
+        $bookedGig->setVenueCity( $venueCity);
+        $bookedGig->setVenueProvince( $venueProvince);
+        $bookedGig->setFirstName( $firstName);
+        $bookedGig->setLastName( $lastName);
+        $bookedGig->setEventName( $event_name);
+        $bookedGig->setEmail( $email);
+        
+        $bookedGigDetailsDT0[] = $bookedGig;
+       
+    }
+    
+    //close statement
+    $stmt2->close();
+}
+
+
+
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $firstName, $lastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
+
+?>
 
 
 <script>
@@ -120,9 +187,10 @@ if ($stmt = $connection->prepare( $query)) {
 		var events = [];
 
 		<?php foreach( $availabilityDTO as $availability) { ?>
-
     		var myEvent = new Object();
     		myEvent.title = "<?= $availability->getAvailTitle() ?>";
+    		myEvent.sponsor_name = "My availability";
+    		myEvent.isDeletable = true;
 
     		myEvent.start = new Date(
     	       <?=substr( $availability->getAvailStartDate(), 0, 4)?>, 
@@ -137,8 +205,46 @@ if ($stmt = $connection->prepare( $query)) {
     		myEvent.className = 'info';
 
     	    events.push( myEvent);
-
 		<?php } ?>
+
+
+		
+		<?php foreach( $bookedGigDetailsDT0 as $bookedGigs) { ?>
+		var myEvent = new Object();
+		myEvent.title = "<?= $bookedGigs->getEventName() ?>";
+		myEvent.location = "<?= $bookedGigs->getVenueName() ?>";
+		myEvent.short_description = "<?= $bookedGigs->getEventDescription() ?>";
+		myEvent.sponsor_name = "<?= $bookedGigs->getFirstName()." ".$bookedGigs->getLastName() ?>";
+		myEvent.isDeletable = false;
+		myEvent.url = "entertainerViewEventDetails.php?id=<?= $bookedGigs->getBookedGigsId()?>";
+
+		myEvent.start = new Date(
+	       <?=substr( $bookedGigs->getEventDate(), 0, 4)?>, 
+	       <?=substr( $bookedGigs->getEventDate(), 5, 2)-1?>, 
+	       <?=substr( $bookedGigs->getEventDate(), 8, 2)?>);
+
+		myEvent.end = new Date(
+	    	       <?=substr( $bookedGigs->getEventDate(), 0, 4)?>, 
+	    	       <?=substr( $bookedGigs->getEventDate(), 5, 2)-1?>, 
+	    	       <?=substr( $bookedGigs->getEventDate(), 8, 2)?>);
+
+		
+		var today = new Date ();
+
+		var dd = today.getDate();
+		var mm = today.getMonth()+1; 
+		var yy = today.getFullYear();
+
+	
+		if ( myEvent.start.getDate() >= dd && myEvent.start.getMonth()+1 >= mm &&  myEvent.start.getFullYear() >= yy) {
+			myEvent.className = 'important';
+		} else { 
+			myEvent.className = 'default';
+		}
+
+
+	    events.push( myEvent);
+	   <?php } ?>
 		
 		/*  className colors
 		className: default(transparent), important(red), chill(pink), success(green), info(blue)
@@ -173,11 +279,12 @@ if ($stmt = $connection->prepare( $query)) {
 
 		var calendar =  $('#calendar').fullCalendar({
 			header: {
-				left: 'title',
-				center: 'agendaDay,agendaWeek,month',
+				left: 'month,agendaWeek,agendaDay',
+				center: 'title',
 				right: 'prev,next today'
 			},
-			editable: true,
+
+			editable: false,
 			firstDay: 1, //  1(Monday) this can be changed to 0(Sunday) for the USA system
 			selectable: true,
 			defaultView: 'month',
@@ -260,7 +367,174 @@ if ($stmt = $connection->prepare( $query)) {
 
 			},
 
-			events,
+			eventMouseover: function(event, element) {
+				var deviceType = $("#deviceType").val();
+
+				console.log(deviceType);
+				
+				if(deviceType == 0){
+					
+					var openClickPopup = 0;
+					$.each($('.popout'),function(){
+							if($(this).hasClass("open")){
+								openClickPopup = 1;
+							}
+					})
+				
+					if(openClickPopup == 1){
+						$('.tooltipevent').remove();
+					}else{
+						var calendar_custom_class = $("#calendar").attr("custom_class");
+						var popupWidth = "260px";
+							
+						
+						if(calendar_custom_class == "inner_calendar"){
+							popupWidth = "200px";
+						}
+
+						if ( event.isDeletable) {
+							var detailText = 
+    							'<div id="eventContent" class="eventPopup ">' + 
+    							  '<div class="">' + 
+    							    '<div class="row row-centered pos">' + 
+    							      '<div class="col-lg-12 col-xs-12 col-centered">' + 
+    							        '<img src="../assets/images/user-bg.jpg" class="img-responsive event_image " alt=""  hegiht="140px">' +
+    							          '<h3 id="event_sponcername">'+event.sponsor_name+'</h3>' + 
+    							          '<h3 id="event_heading">'+event.title+'</h3>' +
+    							              '<ul>' + 
+    							               	'<li> <i class="fa fa-calendar"></i> Start: <span id="startDate">'+event.start+'</span> <span id="startTime">START TIME</span></li>' + 
+    							               	'<li> <i class=" fa fa-map-marker"></i> Location:  <span id="eventLocation">'+event.location+'</span></li>' + 
+    							               	'<li class="short_description"> <i class=" fa fa-file-text"></i> Description: <span id="eventSponsorDescription">'+event.short_description+'</span></li>' + 
+    							              '</ul>' + 
+    							              '<input class ="btn-all" style="display:inline;" type="submit" id="submit" name="submit" value="Delete" /> <br>' +							              
+    							            '</div><div class="clearfix">' + 
+    							            '</div>'+
+    							         '</div>'+
+    							     '</div>'+
+    							  '</div>';
+						} else {
+    						var detailText = 
+    							'<div id="eventContent" class="eventPopup ">' + 
+    							  '<div class="">' + 
+    							    '<div class="row row-centered pos">' + 
+    							      '<div class="col-lg-12 col-xs-12 col-centered">' + 
+    							        '<img src="../assets/images/user-bg.jpg" class="img-responsive event_image " alt=""  hegiht="140px">' +
+    							          '<h3 id="event_sponcername">'+event.sponsor_name+'</h3>' + 
+    							          '<h3 id="event_heading">'+event.title+'</h3>' +
+    							              '<ul>' + 
+    							               	'<li> <i class="fa fa-calendar"></i> Start: <span id="startDate">'+event.start+'</span> <span id="startTime">START TIME</span></li>' + 
+    							               	'<li> <i class=" fa fa-map-marker"></i> Location:  <span id="eventLocation">'+event.location+'</span></li>' + 
+    							               	'<li class="short_description"> <i class=" fa fa-file-text"></i> Description: <span id="eventSponsorDescription">'+event.short_description+'</span></li>' + 
+    							              '</ul>' + 						              
+    							            '</div><div class="clearfix">' + 
+    							            '</div>'+
+    							         '</div>'+
+    							     '</div>'+
+    							  '</div>';
+						}
+						
+						var eventDetail = '<div class="showEventDetail '+calendar_custom_class+'_page'+'">'+detailText+'</div>';
+						
+						var tooltip = '<div class="tooltipevent" style="width:'+popupWidth+';background:#fff;padding-top:5px;padding-bottom:5px;border:4px solid #D9E0E7;position:absolute;z-index:10001;">' + eventDetail + '</div>';
+						$("body").append(tooltip);
+						
+							
+						$(this).mouseover(function(e) {
+							$(this).css('z-index', 10000);
+							$('.tooltipevent').fadeIn('500');
+							$('.tooltipevent').fadeTo('10', 1.9);
+							
+						}).mousemove(function(e) {
+							var offset = $(this).offset();
+							//alert(offset.top +'===>'+offset.left); 
+							var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+							var a = new Date(event.start_date);
+							var weekday = weekday[a.getDay()];
+							
+							var addExtraLeft = 50;
+							if(weekday == "Saturday"){
+								addExtraLeft = addExtraLeft * 2;
+							}else if(weekday == "Sunday"){
+								addExtraLeft = 0;
+							}
+							
+							$('.tooltipevent').css('top', e.pageY + 15);
+							$('.tooltipevent').css('left', Math.round(offset.left - addExtraLeft));
+						});
+					}
+				
+					}
+				
+			},
+
+			
+			eventMouseout: function(event, element) {
+
+				//if ( event.isDeletable) {
+					
+				//} else {
+					var deviceType = $("#deviceType").val();
+					if(deviceType == 0){
+						 $(this).css('z-index', 8);
+						 $('.tooltipevent').remove();
+				//	}
+				}
+			}, events, 
+
+			
+			eventRender: function (event, element) {
+				 element.attr('title', event.tooltip);
+				if(event.draft){
+					element.addClass('mydraf');
+				}
+		    
+			var deviceType = $("#deviceType").val();
+			if(deviceType == 0){
+				element.attr('href', event.website_url);
+				element.attr('target', '_blank');
+			}else{
+				element.attr('href', 'javascript:void(0)');
+			}	
+			
+		var deviceType = $("#deviceType").val();
+			
+			if(deviceType == 1){
+				 $(this).css('z-index', 8);
+				 $('.tooltipevent').remove();
+				var calendar_custom_class = $("#calendar").attr("custom_class");
+				var calendar_width = $('#calendar').width();
+				/*var popupWidth = "260px";
+					
+				var deviceType = $("#deviceType").val();
+				if(deviceType == 1){
+					
+
+				} */
+				
+				/*var popupWidth = "160px";
+				
+				if(calendar_custom_class == "inner_calendar"){
+					popupWidth = "200px";
+				}*/
+				
+				var popupWidth = "280px";
+					//calendar_custom_class = 'iframe_calendar';
+					if(calendar_width <= 800){
+						popupWidth = "180px";
+					}
+
+				$('.popout').css('width',popupWidth);
+				
+				var detailText = '<div id="eventContent" class="eventPopup "><div class=""><a class="btn-close close_dailog" title="Close"> <i class="fa fa-times"> </i></a><div class="row row-centered pos"><div class="col-lg-12 col-xs-12 col-centered"><img src="'+event.event_image+'" class="img-responsive event_image" alt=""  hegiht="140px"><h3 id="event_sponcername">'+event.sponsor_name+'</h3><h3 id="event_heading">'+event.title+'</h3><ul><li> <i class="fa fa-calendar"></i> Start: <span id="startDate">'+moment(event.start).format('MMMM DD, YYYY')+'</span> <span id="startTime">'+event.start_time+'</span></li><li> <i class=" fa fa-map-marker"></i> Location:  <span id="eventLocation">'+event.location+'</span></li><li class="short_description"> <i class=" fa fa-file-text"></i> Description: <span id="eventSponsorDescription">'+event.short_description+'</span></li></ul><!--<p id="eventInfo">'+event.description+'</p>--><div class="btn-outer"><a id="eventLink" href="'+event.website_url+'"  class="btn btn-success btn-block " target="_blank" >More information</a></div></div><div class="clearfix"></div></div></div></div>';
+				
+				var eventDetail = '<div class="showEventDetail '+calendar_custom_class+'_page'+' iframe_calendar" style="max-width: '+popupWidth+';">'+detailText+'</div>';
+				
+				$(element).popout({ 'sName' : 'more-info' , 'sContent' : eventDetail, 'sWidth' : popupWidth ,position: 'left',  'fnOnShow' : function(){ alert('Popout opened') } });
+				
+					
+			}
+	
+		    }
 			
 			/**
 			events: [
@@ -342,8 +616,8 @@ if (isset($_POST['title'])) {
         $entid_ = $entid;
         $availStartDate = formatDate($_POST['start']);
         $availEndDate = formatDate($_POST['end']);
-        $availStartTime = '00:00:00';
-        $availEndTime = '00:00:00';
+        $availStartTime = date("H:i:s");
+        $availEndTime = date("H:i:s");
         $availTitle = $_POST['title'];
         
         //execute statement
@@ -594,8 +868,8 @@ function formatDate(string $date) {
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -628,17 +902,17 @@ function formatDate(string $date) {
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -709,12 +983,38 @@ function formatDate(string $date) {
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Portfolio</span>
+                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>                                                                
+                                </li>
+                                      
+                                <?php
+                                    if ( $profileStatus == ProfileStatus::INCOMPLETE || $profileStatus == ProfileStatus::NOT_CREATED) {
+                                      print'
+                                           <li class="">
+                                                <a href="entertainerCreateNewPortfolio.php" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                                    <span class="pcoded-mtext">Create Portfolio</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li> 
+                                           '; 
+                                    } else {
+                                        print'
+                                            <li class="">
+                                                <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                                    <span class="pcoded-mtext">Portfolio</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                             ';
+                                        
+                                    }
+                                ?>      
+                                                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">
@@ -828,6 +1128,8 @@ function formatDate(string $date) {
     <script src="../assets/javascript/vertical/vertical-layout.min.js "></script>
 
     <script type="text/javascript" src="../assets/javascript/script.js "></script>
+    
+    <input type="hidden" id="deviceType" value="0">
 </body>
 
 </html>
