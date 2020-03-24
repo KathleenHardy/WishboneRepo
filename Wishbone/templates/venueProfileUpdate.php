@@ -132,7 +132,7 @@
 										<a href="venueProfileView.php"><button type="button" class="btn-all" style="display:inline;">Update</button></a>
 										 
 										 
-										<a href="venueEventList.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
+										<a href="venueHostVenueList.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
 										
 										<!-- Replace buttons with below code -->
 										<!--<div class="form-group" style="display:inline;"> 

@@ -1,180 +1,131 @@
+
 <?php
+session_start();
+?>
+
+<?php
+
+require_once ("config.php");
+include ('../enums/userType.php');
+include ('../enums/profileStatus.php');
+
 $authId = $_SESSION['authId'];
 
-/*
- if(isset($_FILES['fileToUpload'])) {
- 
- //'../assets/img-temp/gigs/'
- $target_dir = "../assets/img-temp/portfolio/";
- $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
- $uploadOk = 1;
- $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
- // Check if image file is a actual image or fake image
- if(isset($_POST["submit"])) {
- $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
- if($check !== false) {
- echo "File is an image - " . $check["mime"] . ".";
- $uploadOk = 1;
- } else {
- echo "File is not an image.";
- $uploadOk = 0;
- }
- }
- // Check if file already exists
- 
- if (file_exists($target_file)) {
- echo "Sorry, file already exists.";
- $uploadOk = 0;
- }
- 
- 
- // Check file size
- if ($_FILES["fileToUpload"]["size"] > 500000) {
- echo "Sorry, your file is too large.";
- $uploadOk = 0;
- }
- 
- // Allow certain file formats
- if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
- && $imageFileType != "gif" ) {
- echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
- $uploadOk = 0;
- }
- // Check if $uploadOk is set to 0 by an error
- if ($uploadOk == 0) {
- echo "Sorry, your file was not uploaded.";
- // if everything is ok, try to upload file
- } else {
- if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
- echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded to ". $target_file;
- } else {
- echo "Sorry, there was an error uploading your file.";
- }
- }
- }
- */
-
-if(isset($_FILES['fileToUpload'])){
+if(isset($_FILES['profilepic'])){
     $errors= array();
-    $file_name = $_FILES['fileToUpload']['name'];
-    $file_size =$_FILES['fileToUpload']['size'];
-    $file_tmp =$_FILES['fileToUpload']['tmp_name'];
-    $file_type=$_FILES['fileToUpload']['type'];
-    //$file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
-    //$file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
+    $profilePic_file_name = $_FILES['profilepic']['name'];
+    $profilePic_file_size =$_FILES['profilepic']['size'];
+    $profilePic_file_tmp =$_FILES['profilepic']['tmp_name'];
+    $profilePic_file_type=$_FILES['profilepic']['type'];
     
-    $file_path = "../assets/img-temp/portfolio/";
+    $profilePic_file_path = "../assets/img/profile/";
     
-    /*
-     $file_ext=strtolower(end(explode('.', $file_name)));
-     
-     $extensions= array("jpeg","jpg","png");
-     
-     if(in_array($file_ext,$extensions)=== false){
-     $errors[]="extension not allowed, please choose a JPEG or PNG file.";
-     }
-     */
-    
-    if($file_size > 2097152){
+    if($profilePic_file_size > 2097152){
         $errors[]='File size must be excatly 2 MB';
     }
     
     if(empty($errors)==true){
-        move_uploaded_file($file_tmp, $file_path.$file_name);
+        move_uploaded_file($profilePic_file_tmp, $profilePic_file_path.$profilePic_file_name);
     }else{
         print_r($errors);
     }
 }
 
 
+if(isset($_FILES['bgimage'])){
+    $errors= array();
+    $bgPic_file_name = $_FILES['bgimage']['name'];
+    $bgPic_file_size =$_FILES['bgimage']['size'];
+    $bgPic_file_tmp =$_FILES['bgimage']['tmp_name'];
+    $bgPic_file_type=$_FILES['bgimage']['type'];
+    
+    //$bgPic_file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img/backgrounds/";
+    $bgPic_file_path = "../assets/img/backgrounds/";
+    
+    
+    if($bgPic_file_size > 2097152){
+        $errors[]='File size must be excatly 2 MB';
+    }
+    
+    if(empty($errors)==true){
+        move_uploaded_file($bgPic_file_tmp, $bgPic_file_path.$bgPic_file_name);
+    }else{
+        print_r($errors);
+    }
+}
+
+
+function profileStatus() {
+    
+    if ( isset($_POST['hourlyrate']) && isset($_POST['occupation']) && isset($_POST['aboutme']) && isset($_POST['gigsdetails'])) {
+        $result = ProfileStatus::COMPLETE;
+    } else if ( isset($_POST['hourlyrate']) || isset($_POST['occupation']) || isset($_POST['aboutme']) || isset($_POST['gigsdetails'])) {
+        $result = ProfileStatus::INCOMPLETE;
+    }
+    
+    return $result;
+}
+
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    $query = "SELECT entid
-               FROM entertainers
-               WHERE  authid = ?";
+    $query = "UPDATE entertainers
+                  SET ratePerHour = ?, workDescription = ?, profilePicture = ?, homePagePicture = ?, aboutMe = ?, myQuote = ?, profileStatus = ?
+                  WHERE  authid = ?";
     
     if ($stmt = $connection->prepare( $query)) {
+        $profileStatus = profileStatus();
         
-        $stmt->bind_param( "i", $authId);
+        $stmt->bind_param( "dsssssii", $ratePerHour, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus, $authId);
+        
+        //Set params
+        $ratePerHour = $_POST['hourlyrate'];
+        $workDescription = $_POST['gigsdetails'];
+        $profilePicture = basename($_FILES["profilepic"]["name"]);
+        $homePagePicture = basename($_FILES["bgimage"]["name"]);
+        $aboutMe = $_POST['aboutme'];
+        $myQuote = $_POST['quote'];
+        
         
         //execute statement
-        $stmt->execute();
+        $status = $stmt->execute();
         
-        //bind result variables
-        $stmt->bind_result($entid);
-        
-        // fetch values
-        $stmt->fetch();
+        if ($status === false) {
+            trigger_error($stmt->error, E_USER_ERROR);
+        } else {
+            //echo("<script>location.href = 'entertainerMainPortfolio.php?msg=$msg';</script>");
+            //header("Location: entertainerMainPortfolio.php");
+            mysqli_close($connection);
+        }
         
         //close statement
         $stmt->close();
     }
     
-    
-    
-    $query2 = "INSERT INTO gigs
-                  ( entid, gigsName, gigscategory, gigslabel, gigsArttype, gigsdetails, notes)
-                  VALUES
-                  (?,?,?,?,?,?,?)";
-    
-    if ($stmt2 = $connection->prepare( $query2)) {
-        
-        $stmt2->bind_param( "issssss", $entid, $gigsName, $gigsCategory, $gigsLabel, $gigsArtType, $gigsDetails, $gigsNotes);
-        //Set params
-        $gigsName = $_POST['gigs_name'];
-        $gigsCategory = $_POST['gigs_category'];
-        $gigsLabel = $_POST['gigs_label'];
-        $gigsArtType = $_POST['gigs_artType'];
-        $gigsDetails = $_POST['gigs_details'];
-        $gigsNotes = $_POST['gigs_notes'];
-        
-        //execute statement
-        $status = $stmt2->execute();
-        
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
-        } else {
-            $insertedId = $stmt2->insert_id;
-        }
-        //close statement
-        $stmt2->close();
+    else {
+        //  $fmsg = "Invalid Login Credentials.";
     }
+    //close connection
+    //$connection->close();   
+  
+    //echo $_REQUEST
     
-    
-    //upload gigs Image
-    $query3 = "INSERT INTO gigsimages
-                  ( gigsid, gigsImageLocation)
-                  VALUES
-                  (?,?)";
-    
-    if ($stmt3 = $connection->prepare( $query3)) {
-        
-        $stmt3->bind_param( "is", $insertedId, $gigsImageLocation);
-        
-        //Set params
-        
-        //$gigsImageLocation = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-        
-        //$gigsImageLocation = $target_file; //---------------------------------------
-        
-        
-        $gigsImageLocation = basename($_FILES["fileToUpload"]["name"]);
-        
-        //execute statement
-        $status = $stmt3->execute();
-        
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Something posted
+        echo "i am here";
+        if (isset($_POST['myOccupation'])) {
+            // btnDelete
+            echo "i am here - 2";
         } else {
-            //header('Location: entertainerPortfolio.php');
-            mysqli_close($connection);
+            // Assume btnSubmit
         }
-        //close statement
-        $stmt3->close();
     }
-    
+  
 }
 
+// Handle AJAX request (start)
+//print_r($_POST);
 
 ?>
 <!DOCTYPE html>
@@ -215,24 +166,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
-    <!-- for the upload file css link -->
+    <!-- for the upload file css link 
 		<link rel="stylesheet" type="text/css" href="..assets/css2/normalize.css" />
 		<link rel="stylesheet" type="text/css" href="..assets/css2/demo.css" />
 		<link rel="stylesheet" type="text/css" href="..assets/css2/component (2).css" />
+		
+		<script src="/code.jquery.com/jquery-2.1.0.min.js" type="text/javascript" ></script>
+		-->
+		
 <!-- end -->		
 
     		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
-    <script type="text/javascript">
-    function changeText2() {
-    	var occupationToAdd = $('#occupationAdded').val();
-
-    	$('ol').append( '<li>' + occupationToAdd + '</li>' );
-        
-    }
-    </script>    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+     
 </head>
-
+ 
 <body>
     <!-- Pre-loader start -->
     <div class="theme-loader">
@@ -539,16 +489,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 							<div class="title-01 title-01__style-04">
 								<h1 class="main-title">CREATE YOUR PORTFOLIO</h1>
 							</div>
-							<form  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
+							<form  action="entertainerCreateNewPortfolio.php" method="post" enctype="multipart/form-data">
 
 										<div class="form-group"> <!-- Event Name -->
 											<label for="hourlyrate" class="control-label title2">What's your hourly rate?</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="hourlyrate" name="hourlyrate">
-										</div>	 
-										<div class="form-group"> <!-- Event Name -->   
+										</div>
+										<!--	 
+										<div class="form-group">   
 											<label for="occupation" class="control-label title2">What's your occupation as an entertainer?</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="occupation" name="occupation">
-										</div>	
+										</div>
+										-->	
 										<!-- code below is UI for adding more occupations -->
 <div class="form-group">
 <div class="occupations-list">
@@ -556,7 +508,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <input type="text" id="occupationAdded" style="border-bottom: 2px solid #faa828;">
 <br>
 <p>Occupations Listed:</p>
-<ol class="list-occupations"></ol>
+<ol class="list-occupations" #id = "occupation" name="occupation"></ol>
 <input class ="add-button-list" type='button' onclick='changeText2()' value='Add' />
 </div>
 </div>
@@ -579,13 +531,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										<!-- Code for creative file upload -->
 										<div class="form-group">
 				<label for ="eventpic" class="title2">Upload Your Profile Image</label>
-					<input type="file" name="file-1[]" id="profilepic" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
+					<input type="file" name="profilepic" id="profilepic" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
 					<label for="profilepic"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose image&hellip;</span></label>
 										
 										</div>
 												<div class="form-group">
 				<label for ="eventpic" class="title2">Upload Your Background Image</label>
-					<input type="file" name="file-1[]" id="bgimage" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
+					<input type="file" name="bgimage" id="bgimage" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
 					<label for="bgimage"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose image&hellip;</span></label>
 										
 										</div>
@@ -603,7 +555,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										</div>
 										for later -->
 										<div style="text-align:center;">
-										<input  class="btn-all" style="display:inline;" type="submit" value="Submit">
+
+										<input class ="btn-all" style="display:inline;" type='submit' id='submit' name='submit' value='Submit' />
 										 
 										</div>
 										<!-- Replace buttons with below code -->
@@ -694,4 +647,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		<script src="../assets/js-other/custom-file-input.js"></script>
 
     <script type="text/javascript" src="../assets/javascript/script.js "></script>
+    
+    <script>    
+
+    var occupation = [];
+    
+    function changeText2() {
+    	var occupationToAdd = $('#occupationAdded').val();
+
+    	$('ol').append( '<li class = "items">' + occupationToAdd + '</li>' );
+
+    	occupation.push( occupationToAdd)
+    } 
+
+
+    $(document).ready(function(){
+
+    	$("#submit").on("click", function(){
+        	
+    		if ( occupation.length > 0) {
+           	 $.ajax({
+           			url: 'entertainerCreateNewPortfolio.php',
+                    type: 'POST',
+                    data: {myOccupation: occupation},
+                    success: function(){
+                   	console.log(occupation);
+                    }
+                   });
+            }
+    	 });
+         /**
+         $.ajax({
+         type: 'post',
+         url: 'entertainerCreateNewPortfolio.php',
+         data: {occupation: JSON.stringify( occupation) },
+         success: function(){
+         alert (occupation);
+         }
+        });
+
+         */   
+        
+      });
+
+    
+    </script> 
+    <?php 
+    
+    ?>
 </body>
+</html>

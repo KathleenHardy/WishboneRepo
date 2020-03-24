@@ -38,7 +38,41 @@
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
 </head>
+<?php
+session_start();
+include ('../config.php');
+include "navigationheaderVenueHost.php";
 
+$authId = $_SESSION['authId'];
+
+$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
+          FROM venueowners
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+
+
+$_SESSION['venueOwnerfirstname'] = $firstName;
+$_SESSION['venueOwnerlastname'] = $lastName;
+$_SESSION['venueOwnerId'] = $venueOwnerId;
+print_r($_SESSION);
+?>
 <body>
     <!-- Pre-loader start -->
     <div class="theme-loader">
@@ -292,7 +326,7 @@
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>

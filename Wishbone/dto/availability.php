@@ -6,6 +6,7 @@ class Availability {
     private $availEndDate;
     private $availStartTime;
     private $availEndTime;
+    private $availTitle;
     
     /**
      * @return mixed
@@ -45,6 +46,11 @@ class Availability {
     public function getAvailEndTime()
     {
         return $this->availEndTime;
+    }
+    
+    public function getAvailTitle()
+    {
+        return $this->availTitle;
     }
 
     /**
@@ -86,13 +92,22 @@ class Availability {
     {
         $this->availEndTime = $availEndTime;
     }
+    
+    public function setAvailTitle ($availTitle)
+    {
+        $this->availTitle = $availTitle;
+    }
+    
+    
+    
 
-    function __construct( $availId, $availStartDate, $availEndDate, $availStartTime, $availEndTime) {
+    function __construct( $availId, $availStartDate, $availEndDate, $availStartTime, $availEndTime, $availTitle) {
         $this->availId = $availId;
         $this->availStartDate = $availStartDate;
         $this->availEndDate = $availEndDate;
         $this->availStartTime = $availStartTime;
         $this->availEndTime = $availEndTime;
+        $this->availTitle = $availTitle;
     }
     
 

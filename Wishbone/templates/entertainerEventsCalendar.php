@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>Upcoming Events</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -12,12 +12,12 @@
     <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />  
     <meta name="keywords" content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
     <meta name="author" content="Codedthemes" />
     <!-- Favicon icon -->
     <link rel="icon" href="../assets/images/favicon.ico" type="image/x-icon">
+    <!-- bootstrap -->
     <!-- Google font-->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
     <!-- waves.css -->
@@ -36,63 +36,427 @@
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
-    <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">    
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+  <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+  
+    <link href='../assets/css/fullcalendar.css' rel='stylesheet' />
+    <link href='../assets/css/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <script src='../assets/js/jquery-1.10.2.js' type="text/javascript"></script>
+    <script src='../assets/js/jquery-ui.custom.min.js' type="text/javascript"></script>
+    <script src='../assets/js/fullcalendar.js' type="text/javascript"></script>
+    <script src="/code.jquery.com/jquery-2.1.0.min.js" type="text/javascript" ></script>
+
+<?php 
+
+session_start();
+include ('../config.php');
+include ('../dto/availability.php');
+
+$authId=$_SESSION['authId'];
+
+$query0 = "SELECT entid
+          FROM entertainers
+          WHERE  authid = ?";
+
+if ($stmt0 = $connection->prepare( $query0)) {
+    
+    $stmt0->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt0->execute();
+    
+    //bind result variables
+    $stmt0->bind_result($entid);
+    
+    // fetch values
+    $stmt0->fetch();
+    
+    //close statement
+    $stmt0->close();    
+}
+
+
+$availabilityDTO = array();
+
+$query = "SELECT availid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle
+          FROM entertaineravailability
+          WHERE  entid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $entid);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $availid, $availStartDate, $availEndDate, $availStartTime, $availEndTime, $availTitle);
+    
+    // fetch values
+    while( $stmt->fetch()) {
+        $availabilityDTO[] = new Availability( $availid, $availStartDate, $availEndDate, $availStartTime, $availEndTime, $availTitle);
+    }
+    
+    //close statement
+    $stmt->close();
+       
+}
+
+?>
+
+
+
+<script>
+
+	$(document).ready(function() {
+	    var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();
+
+		var events = [];
+
+		<?php foreach( $availabilityDTO as $availability) { ?>
+
+    		var myEvent = new Object();
+    		myEvent.title = "<?= $availability->getAvailTitle() ?>";
+
+    		myEvent.start = new Date(
+    	       <?=substr( $availability->getAvailStartDate(), 0, 4)?>, 
+    	       <?=substr( $availability->getAvailStartDate(), 5, 2)-1?>, 
+    	       <?=substr( $availability->getAvailStartDate(), 8, 2)?>);
+
+    		myEvent.end = new Date(
+    	    	       <?=substr( $availability->getAvailEndDate(), 0, 4)?>, 
+    	    	       <?=substr( $availability->getAvailEndDate(), 5, 2)-1?>, 
+    	    	       <?=substr( $availability->getAvailEndDate(), 8, 2)?>);
+
+    		myEvent.className = 'info';
+
+    	    events.push( myEvent);
+
+		<?php } ?>
+		
+		/*  className colors
+		className: default(transparent), important(red), chill(pink), success(green), info(blue)
+		*/
+
+		/* initialize the external events
+		-----------------------------------------------------------------*/
+
+		$('#external-events div.external-event').each(function() {
+
+			// create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+			// it doesn't need to have a start or end
+			var eventObject = {
+				title: $.trim($(this).text()) // use the element's text as the event title
+			};
+
+			// store the Event Object in the DOM element so we can get to it later
+			$(this).data('eventObject', eventObject);
+
+			// make the event draggable using jQuery UI
+			$(this).draggable({
+				zIndex: 999,
+				revert: true,      // will cause the event to go back to its
+				revertDuration: 0  //  original position after the drag
+			});
+
+		});
+
+
+		/* initialize the calendar
+		-----------------------------------------------------------------*/
+
+		var calendar =  $('#calendar').fullCalendar({
+			header: {
+				left: 'title',
+				center: 'agendaDay,agendaWeek,month',
+				right: 'prev,next today'
+			},
+			editable: true,
+			firstDay: 1, //  1(Monday) this can be changed to 0(Sunday) for the USA system
+			selectable: true,
+			defaultView: 'month',
+
+			axisFormat: 'h:mm',
+			columnFormat: {
+                month: 'ddd',    // Mon
+                week: 'ddd d', // Mon 7
+                day: 'dddd M/d',  // Monday 9/7
+                agendaDay: 'dddd d'
+            },
+            titleFormat: {
+                month: 'MMMM yyyy', // September 2009
+                week: "MMMM yyyy", // September 2009
+                day: 'MMMM yyyy'                  // Tuesday, Sep 8, 2009
+            },
+			allDaySlot: false,
+			selectHelper: true,
+			select: function(start, end, allDay) {
+				var title = prompt('Event Title:');
+
+				if (title) {
+					$.ajax({
+	                    type: "POST",
+	                    url: 'entertainerEventsCalendar.php',
+	                    data: {title: title, start: start, end: end },
+	                    success: function(data)
+	                    {
+	                    }
+
+	        		});
+
+					calendar.fullCalendar('renderEvent',
+						{
+							title: title,
+							start: start,
+							end: end,
+							allDay: allDay
+						},
+						true // make the event "stick"
+
+					);
+				}
+				calendar.fullCalendar('unselect');
+			},
+			droppable: true, // this allows things to be dropped onto the calendar !!!
+			drop: function(date, allDay) { // this function is called when something is dropped
+
+				// retrieve the dropped element's stored Event Object
+				var originalEventObject = $(this).data('eventObject');
+
+				// we need to copy it, so that multiple events don't have a reference to the same object
+				var copiedEventObject = $.extend({}, originalEventObject);
+
+				// assign it the date that was reported
+				copiedEventObject.start = date;
+				copiedEventObject.allDay = allDay;
+
+				// render the event on the calendar
+				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+				$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+				/**
+				$.ajax({
+                    type: "POST",
+                    url: 'entertainerEventsCalendar.php',
+                    data: {copiedTitle: copiedEventObject.title, copiedStart: copiedEventObject.start, copiedEnd: copiedEventObject.end },
+                    success: function(data)
+                    {
+                    }
+
+        		});
+        		*/
+
+				// is the "remove after drop" checkbox checked?
+				if ($('#drop-remove').is(':checked')) {
+					// if so, remove the element from the "Draggable Events" list
+					$(this).remove();
+				}
+
+			},
+
+			events,
+			
+			/**
+			events: [
+				{
+					title: 'All Day Event',
+					start: new Date(y, m, 1)
+				}
+				],
+			
+			
+			events: [
+				{
+					title: 'All Day Event',
+					start: new Date(y, m, 1)
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: new Date(y, m, d-3, 16, 0),
+					allDay: false,
+					className: 'info'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: new Date(y, m, d+4, 16, 0),
+					allDay: false,
+					className: 'info'
+				},
+				{
+					title: 'Meeting',
+					start: new Date(y, m, d, 10, 30),
+					allDay: false,
+					className: 'important'
+				},
+				{
+					title: 'Lunch',
+					start: new Date(y, m, d, 12, 0),
+					end: new Date(y, m, d, 14, 0),
+					allDay: false,
+					className: 'important'
+				},
+				{
+					title: 'Birthday Party',
+					start: new Date(y, m, d+1, 19, 0),
+					end: new Date(y, m, d+1, 22, 30),
+					allDay: false,
+				},
+				{
+					title: 'Click for Google',
+					start: new Date(y, m, 28),
+					end: new Date(y, m, 30),
+					url: 'http://google.com/',
+					className: 'success'
+				}
+			],
+			*/
+			
+			
+		});
+
+
+	});
+
+</script>
+<?php 
+if (isset($_POST['title'])) {
+
+    $query2 = "INSERT INTO entertaineravailability
+              (entid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle)
+              VALUES
+              (?,?,?,?,?,?)";
+    
+    if ($stmt2 = $connection->prepare( $query2)) {
+        
+        $stmt2->bind_param( "isssss", $entid_, $availStartDate, $availEndDate, $availStartTime, $availEndTime, $availTitle);
+        
+        //Set params
+        $entid_ = $entid;
+        $availStartDate = formatDate($_POST['start']);
+        $availEndDate = formatDate($_POST['end']);
+        $availStartTime = '00:00:00';
+        $availEndTime = '00:00:00';
+        $availTitle = $_POST['title'];
+        
+        //execute statement
+        $stmt2->execute();
+        
+        //close statement
+        $stmt2->close();
+    }
+}
+
+
+function formatDate(string $date) {
+
+    $year=substr( $date, 11, 4);
+    
+    $month=0;
+    
+    if ( substr( $date, 4, 3) == "Jan") {
+        $month=1;
+    } else if ( substr( $date, 4, 3) == "Feb") {
+        $month=2;
+    } else if ( substr( $date, 4, 3) == "Mar") {
+        $month=3;
+    } else if ( substr( $date, 4, 3) == "Apr") {
+        $month=4;
+    } else if ( substr( $date, 4, 3) == "May") {
+        $month=5;
+    } else if ( substr( $date, 4, 3) == "Jun") {
+        $month=6;
+    } else if ( substr( $date, 4, 3) == "Jul") {
+        $month=7;
+    } else if ( substr( $date, 4, 3) == "Aug") {
+        $month=8;
+    } else if ( substr( $date, 4, 3) == "Sep") {
+        $month=9;
+    } else if ( substr( $date, 4, 3) == "Oct") {
+        $month=10;
+    } else if ( substr( $date, 4, 3) == "Nov") {
+        $month=11;
+    } else if ( substr( $date, 4, 3) == "Dec") {
+        $month=12;
+    }
+    
+    $day = substr( $date, 8, 2);
+    
+    return $year .'-'. $month . '-' . $day;
+}
+
+?>
+
+<style>
+
+	body {
+		/* margin-top: 40px; */
+		text-align: center;
+		font-size: 14px;
+		font-family: "Helvetica Nueue",Arial,Verdana,sans-serif;
+		background-color: #DDDDDD;
+		}
+
+	#wrap {
+		width: 1100px;
+		margin: 0 auto;
+		}
+
+	#external-events {
+		float: left;
+		width: 150px;
+		padding: 0 10px;
+		text-align: left;
+		}
+
+	#external-events h4 {
+		font-size: 16px;
+		margin-top: 0;
+		padding-top: 1em;
+		}
+
+	.external-event { /* try to mimick the look of a real event */
+		margin: 10px 0;
+		padding: 2px 4px;
+		background: #3366CC;
+		color: #fff;
+		font-size: .85em;
+		cursor: pointer;
+		}
+
+	#external-events p {
+		margin: 1.5em 0;
+		font-size: 11px;
+		color: #666;
+		}
+
+	#external-events p input {
+		margin: 0;
+		vertical-align: middle;
+		}
+
+	#calendar {
+/* 		float: right; */
+        margin: 0 auto;
+		width: 900px;
+		background-color: #FFFFFF;
+		  border-radius: 6px;
+        box-shadow: 0 1px 50px #C3C3C3;
+		}
+
+</style>
+
+
 </head>
 
 <body>
-
-<?php
-include ('../config.php');
-//include "navigationheaderVenueHost.php";
-include ('../dto/venue.php');
-include ('../dto/availability.php');
-
-session_start();
-$venueOwnerId = $_SESSION['venueOwnerId'];
-$venueDTO = array();
-
-$query2 = "SELECT *
-        FROM venues
-        WHERE venueOwnerId=$venueOwnerId";
-
-$result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
-
-$count = mysqli_num_rows($result);
-
-if ($count >= 1) {
-    
-    while ($row = mysqli_fetch_array($result)) {
-        
-        $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);
-    }
-} else {
-    // $fmsg = "No venues for this user";
-}
-$_SESSION['myVenues'] = $venueDTO;
-
-/* $availabilityDTO = array();
-$query3 = "SELECT *
-        FROM availability";
-
-$result2 = mysqli_query($connection, $query3) or die(mysqli_error($connection));
-
-$count2 = mysqli_num_rows($result2);
-
-if ($count2 >= 1) {
-    
-    while ($row = mysqli_fetch_array($result2)) {
-        
-        $availabilityDTO[] = new Availability($row['availId'], $row['availStartDate'], $row['availEndDate'], $row['availStartTime'], $row['availEndTime']);
-    }
-} else { */
-    // $fmsg = "No availabilities";
-//}
-$_SESSION['myVenues'] = $venueDTO;
-//$_SESSION['avails'] = $availabilityDTO;
-
-mysqli_close($connection);
-
-?>
     <!-- Pre-loader start -->
     <div class="theme-loader">
         <div class="loader-track">
@@ -167,8 +531,8 @@ mysqli_close($connection);
                                 </div>
                             </div>
                         </div>
-                        <a href="venueDashboardHome.php">
-                            <h4 style="color: white;">WISHBONE</h4>
+                        <a href="entertainerDashboardHome.php">
+                            <h4>WISHBONE</h4>
                         </a>
                         <a class="mobile-options waves-effect waves-light">
                             <i class="ti-more"></i>
@@ -241,7 +605,7 @@ mysqli_close($connection);
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="venueHostProfileView.php">
+                                        <a href="entertainerViewProfile-New.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
@@ -272,9 +636,9 @@ mysqli_close($connection);
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
+                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -329,14 +693,14 @@ mysqli_close($connection);
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class=" ">
-                                            <a href="venueHostUpcomingEvents.php" class="waves-effect waves-dark">
+                                            <a href="entertainerUpcomingEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Upcoming</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
                                         <li class=" ">
-                                            <a href="venueHostPastEvents.php" class="waves-effect waves-dark">
+                                            <a href="entertainerPastEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Past</span>
                                                 <span class="pcoded-mcaret"></span>
@@ -345,26 +709,12 @@ mysqli_close($connection);
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Calendar</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>                                
-                                <li class="">
-                                    <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
+                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Book Entertainers</span>
+                                        <span class="pcoded-mtext">Portfolio</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li> 
-                                <li class="">
-                                    <a href="venueHostVenueList.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fas fa-building"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">My Venues</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>                                                                                                
+                                </li>                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">
@@ -395,88 +745,15 @@ mysqli_close($connection);
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
-<div class="pg-start">
-<h1 class="main-title">
-My Venues
+<div id='wrap'>
 
+<div id='calendar'></div>
 
-</h1>
-
-<div class="card-deck spacing1" style = "text-align: center;">
-<div class="row">
-<?php
-foreach ($venueDTO as $venue) {
-    print '
-    <div class="card text-center">
-    <img class="card-img-top event-img-size" src='."../assets/img-temp/portfolio/" .$venue->getVenuePicture().' alt="event img">
-    <div class="card-body">
-    <h5 class="card-title title2">' . $venue->getVenueName() . '</h5>
-    <p class="card-text">' . $venue->getVenueCity() . '</p>
-    <button type="button"><a href="venueHostBookEvent.php">Delete Venue</a></button>
-    </div>
-    </div>
-';
-}
-?>
-
-
- </div>
- </div>
-  <div class="outer">
-	<button type="button"><a href="createVenue.php">Create New Venue</a></button>
-</div> 
- <br/>
- <br/>
- <br/>
- <div style="text-align: center;">
- <h1 class="main-title" style="padding: 50px; text-align: center;">
-Venue Availabilities
-
-</h1>
+<div style='clear:both'></div>
 </div>
-<div class="card-deck spacing1" style = "text-align: center;">
-<div class="row">
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Availability Time/Date</p>
-	<button type="button"><a href="venueHostEntertainerView.php">Delete Availability</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Availability Time/Date</p>
-	<button type="button"><a href="venueHostEntertainerView.php">Delete Availability</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event3.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Availability Time/Date</p>
-	<button type="button"><a href="venueHostEntertainerView.php">Delete Availability</a></button>
-      </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Availability Time/Date</p>
-	<button type="button"><a href="venueHostEntertainerView.php">Delete Availability</a></button>
-    </div>
-  </div>
- </div> 
 
 
 
-</div>
-<div class="outer">
-	<button type="button"><a href="addVenueAvailability-New.php">Add New Availability</a></button>
-</div>
-</div>
                                     </div>
                                     <!-- Page-body end -->
                                 </div>
@@ -534,7 +811,7 @@ Venue Availabilities
     <!-- Warning Section Ends -->
 
     <!-- Required Jquery -->
-    <script type="text/javascript" src="../assets/javascript/jquery/jquery.min.js "></script>
+    <!--  <script type="text/javascript" src="../assets/javascript/jquery/jquery.min.js "></script> -->
     <script type="text/javascript" src="../assets/javascript/jquery-ui/jquery-ui.min.js "></script>
     <script type="text/javascript" src="../assets/javascript/popper.js/popper.min.js"></script>
     <script type="text/javascript" src="../assets/javascript/bootstrap/js/bootstrap.min.js "></script>

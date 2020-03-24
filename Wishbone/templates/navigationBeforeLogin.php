@@ -25,7 +25,7 @@
 							</li>
 							<li><a href="about.php">About</a></li>
 							<li><a href="contact.php">Contact</a></li>
-                            <li><a href="login.php">log in / Sign up</a></li>
+                            <li><a href="login-register.php">log in / Sign up</a></li>
 						</ul><!-- consult-menu -->
 						
 						<div class="navbar-toggle"><span></span><span></span><span></span></div>
