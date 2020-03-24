@@ -1,3 +1,34 @@
+<?php 
+session_start();
+include ('config.php');
+include ('../dto/bookedGigDetails.php');
+
+$_SESSION['bookedGigsId']=$_GET['id'];
+$bookedGigsId = $_SESSION['bookedGigsId'];
+
+$query = "SELECT bookedGigsId, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName,event_name, email
+          FROM bookedgigsdetails
+          WHERE  bookedGigsId = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $bookedGigsId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result($bookedGigsId, $gigsName, $gigsDetails, $event_date, $venueName, $venueCity, $venueProvince, $firstName, $lastName, $event_name, $email);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -336,12 +367,12 @@
   <div class="card text-center notification-card">
     <img class="card-img-top event-img-size-notification" src="../assets/img/backgrounds/1.jpg" alt="event img">
     <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
+      <h5 class="card-title title2"><?= $event_name ?></h5>
       <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-            <p class="card-text">Gig Selected: Celine Dion songs</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>
+      <p class="card-text"><?= $venueName ?></p>
+            <p class="card-text">Gig Selected: <?= $gigsName ?></p>
+      <p class="card-text"><?= $gigsDetails ?></p>
+      <p class="card-text">Contact: <?= $firstName . '  ' . $lastName . ' at ' . $email ?></p>
     </div>
       
   </div>           

@@ -1,6 +1,7 @@
 <?php
 
 class BookedGigDetails {
+    private $bookedGigsId;
     private $gigsName;
     private $gigsDetails;
     private $eventDate;
@@ -15,22 +16,11 @@ class BookedGigDetails {
     
     
     
-    function __construct( $gigsName, $gigsDetails, $eventDate, $eventDescription , $venueName,
-        $venueCity, $venueProvince, $firstName, $lastName, $evtname, $email) {
-            
-            $this->gigsName = $gigsName;
-            $this->gigsDetails = $gigsDetails;
-            $this->eventDate = $eventDate;
-            $this->venueName = $venueName;
-            $this->venueCity = $venueCity;
-            $this->venueProvince = $venueProvince;
-            
-            $this->firstName = $firstName;
-            $this->lastName = $lastName;
-            
-            $this->eventDescription = $eventDescription;
-            $this->evtname = $evtname;
-            $this->email = $email;
+    function __construct() {
+    }
+    
+    function setBookedGigsId( $bookedGigsId) {
+        $this->bookedGigsId = $bookedGigsId;
     }
     
     function setGigsName( $gigsName) {
@@ -75,6 +65,10 @@ class BookedGigDetails {
     
     function setEmail($email) {
         $this->email = $email;
+    }
+    
+    function getBookedGigsId() {
+        return $this->bookedGigsId;
     }
     
     function getEventDescription() {

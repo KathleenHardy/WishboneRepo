@@ -1,3 +1,38 @@
+<?php 
+
+    session_start();
+    
+    include ('../config.php');
+    include ('../enums/profileStatus.php');
+    
+    $authId = $_SESSION['authId'];
+    
+    $query = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
+    
+    if ($stmt = $connection->prepare( $query)) {
+    
+        $stmt->bind_param( "i", $authId);
+        
+        //execute statement
+        $stmt->execute();
+    
+        //bind result variables
+        $stmt->bind_result( $profileStatus, $firstName, $lastName, $profilePicture);
+        
+        // fetch values
+        $stmt->fetch();
+        
+        //close statement
+        $stmt->close();
+          
+    }
+    
+    
+    
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,10 +73,7 @@
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
 </head>
-<?php 
-Session_start();
 
-?>
 <body>
     <!-- Pre-loader start -->
     <div class="theme-loader">
@@ -180,8 +212,8 @@ Session_start();
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -214,9 +246,9 @@ Session_start();
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -278,6 +310,7 @@ Session_start();
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                     <ul class="pcoded-submenu">
+                                        
                                         <li class=" ">
                                             <a href="entertainerUpcomingEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
@@ -293,6 +326,7 @@ Session_start();
                                             </a>
                                         </li>
                                     </ul>
+                                    
                                 </li>
                                 <li class="">
                                     <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
@@ -300,14 +334,33 @@ Session_start();
                                         <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>                                
-                                <li class="">
-                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Portfolio</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>                                                                
+                                </li>
+                                      
+                                <?php
+                                    if ( $profileStatus == ProfileStatus::INCOMPLETE || $profileStatus == ProfileStatus::NOT_CREATED) {
+                                      print'
+                                           <li class="">
+                                                <a href="entertainerCreateNewPortfolio.php" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                                    <span class="pcoded-mtext">Create Portfolio</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li> 
+                                           '; 
+                                    } else {
+                                        print'
+                                            <li class="">
+                                                <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                                    <span class="pcoded-mtext">Portfolio</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                             ';
+                                        
+                                    }
+                                ?>      
+                                                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">

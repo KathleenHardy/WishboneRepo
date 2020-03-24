@@ -1,3 +1,98 @@
+<?php 
+session_start();
+include ('config.php');
+include ('../dto/bookedGigDetails.php');
+include ('../enums/profileStatus.php');
+
+$authId = $_SESSION['authId'];
+
+$query = "SELECT entid
+          FROM entertainers
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result($entid);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();    
+}
+
+$todaysDate = date("Y-m-d");
+
+$bookedGigDetailsDT0 = array();
+
+$query2 = "SELECT bookedGigsId, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName,event_name, email
+          FROM bookedgigsdetails
+          WHERE  entid = ? and event_date < ?";
+
+if ($stmt2 = $connection->prepare( $query2)) {
+    
+    $stmt2->bind_param( "is", $entid, $todaysDate);
+    
+    //execute statement
+    $stmt2->execute();
+    
+    //bind result variables
+    $stmt2->bind_result( $bookedGigsId, $gigsName, $gigsDetails, $event_date, $venueName, $venueCity, $venueProvince, $firstName, $lastName, $event_name , $email);
+    
+    //fetch values
+    while( $stmt2->fetch()) {
+        
+        $bookedGig = new BookedGigDetails();
+        
+        $bookedGig->setBookedGigsId( $bookedGigsId);
+        $bookedGig->setGigsName( $gigsName);
+        $bookedGig->setGigsDetails($gigsDetails);
+        $bookedGig->setEventDate( $event_date);
+        $bookedGig->setVenueName( $venueName);
+        $bookedGig->setVenueCity( $venueCity);
+        $bookedGig->setVenueProvince( $venueProvince);
+        $bookedGig->setFirstName( $firstName);
+        $bookedGig->setLastName( $lastName);
+        $bookedGig->setEventName( $event_name);
+        $bookedGig->setEmail( $email);
+        
+        $bookedGigDetailsDT0[] = $bookedGig;
+    }
+    
+    //close statement
+    $stmt2->close();
+}
+
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -182,7 +277,7 @@
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
                                     <span>John Doe</span>
                                     <i class="ti-angle-down"></i>
                                 </a>
@@ -216,7 +311,7 @@
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
                                     <div class="user-details">
                                         <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
                                     </div>
@@ -297,6 +392,13 @@
                                     </ul>
                                 </li>
                                 <li class="">
+                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Calendar</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="">
                                     <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Portfolio</span>
@@ -342,85 +444,46 @@ Past Events
 
 <div class="card-deck spacing1">
 <div class="row">
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>
-	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event1.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-      
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-      
-          </div>
-  </div>
+     <?php
+     
+     if ( count($bookedGigDetailsDT0) >= 1) {
+         foreach( $bookedGigDetailsDT0 as $bookedGigDetails) {
+             
+             print
+             '
+              <div class="card text-center">
+              <!-- <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 card text-center"> -->
+                <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
+                <div class="card-body">
+                  <h5 class="card-title title2">' . $bookedGigDetails->getEventName() . '</h5>
+                  <p class="card-text">' . $bookedGigDetails->getEventDate() . '</p>
+                  <p class="card-text">' . $bookedGigDetails->getVenueName() . '</p>
+                  <p class="card-text">' . $bookedGigDetails->getGigsDetails() . '</p>
+                  <p class="card-text">Contact ' . $bookedGigDetails->getFirstName() . '  ' . $bookedGigDetails->getLastName() . ' at ' . $bookedGigDetails->getEmail() . '</p>
+                  <button type="button"><a href="entertainerViewEventDetails.php?id='. $bookedGigDetails->getBookedGigsId() . '">View More</a></button>
+                </div>
+              </div>
+            ';
+         }
+     } else {
+         print 
+         '
+            <div class="card text-center">
+                <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img"> 
+                <div class="card-body">
+                  <h5 class="card-title title2">No Event Found!!!</h5>
+                  <p class="card-text">  </p>
+                  <p class="card-text">  </p>
+                  <p class="card-text">  </p>
+                  <p class="card-text">  </p>
+                  
+                </div>
+            </div>
+         ';
+     }
+	
+    ?>
  </div> 
- <br/>
- <br/>
-<div class="row">
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-      
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event3.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-          
-      </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-      
-    </div>
-  </div>
- </div> 
-
-
-
 </div>
 
 

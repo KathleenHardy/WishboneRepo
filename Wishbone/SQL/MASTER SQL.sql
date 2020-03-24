@@ -991,13 +991,7 @@ INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availS
 INSERT INTO entertainerAvailability (entid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
 							(4, '2020-03-18','2020-03-20', '17:00', '16:00', 'Music Festival');		
 							
-							
-INSERT INTO venueAvailability (venueid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
-							(1, '2020-03-18','2020-03-20', '17:00', '16:00', 'Booked');						
-
-						
-											
-							
+					
 
 INSERT INTO venueOwners ( authid, firstName, lastName) VALUES 
 					    (17, 'Madison', 'Kindler');
@@ -1016,6 +1010,11 @@ INSERT INTO venues (venueOwnerId, venueName, venueCity, venueState, venueProvinc
 				
 INSERT INTO venues (venueOwnerId, venueName, venueCity, venueProvince, venueDescription, venuePicture) VALUES 
                      (1, 'TestVenue', 'Ottawa', 'Ontario', 'a description', 'NAC.jpg');
+                     
+                     
+INSERT INTO venueAvailability (venueid, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) VALUES 
+							(1, '2020-03-18','2020-03-20', '17:00', '16:00', 'Booked');						
+
 					 
 					 
 INSERT INTO bookedvenues (eventPlannerId, venueId) VALUES 
@@ -1038,7 +1037,9 @@ INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VA
 INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (2,3, 2,1,2);	
 INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (2,2, 3,2,1);
 INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (3,4, 1,2,2);
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,1, 2,1,1);
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,6, 2,1,1);
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,6, 3,1,1);
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,6, 1,1,1);
 
 
 INSERT INTO occupation (entid, occupation) VALUES (1, "Dancer");

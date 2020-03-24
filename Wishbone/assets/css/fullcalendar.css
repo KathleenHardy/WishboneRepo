@@ -59,9 +59,9 @@ html .fc,
 }
 	
 .fc-header-title h2 {
-	margin-top: 0;
+	margin-top: 2px;
 	white-space: nowrap;
-	font-size: 32px;
+	font-size: 28px;
     font-weight: 100;
     margin-bottom: 10px;
 }
@@ -656,3 +656,42 @@ table.fc-header{
     text-align: right;
     padding-right: 10px;
 }
+
+#eventContent{color:#000 !important}
+#eventContent h3{color:#000 !important}
+#eventContent li{color:grey !important}
+
+#calendar .fc-event.fc-draggable{border-radius:0 !important; min-height:12px !important; border: 1px dotted #fff !important;box-shadow:none !important}
+
+#eventSponsorDescription{word-wrap: break-word !important;}
+
+.eventPopup .btn-close {
+    right: 4px !important;
+    top: 11px !important;
+	z-index: 999 !important;
+}
+
+#event_sponcername {
+    text-align: center;
+}
+.ui-dialog{box-shadow:0px 0px 7px #363636;-o-box-shadow:0px 0px 7px #363636;-ms-box-shadow:0px 0px 7px #363636;-webkit-box-shadow:0px 0px 7px #363636;-moz-box-shadow:0px 0px 7px #363636;}
+#eventContent .btn{ text-transform:uppercase; text-shadow:2px 2px 3px #333;box-shadow:2px 2px 3px #333; font-weight:bold;}   
+#eventContent .eventBackground_color { background:#666; padding-bottom:15px;}  
+#eventContent{}
+#eventContent ul{ margin:0px; padding:0px 5px;}
+#eventContent ul li{ list-style:none; padding:5px 10px; font-size:13px; color:#fff;}
+#eventContent ul li i{ width:20px;}
+.gh_detail{ padding:15px; position:relative}
+
+
+#eventContent{ padding:0px;  }
+#eventContent img{ height:160px !important;}
+#eventContent h3{font-size: 14px; color:#fff; font-weight: bold; text-align:center;  margin:0px; padding:8px 0; }
+#eventContent .eventPopup h3{font-size: 14px; color:#000; font-weight: bold; text-align:center;  margin:0px; padding:8px 0; }
+#eventContent .eventPopup ul li {
+  color: #666;
+  font-size: 13px;
+  list-style: outside none none;
+  padding: 5px 10px;
+}
+
