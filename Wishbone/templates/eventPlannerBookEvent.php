@@ -189,8 +189,8 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             $event_description = $_POST["eventDescription"];
             
             //query to insrt into bookedgigs
-            $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,resAvailId,event_name,event_date,event_description) 
-values(".$_SESSION['entid'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$venue_id.",".$resAvailId.",'".$event_name."','".$event_date."','".$event_description."');";
+            $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
+values(".$_SESSION['entid'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."');";
             echo $query;
            //if success then show success msg else show error msg
            if( mysqli_query($connection,$query) === TRUE)

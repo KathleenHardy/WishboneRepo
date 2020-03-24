@@ -13,7 +13,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
+    <?php
+		session_start();
+		 ?>
     <meta name="keywords" content="bootstrap, bootstrap admin template, admin theme, admin dashboard, dashboard template, admin template, responsive" />
     <meta name="author" content="Codedthemes" />
     <!-- Favicon icon -->
@@ -46,6 +48,194 @@
 		</head>
 
 <body>
+<?php 
+
+include ('../dto/venue.php');
+include ('../dto/gig.php');
+include ('../dto/eventPlanner.php');
+
+include ('../dao/authenticationDAO.php');
+include ("navigationheaderVenueHost.php");
+require_once ("../config.php");
+
+//get selected entainer id
+if(isset($_GET["id"]))
+{
+	$entid = $_GET["id"];
+	$_SESSION['entId'] = $entid;
+}else
+{
+	$entid = $_SESSION['entId'];
+}
+
+ //get logged in auth id
+ $authId = $_SESSION['authId'];
+ //echo $authId;
+ //fetch eventPlannerId based on authId
+ $querya = 'SELECT venueOwnerId FROM venueowners WHERE authid = ?';
+ $stmta =mysqli_prepare ($connection,$querya);
+ $stmta->bind_param('s', $authId);
+ $stmta->execute();
+ $stmta->bind_result($venueOwnerID);
+ $stmta->fetch();
+ $stmta->close();
+
+$venuesDTO = array();
+
+$query2 = "SELECT * 
+		FROM venues where venueOwnerId=".$venueOwnerID;
+		
+$result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+		
+if ($count >= 1) {
+		
+	while ($row = mysqli_fetch_array($result)) {
+		$venuesDTO[] = new Venue ($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince']);
+	}
+} else {
+			// $fmsg = "No venues for this user";
+}
+
+$_SESSION['myVenues'] = $venuesDTO;
+
+//gigs
+$gigsDTO = array();
+
+$query3 = "SELECT * 
+		FROM gigs where entid=".$entid;
+		
+$result2 = mysqli_query($connection, $query3) or die(mysqli_error($connection));
+
+$count2 = mysqli_num_rows($result2);
+		
+if ($count2 >= 1) {
+		
+	while ($row = mysqli_fetch_array($result2)) {
+		
+		$gigsDTO[] = new Gig  ($row['gigsid'], $row['gigsName'], $row['gigsCategory'], $row['gigsLabel'], $row['gigsArtType'], $row['gigsDetails'],$row['notes']);
+	
+	}
+} else {
+			// $fmsg = "No venues for this user";
+}
+
+$_SESSION['myGigs'] = $gigsDTO;
+
+//event planner
+
+$eventPlannerDTO = array();
+
+$query4 = "SELECT * FROM eventplanners;";
+		
+$result4 = mysqli_query($connection, $query4) or die(mysqli_error($connection));
+
+$count3 = mysqli_num_rows($result4);
+		
+if ($count3 >= 1) {
+		
+	while ($row = mysqli_fetch_array($result4)) {
+		$eventPlannerDTO[] = new EventPlanner  ($row['eventPlannerId'], $row['authid'], $row['firstName'], $row['lastName'], $row['imageLocation']);
+	
+	}
+} else {
+			// $fmsg = "No venues for this user";
+}
+
+$_SESSION['myEventPlanners'] = $eventPlannerDTO;
+
+
+
+
+
+//connection object from config file
+
+$hasError = false;
+$errorMessages = Array();
+
+//cehcks if value is set after button clic or not
+if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eventDescription"]))   
+{
+  
+    
+    if ($_POST["eventName"] == "") {
+        $hasError = true;
+        $errorMessages['eventName'] = 'Please enter event name';
+    }
+
+    if ($_POST["eventDate"] == "") {
+        $hasError = true;
+        $errorMessages['eventDate'] = 'Please enter event date';
+    }
+
+    if ($_POST["eventDescription"] == "") {
+        $hasError = true;
+        $errorMessages['eventDescription'] = 'Please enter event description';
+    }
+    
+    
+  
+        if (! $hasError) {
+           
+
+			
+
+            //fetch venueOwnerId from vanues based on venueId
+            $venue_id = $_POST["venueSelection"];
+            $queryVenueOwner = 'SELECT venueOwnerId FROM venues WHERE venueId = ?';
+            $stmta = mysqli_prepare ($connection,$queryVenueOwner);
+            $stmta->bind_param('s', $venue_id);
+            $stmta->execute();
+            $stmta->bind_result($venueOwnerId);
+            $stmta->fetch();
+            $stmta->close();
+            
+			$resAvailId = '1';
+            
+            //get selected gig id
+			$gigsid = $_POST["gigSelection"];
+			
+			$eventplannerID = $_POST["eventplannerSelection"];
+            
+            //get evenet name
+            $event_name = $_POST["eventName"];
+            
+            //get event date
+            $event_date = date($_POST["eventDate"]);
+            
+            //get event description
+            $event_description = $_POST["eventDescription"];
+            
+            //query to insrt into bookedgigs
+            $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
+values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."');";
+            echo $query;
+           //if success then show success msg else show error msg
+           if( mysqli_query($connection,$query) === TRUE)
+           {
+			
+		
+              ?> 
+<script type="text/javascript">
+               window.location.href = 'venueEventConfirmation.php';
+               </script>
+				
+
+               <?php
+           }else {
+               echo "<script type='text/javascript'>alert('".mysqli_error($connection)."');</script>";
+               echo mysqli_error($connection);
+           }
+            
+         }
+    
+    //testing.test@1.com
+    
+}
+
+
+?>
     <!-- Pre-loader start -->
     <div class="theme-loader">
         <div class="loader-track">
