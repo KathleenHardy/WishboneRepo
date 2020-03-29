@@ -61,7 +61,27 @@ if ($count >= 1) {
 		
 	while ($row = mysqli_fetch_array($result)) {
 	
-		$entertainersDTO[] = new Entertainer($row['entid'], $row['firstName'], $row['lastName'], $row['ratePerHour'], $row['profilePicture'], $row['homePagePicture'],$row['aboutMe'],$row['aboutMe']);
+	    $entertainerObj = new Entertainer();
+	    
+	    $entertainerObj->setEntID($row['entid']);
+	    
+	    $entertainerObj->setFirstName($row['firstName']);
+	    
+	    $entertainerObj->setLastName( $row['lastName']);
+	    
+	    $entertainerObj->setRatePerHour( $row['ratePerHour']);
+	    
+	    $entertainerObj->setProfilePicture($row['profilePicture']);
+	    
+	    $entertainerObj->setHomePagePicture( $row['homePagePicture']);
+	    
+	    $entertainerObj->setAboutMe($row['aboutMe']);
+	    
+	    $entertainerObj->setOccupation( $row['aboutMe']) ;
+	    
+	    $entertainerObj->setWorkDescription($row['aboutMe']);
+	    
+	    $entertainersDTO[] = $entertainerObj;
 	}
 } else {
 			// $fmsg = "No venues for this user";
@@ -389,7 +409,7 @@ Entertainers
                     <?php
 					   foreach( $entertainersDTO as $entertainer) {
     					    print '  <div class="card text-center">
-                            <img class="card-img-top event-img-size" src="../assets/img/profile/'.$entertainer->getImageLocation().'" alt="event img">
+                            <img class="card-img-top event-img-size" src="../assets/img/profile/'.$entertainer->getProfilePicture().'" alt="event img">
                             <div class="card-body">
                               <h5 class="card-title title2">'.$entertainer->getFirstName() . " " . $entertainer->getLastName() .'</h5>
                               <p class="card-text">'.$entertainer->getAboutMe().'</p>

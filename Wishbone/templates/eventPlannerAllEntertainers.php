@@ -61,8 +61,28 @@ $count = mysqli_num_rows($result);
 if ($count >= 1) {
 		
 	while ($row = mysqli_fetch_array($result)) {
-	
-		$entertainersDTO[] = new Entertainer($row['entid'], $row['firstName'], $row['lastName'], $row['ratePerHour'], $row['profilePicture'], $row['homePagePicture'],$row['aboutMe'],$row['aboutMe']);
+    
+        $entertainerObj = new Entertainer();
+        
+        $entertainerObj->setEntID($row['entid']);
+
+        $entertainerObj->setFirstName($row['firstName']);
+        
+        $entertainerObj->setLastName( $row['lastName']);
+        
+        $entertainerObj->setRatePerHour( $row['ratePerHour']);
+        
+        $entertainerObj->setProfilePicture($row['profilePicture']);
+        
+        $entertainerObj->setHomePagePicture( $row['homePagePicture']);
+        
+        $entertainerObj->setAboutMe($row['aboutMe']);
+        
+        $entertainerObj->setOccupation( $row['aboutMe']) ;
+        
+        $entertainerObj->setWorkDescription($row['aboutMe']);
+        
+        $entertainersDTO[] = $entertainerObj;
 	}
 } else {
 			// $fmsg = "No venues for this user";
@@ -75,59 +95,7 @@ mysqli_close($connection);
 
 ?>
 
-    <!-- Pre-loader start -->
-    <div class="theme-loader">
-        <div class="loader-track">
-            <div class="preloader-wrapper">
-                <div class="spinner-layer spinner-blue">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-                <div class="spinner-layer spinner-red">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-
-                <div class="spinner-layer spinner-yellow">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-
-                <div class="spinner-layer spinner-green">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+   
     <!-- Pre-loader end -->
     <div id="pcoded" class="pcoded">
         <div class="pcoded-overlay-box"></div>
@@ -384,7 +352,7 @@ Entertainers
 						foreach($entertainersDTO as $entertainer)
 
 						print ' <div class="card text-center">
-                        <img class="card-img-top event-img-size" src="../assets/img/profile/'.$entertainer->getImageLocation().'" alt="event img">
+                        <img class="card-img-top event-img-size" src="../assets/img/profile/'.$entertainer->getProfilePicture().'" alt="event img">
                         <div class="card-body">
                           <h5 class="card-title title2">'.$entertainer->getFirstName() . " " . $entertainer->getLastName() .'</h5>
                           <p class="card-text">'.$entertainer->getAboutMe().'</p>

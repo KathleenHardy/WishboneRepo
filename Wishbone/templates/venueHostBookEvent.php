@@ -92,7 +92,7 @@ $count = mysqli_num_rows($result);
 if ($count >= 1) {
 		
 	while ($row = mysqli_fetch_array($result)) {
-		$venuesDTO[] = new Venue ($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince']);
+	    $venuesDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);
 	}
 } else {
 			// $fmsg = "No venues for this user";
@@ -190,6 +190,7 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             $stmta->bind_result($venueOwnerId);
             $stmta->fetch();
             $stmta->close();
+        
             
 			$resAvailId = '1';
             
@@ -208,28 +209,75 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             $event_description = $_POST["eventDescription"];
             
             //query to insrt into bookedgigs
-            $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
+            $query = "insert into bookingrequests(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
 values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."');";
             echo $query;
            //if success then show success msg else show error msg
-           if( mysqli_query($connection,$query) === TRUE)
-           {
-			
-		
-              ?> 
-<script type="text/javascript">
-               window.location.href = 'venueEventConfirmation.php';
-               </script>
-				
-
+            $conn =   mysqli_query($connection,$query);
+            if($conn  === TRUE)
+            {
+                $last_id = mysqli_insert_id($connection);
+                
+                
+                echo $_SESSION['entId'];
+                $querya = 'SELECT email FROM authentication WHERE authid = (select authid from entertainers where entid = ?)';
+                $stmta =mysqli_prepare ($connection,$querya);
+                $stmta->bind_param('s',$_SESSION['entId']);
+                $stmta->execute();
+                $stmta->bind_result($entertainerEmail);
+                $stmta->fetch();
+                $stmta->close();
+                
+                
+                //   echo '<script>document.write(shortUrl);</script>';
+                // the message
+                $url = $_SERVER['REQUEST_URI'];
+                $shortUrl = substr($url,0, strrpos($url, '/'));
+                $server = "http://localhost";
+                $htmlContent = '
+    <html>
+    <head>
+        <title>Welcome to WishBone</title>
+    </head>
+    <body>
+        <h1>Thanks you for joining with us!</h1>
+        <table cellspacing="0" style="border: 2px dashed #FB4314; width: 100%;">
+            <tr>
+                <th>WishBone
+            </tr>
+            <tr style="background-color: #e0e0e0;">
+                <th>You got a new Booking Request</td>
+            </tr>
+            <tr>
+    
+                <th>Website:</th><td><a href="'.$server.$shortUrl .'/entertainerNotificationDetails.php?id='.$last_id.'">Click here to Review Booking Request</a></td>
+            </tr>
+        </table>
+    </body>
+    </html>';
+                
+                
+                // Set content-type header for sending HTML email
+                $headers = "MIME-Version: 1.0" . "\r\n";
+                $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                echo $entertainerEmail;
+                // send email
+                mail($entertainerEmail,"Wishbone", $htmlContent,$headers);
+                ?> <script type="text/javascript">
+             window.location.href = 'eventPlannerEventConfirmation.php';
+           
+              </script>
                <?php
+               
+               /*
+               echo("<script>location.href = 'eventPlannerEventConfirmation.php?msg=$msg';</script>");
+               */
            }else {
                echo "<script type='text/javascript'>alert('".mysqli_error($connection)."');</script>";
                echo mysqli_error($connection);
            }
             
          }
-    
     //testing.test@1.com
     
 }

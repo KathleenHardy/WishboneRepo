@@ -40,6 +40,161 @@
 </head>
 
 <body>
+    <?php
+        session_start();
+
+        include ('../config.php');
+    
+        if(isset($_SESSION['authId']) )
+        {
+            $requestID = $_GET["id"];
+            $query2 = "SELECT * 
+                    FROM bookingrequests where bookingReqId = ".$requestID;
+                    
+            $result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+            
+            $count = mysqli_num_rows($result);
+                    
+            if ($count >= 1) {
+                    
+                while ($row = mysqli_fetch_array($result)) {
+
+                    $entid = $row["entid"];
+
+        
+                    $querya = 'SELECT authId FROM entertainers WHERE entid = ?';
+                    $stmta =mysqli_prepare ($connection,$querya);
+                    $stmta->bind_param('s', $entid);
+                    $stmta->execute();
+                    $stmta->bind_result($authid);
+                    $stmta->fetch();
+                    $stmta->close();
+        
+                    if($authid == $_SESSION['authId']){
+
+                        $eventName = $row["event_name"];
+
+                        $eventDate = $row["event_date"];
+        
+                        $eventDescription = $row["event_description"];
+                    
+
+                        $gigssid = $row["gigsid"];
+                            echo $gigssid;
+                        $eventPlannerId = $row["eventPlannerId"];
+    
+                        $entid = $row["entid"];
+    
+                        $venueOwnerId = $row["venueOwnerId"];
+    
+                        $venueid = $row["venueid"];
+
+                        if(isset($_POST['accept']))
+                        {
+                                        //query to insrt into bookedgigs
+                        $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
+                        values(".$entid.",".$gigssid.",".$eventPlannerId.",".$venueOwnerId.",".$venueid.",'".$eventName."','".$eventDate."','".$eventDescription."');";
+                                    echo $query;
+                                //if success then show success msg else show error msg
+                                $conn =   mysqli_query($connection,$query);
+                                    if($conn  === TRUE)
+                                    {
+                                        ?>
+                                        <script type="text/javascript">
+                                        alert("Booking Accepted!");
+                                        window.location.href = 'entertainerDashboardHome.php';
+                                        </script>
+                                        <?php
+                                    }else  {
+                                        echo "<script type='text/javascript'>alert('".mysqli_error($connection)."');</script>";
+                                        echo mysqli_error($connection);
+                                    }
+                                    
+                                
+                        }
+                        else if(isset($_POST['reject']))
+                        {
+                            ?>
+                            <script type="text/javascript">
+                            alert("Booking Rejected!");
+                            window.location.href = 'entertainerDashboardHome.php';
+                            </script>
+                            <?php
+                        }
+                        
+                       
+
+                    $queryb = 'SELECT gigsName FROM gigs WHERE gigsid = ?';
+                    $stmta =mysqli_prepare ($connection,$queryb);
+                    $stmta->bind_param('s', $gigssid);
+                    $stmta->execute();
+                    $stmta->bind_result($gig);
+                    $stmta->fetch();
+                    $stmta->close();
+        
+                    
+                    $querya = 'SELECT venueName FROM venues WHERE venueid = ?';
+                    $stmta =mysqli_prepare ($connection,$querya);
+                    $stmta->bind_param('s', $venueid);
+                    $stmta->execute();
+                    $stmta->bind_result($venue);
+                    $stmta->fetch();
+                    $stmta->close();
+                    
+                    $querya = 'SELECT firstName,lastName FROM eventPlanners WHERE eventPlannerId = ?';
+                    $stmta =mysqli_prepare ($connection,$querya);
+                    $stmta->bind_param('s', $eventPlannerId);
+                    $stmta->execute();
+                    $stmta->bind_result($first,$last);
+                    $stmta->fetch();
+                    $stmta->close();
+                
+                    $eventPlanner = $first." ".$last;
+
+                    
+                        
+
+                    }
+                    else
+                    {
+                        //this request is not for this current logged in entertainer
+                        ?>
+
+                        <script type="text/javascript">
+                        window.location.href = 'index.php';
+                        </script>
+        
+                        <?php
+                    }
+                
+                }
+            } else {
+                        // $fmsg = "No venues for this user";
+            }
+            
+            
+    
+
+        
+                    
+            mysqli_close($connection);
+            
+        }
+        else
+        {
+                //if not logged in then redirect to login
+                ?>
+
+                <script type="text/javascript">
+                window.location.href = 'login.php';
+                </script>
+
+                <?php
+        }
+
+       
+
+    ?>
     <!-- Pre-loader start -->
     <div class="theme-loader">
         <div class="loader-track">
@@ -328,28 +483,38 @@
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
- <h1 class="main-title">Your Booking Notification</h1>      
- <br/>
- <br/>   
-  <div class="center" style ="padding: 30px;">
-  
-  <div class="card text-center notification-card">
-    <img class="card-img-top event-img-size-notification" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-            <p class="card-text">Gig Selected: Celine Dion songs</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact Mike Smith at mike@smith.com</p>
-    </div>
-    <div class="card-footer text-muted">
-    <a href="#" style="display: inline; color: green;">Accept</a> <p style="display: inline;">or </p><a href="#" style="color: red; display: inline;">Reject</a>
-  </div>  
-  </div>           
-  </div>                           
+
+                                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+
+
+
+<h1 class="main-title">Your Booking Notification</h1>      
+<br/>
+<br/>   
+ <div class="center" style ="padding: 30px;">
+
+
+ <div class="card text-center notification-card">
+   <img class="card-img-top event-img-size-notification" src="../assets/img/backgrounds/1.jpg" alt="event img">
+   <div class="card-body">
+     <h5 class="card-title title2"><?php echo $eventName; ?></h5>
+     <p class="card-text"><?php echo $eventDate; ?></p>
+     <p class="card-text"><?php echo $eventDescription; ?></p>
+           <p class="card-text">Gig Selected: <?php echo $gig; ?></p>
+     <p class="card-text"><?php echo $venue; ?></p>
+     <p class="card-text">Contact <?php echo $eventPlanner; ?></p>
+   </div>
+   <div class="card-footer text-muted">
+   
+   <a href="entertainerProcessBooking.php?id=<?php echo $_GET["id"]; ?>&accept=1" style="display: inline; color: green;">Accept</a> <p style="display: inline;">or </p><a href="entertainerProcessBooking.php?id=<?php echo $_GET["id"]; ?>&reject=1" style="color: red; display: inline;">Reject</a></div>  
+ </div>           
+ </div>
+ 
+
+ </form>
                                       
                                              </div>
+                                          
                                     <!-- Page-body end -->
                                 </div>
                                 <div id="styleSelector"> </div>
