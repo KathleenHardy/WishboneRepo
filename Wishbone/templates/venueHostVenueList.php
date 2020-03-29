@@ -50,6 +50,7 @@ include ('../dto/availability.php');
 session_start();
 $venueOwnerId = $_SESSION['venueOwnerId'];
 $venueDTO = array();
+print_r($_SESSION);
 
 $query2 = "SELECT *
         FROM venues
@@ -412,7 +413,6 @@ foreach ($venueDTO as $venue) {
     <div class="card-body">
     <h5 class="card-title title2">' . $venue->getVenueName() . '</h5>
     <p class="card-text">' . $venue->getVenueCity() . '</p>
-    <button type="button"><a href="venueHostBookEvent.php">Delete Venue</a></button>
     </div>
     </div>
 ';
@@ -426,6 +426,9 @@ foreach ($venueDTO as $venue) {
 	<button type="button"><a href="createVenue.php">Create New Venue</a></button>
 </div> 
  <br/>
+   <div class="outer">
+	<button type="button"><a href="deleteVenue.php">Delete Venue</a></button>
+</div> 
  <br/>
  <br/>
  <div style="text-align: center;">
@@ -434,45 +437,7 @@ Venue Availabilities
 
 </h1>
 </div>
-<div class="card-deck spacing1" style = "text-align: center;">
-<div class="row">
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Availability Time/Date</p>
-	<button type="button"><a href="venueHostEntertainerView.php">Delete Availability</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Availability Time/Date</p>
-	<button type="button"><a href="venueHostEntertainerView.php">Delete Availability</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event3.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Availability Time/Date</p>
-	<button type="button"><a href="venueHostEntertainerView.php">Delete Availability</a></button>
-      </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Venue Name</h5>
-      <p class="card-text">Availability Time/Date</p>
-	<button type="button"><a href="venueHostEntertainerView.php">Delete Availability</a></button>
-    </div>
-  </div>
- </div> 
 
-
-
-</div>
 <div class="outer">
 	<button type="button"><a href="addVenueAvailability-New.php">Add New Availability</a></button>
 </div>

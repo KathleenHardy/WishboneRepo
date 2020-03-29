@@ -47,6 +47,7 @@
 Session_start();
 include ('../config.php');
 require_once ('../dto/gig.php');
+print_r($_SESSION);
 
 
 $authId = $_SESSION['authId'];
@@ -672,6 +673,23 @@ $connection->close();
       <div class="buttons-section" style="text-align: center;">
 <div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="entertainerAddNewGig.php">Add New Gig</a></div>
 <div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="entertainerEditGig.php">Edit Existing Gig</a></div>
+ </div>
+ 
+  <br/>
+ <br/>
+ <br/>
+ <div style="text-align: center;">
+ <h1 class="main-title" style="padding: 50px; text-align: center;">
+My Availabilities
+
+</h1>
+</div>
+
+
+
+<div class="buttons-section" style="text-align: center;">
+<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="addEntertainerAvailability-New.php">Add New Availability</a></div>
+<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="deleteAvailability.php">Remove an Availability</a></div>
  </div>
       <!-- End Portfolio -->
   

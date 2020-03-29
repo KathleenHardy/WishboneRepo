@@ -1,12 +1,13 @@
 <?php
 
-require_once ('../config.php');
+//require_once ('../config.php');
 require_once ('../dto/venue.php');
 session_start();
 ?>
 <?php
 
-
+include ('../config.php');
+//include ('../dto/venue.php');
 $venueDTO = $_SESSION['myVenues'];
 
 // $authId = $_SESSION['authId'];
@@ -45,28 +46,35 @@ if (! empty($_POST)) {
     $startTime = $_POST['startTime'];
     $endTime = $_POST['endTime'];
     
+//      $sql2 = "SELECT venueID
+//             FROM venues
+//             WHERE venueName='$venueName'";
 
-    $sql = "INSERT INTO availability(availStartDate, availEndDate, availStartTime, availEndTime) 
-VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
+    //get logged in auth id
+    //$authId =  $_SESSION['authId'];
+    //echo $authId;
+    //fetch eventPlannerId based on authId
+    $querya = 'SELECT venueId FROM venues WHERE venueName = ?';
+    $stmta =mysqli_prepare ($connection,$querya);
+    $stmta->bind_param('s', $venueName);
+    $stmta->execute();
+    $stmta->bind_result($chosenVenueId);
+    $stmta->fetch();
+    $stmta->close();
+     
+/*      //$db = new mysqli($host, $username, $password, $database_name); // connect to the DB
+     $query = $connection->prepare("SELECT venueId FROM venues WHERE venueName=?"); // prepate a query
+     $querya->bind_param('i', '$venueName'); // binding parameters via a safer way than via direct insertion into the query. 'i' tells mysql that it should expect an integer.
+     $query->execute(); // actually perform the query
+     $result = $query->get_result(); // retrieve the result so it can be used inside PHP
+     $r = $result->fetch_array(MYSQLI_ASSOC); // bind the data from the first result row to $r
+     //echo $r['price']; // will return the price
+     $chosenVenueId=$r['venueId']; */
+     
+     echo $venueName;
+     echo $chosenVenueId;
     
-
-    if (mysqli_query($connection, $sql)) {
-        echo "New availability created successfully";
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
-    }
-    
-    //mysqli_close($connection);
-    
-//     $sql2 = "SELECT venueID 
-//             FROM venues 
-//             WHERE venueName=$venueName";
-//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
-    $sql2 = "SELECT venueID
-            FROM venues
-            WHERE venueName=?";
-
-    if ($stmt = $connection->prepare( $sql2)) {
+    /*if ($stmt = $connection->prepare( $sql2)) {
         
         $stmt->bind_param( "i", $venueName);
         
@@ -82,9 +90,44 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
         //close statement
         $stmt->close();
         
+    } */
+    
+     /* $venId = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
+    //$chosenVenueId = mysql_fetch_array($venId);
+    //$chosenVenueId=mysqli_fetch_field($venId);
+     $result = mysqli_query($connection, $sql2);
+     
+     if (mysqli_num_rows($result) > 0) {
+         while($row = mysqli_fetch_assoc($result)) {
+             $venue = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);            
+             $chosenVenueId=$venue->getVenueID();
+             //echo "Name: " . $row["name"]. "<br>";
+         }
+     } else {
+         echo "0 results";
+     } */
+    //echo $chosenVenueId;
+    //mysql
+
+    $sql = "INSERT INTO venueavailability(venueId, availStartDate, availEndDate, availStartTime, availEndTime) 
+VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
+    
+
+    if (mysqli_query($connection, $sql)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
     
-    $sql3="SELECT availId
+    //mysqli_close($connection);
+    
+//     $sql2 = "SELECT venueID 
+//             FROM venues 
+//             WHERE venueName=$venueName";
+//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
+    
+    
+    /* $sql3="SELECT availId
             FROM availability
             WHERE availStartDate=? AND availEndDate=? AND availStartTime=? AND availEndTime=?";
     
@@ -108,22 +151,22 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
     $sql4="INSERT INTO resourceAvailability(availId, venueId)
             VALUES ($availId, $chosenVenueId)";
     
-    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection));
+    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
     ?>
     <script type="text/javascript">
-    window.location.href = 'http://localhost:7331/Wishbone/templates/venueEventList.php';
+    window.location.href = 'http://localhost:7331/Wishbone/templates/venueHostVenueList.php';
     </script>
 <?php
 
     
-}
+} 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Create Venue</title>
+    <title>Delete Venue</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -487,7 +530,7 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
 									</div>
 								</div>
 							</div>
-							<form action="addVenueAvailability.php" method="POST">
+							<form action="addVenueAvailability-New.php" method="POST">
 
 								<div class="form-group">
 									<!-- Event Name -->

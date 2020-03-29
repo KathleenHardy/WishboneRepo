@@ -1,20 +1,13 @@
 <?php
-Session_start();
-print_r($_SESSION);
+
 require_once ('../config.php');
-
-//include "navigationheaderVenueHost.php";
-//require_once ('../dto/venue.php');
-//session_start();
-//$authIdLocal=$_SESSION['authId'];
-$authIdLocal = $_SESSION['authId'];
-//$authIdLocal=$authId;
-
+require_once ('../dto/venue.php');
+session_start();
 ?>
 <?php
 
 
-//$venueDTO = $_SESSION['myVenues'];
+$venueDTO = $_SESSION['myVenues'];
 
 // $authId = $_SESSION['authId'];
 
@@ -46,32 +39,32 @@ if (! empty($_POST)) {
 
     echo "Posting";
 
-    //$venueName = $_POST['venueName'];
-    $startDate = $_POST['startDate'];
-    $endDate = $_POST['endDate'];
-    $startTime = $_POST['startTime'];
-    $endTime = $_POST['endTime'];
-
-    $querya = 'SELECT entId FROM entertainers WHERE authId = ?';
+    $venueName = $_POST['venueName'];
+    
+    echo $venueName;
+    
+    
+    $querya = 'SELECT venueId FROM venues WHERE venueName = ?';
     $stmta =mysqli_prepare ($connection,$querya);
-    $stmta->bind_param('s', $authIdLocal);
+    $stmta->bind_param('s', $venueName);
     $stmta->execute();
-    $stmta->bind_result($chosenEntId);
+    $stmta->bind_result($chosenVenueId);
     $stmta->fetch();
     $stmta->close();
-/*      $sql2 = "SELECT entid
-            FROM entertainers
-            WHERE authid=?";
+    
+/*     $sql2 = "SELECT venueID
+            FROM venues
+            WHERE venueName=?";
     
     if ($stmt = $connection->prepare( $sql2)) {
         
-        $stmt->bind_param( "i", $authIdLocal);
+        $stmt->bind_param( "i", $venueName);
         
         //execute statement
         $stmt->execute();
         
         //bind result variables
-        $stmt->bind_result( $chosenEntId);
+        $stmt->bind_result( $chosenVenueId);
         
         // fetch values
         $stmt->fetch();
@@ -79,17 +72,73 @@ if (! empty($_POST)) {
         //close statement
         $stmt->close();
         
-    }  */
+    } */
 
-    $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime) 
-VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
+//     echo $chosenVenueId;
+//     $sql = "DELETE FROM venues WHERE venueId=?";
     
-
+//     if ($stmt = $connection->prepare( $sql)) {
+        
+//         $stmt->bind_param( "i", $chosenVenueId);
+        
+//         //execute statement
+//         $stmt->execute();
+        
+//         //close statement
+//         $stmt->close();
+        
+//     }
+    $sql3 = "DELETE FROM bookedGigs WHERE venueId=$chosenVenueId";
+    if (mysqli_query($connection, $sql3)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql3 . "<br>" . mysqli_error($connection);
+    }
+    $sql4 = "DELETE FROM bookedVenues WHERE venueId=$chosenVenueId";
+    if (mysqli_query($connection, $sql4)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql4 . "<br>" . mysqli_error($connection);
+    }
+    $sql5 = "DELETE FROM venueBookingNotifications WHERE venueId=$chosenVenueId";
+    if (mysqli_query($connection, $sql5)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql5 . "<br>" . mysqli_error($connection);
+    }
+    $sql6 = "DELETE FROM venueAvailability WHERE venueId=$chosenVenueId";
+    if (mysqli_query($connection, $sql6)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql6 . "<br>" . mysqli_error($connection);
+    }
+    $sql7 = "DELETE FROM venuePendingBookings WHERE venueId=$chosenVenueId";
+    if (mysqli_query($connection, $sql7)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql7 . "<br>" . mysqli_error($connection);
+    }
+    $sql8 = "DELETE FROM venueVideos WHERE venueId=$chosenVenueId";
+    if (mysqli_query($connection, $sql8)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql8 . "<br>" . mysqli_error($connection);
+    }
+    $sql = "DELETE FROM venues WHERE venueId=$chosenVenueId";
+    
+    
     if (mysqli_query($connection, $sql)) {
         echo "New availability created successfully";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
+    
+
+//     if (mysqli_query($connection, $sql)) {
+//         echo "Venue deleted";
+//     } else {
+//         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+//     }
     
     //mysqli_close($connection);
     
@@ -97,9 +146,9 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 //             FROM venues 
 //             WHERE venueName=$venueName";
 //     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
-
     
-   /*  $sql3="SELECT availId
+    
+    /* $sql3="SELECT availId
             FROM availability
             WHERE availStartDate=? AND availEndDate=? AND availStartTime=? AND availEndTime=?";
     
@@ -120,26 +169,25 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
         $stmt->close();
         
     }
-    $sql4="INSERT INTO resourceAvailability(availId, entId)
-            VALUES ($availId, $chosenEntId)";
+    $sql4="INSERT INTO resourceAvailability(availId, venueId)
+            VALUES ($availId, $chosenVenueId)";
     
     $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
     ?>
-     <script type="text/javascript"> 
-     //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
-    window.location.href = 'entertainerMainPortfolio.php';
-    </script>
+<!--     <script type="text/javascript"> -->
+<!--      window.location.href = 'http://localhost:7331/Wishbone/templates/venueHostVenueList.php';
+    </script>--> 
 <?php
 
     
-}
-
+} 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Add Entertainer Availability</title>
+    <title>Add Availability</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -176,7 +224,6 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
         <link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
     
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
-
 <script>
     $(document).ready(function(){
       var date_input=$('input[name="date"]'); //our date input has the name "date"
@@ -267,8 +314,8 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                 </div>
                             </div>
                         </div>
-                        <a href="entertainerDashboardHome.php">
-                            <h4>WISHBONE</h4>
+                        <a href="venueDashboardHome.php">
+                            <h4 style="color: white;">WISHBONE</h4>
                         </a>
                         <a class="mobile-options waves-effect waves-light">
                             <i class="ti-more"></i>
@@ -341,7 +388,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="user-profile.html">
+                                        <a href="venueHostProfileView.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
@@ -372,7 +419,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
+                                            <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -429,14 +476,14 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class=" ">
-                                            <a href="entertainerUpcomingEvents.php" class="waves-effect waves-dark">
+                                            <a href="venueHostUpcomingEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Upcoming</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
                                         <li class=" ">
-                                            <a href="entertainerPastEvents.php" class="waves-effect waves-dark">
+                                            <a href="venueHostPastEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Past</span>
                                                 <span class="pcoded-mcaret"></span>
@@ -445,12 +492,19 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
+                                    <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Portfolio</span>
+                                        <span class="pcoded-mtext">Book Entertainers</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>                                                                
+                                </li> 
+                                <li class="">
+                                    <a href="venueHostVenueList.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fas fa-building"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">My Venues</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>                                                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">
@@ -481,7 +535,6 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
-
 				<div class="container">
 					<div class="row">
 						<div
@@ -492,43 +545,30 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 									<div class="u-pull-half text-center">
 										<img
 											class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3"
-											style ="border-radius: 50%;"
+											width="200" height="auto"
 											src="../assets/img-temp/200x200/img1.jpg"
 											alt="Image Description">
 									</div>
 								</div>
 							</div>
-							<form action="addEntertainerAvailability-New.php" method="POST">
+							<form action="deleteVenue.php" method="POST">
 
-								  
 								<div class="form-group">
 									<!-- Event Name -->
-									<label for="startDate" class="control-label title2">Availability Start Date</label>
-									<input type="date" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="startDate"
-										name="startDate" placeholder="Enter the start date of the avilability">
+									<label for="venueName" class="control-label title2">Venue Name</label>
+										<select name="venueName">
+        <option selected="venueName">Choose a Venue</option>
+        <?php
+
+        foreach($venueDTO as $venue){
+        ?>
+        <option value="<?php echo strtolower($venue->getVenueName()); ?>"><?php echo $venue->getVenueName(); ?></option>
+        <?php
+        }
+        ?>
+    </select>
 								</div>
-								<div class="form-group">
-									<!-- Event Name -->
-									<label for="endDate" class="control-label title2">Availability End Date</label>
-									<input type="date" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="endDate"
-										name="endDate" placeholder="Enter the end date of the avilability">
-								</div>
-								<div class="form-group">
-									<!-- Event Name -->
-									<label for="startTime" class="control-label title2">Availability Start Time
-										</label> <input type="time" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="startTime"
-										name="startTime">
-								</div>
-								<div class="form-group">
-									<!-- Event Name -->
-									<label for="endTime" class="control-label title2">Availability End Time
-										</label> <input type="time" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="endTime"
-										name="endTime">
-								</div>
+
 
 								<!--
 										<div class="input-group">
@@ -539,12 +579,12 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 										</div>
 										for later -->
 
- 								<a href="entertainerAvailabilityList.php"> 
-								<button type="submit" class="btn-all" style="display: inline;">Add</button>
- 								</a> 
+<!-- 								<a href="venueHostVenueList.php"> -->
+								<button type="submit" class="btn-all" style="display: inline;">Delete</button>
+<!-- 								</a> -->
 
 
-								<a href="entertainerAvailabilityList.php"><button class="btn-all"
+								<a href="venueHostVenueList.php"><button class="btn-all"
 										type="button" style="display: inline;">Cancel</button></a>
 
 								<!-- Replace buttons with below code -->
@@ -561,7 +601,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 						</div>
 					</div>
 				</div>
-                                             </div>
+                                    </div>
                                     <!-- Page-body end -->
                                 </div>
                                 <div id="styleSelector"> </div>
