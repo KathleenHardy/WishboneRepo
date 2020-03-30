@@ -128,7 +128,7 @@ mysqli_close($connection);
 								<div class="post-02__department">DATE: '. $bookedgig->getEventDate() .'</div>
 								<div class="post-02__content">
 								<div class="post-02__department">VENUE: '. $bookedgig->getVenueName() .'</div>
-								<div class="post-02__department">ENTERTAINER NAME '. $bookedgig->getFirstName()." ".$bookedgig->getLastName()  .'</div>
+								<div class="post-02__department">ENTERTAINER NAME '. $bookedgig->getGigsName()  .'</div>
 											<div class="post-02__description">DESCRIPTION: '. $bookedgig->getEventDescription() .'</div>
 								</div>
 								<a data-toggle="modal" href="#eventDetailsModal" href="#!"><button type="button">View Details</button></a>

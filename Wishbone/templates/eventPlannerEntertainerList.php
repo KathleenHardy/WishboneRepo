@@ -101,7 +101,7 @@ if ($stmt1 = $connection->prepare( $query1)) {
 					<div class="row">
 					
 					<?php
-					   foreach( $entertainersDT0 as $entertainers) {
+					   foreach( $entertainersDTO as $entertainers) {
     					    print
     					    '
                                 <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 "

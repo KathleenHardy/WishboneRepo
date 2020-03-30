@@ -134,7 +134,7 @@ $hasError = false;
 $errorMessages = Array();
 
 //cehcks if value is set after button clic or not
-if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eventDescription"]))   
+if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eventDescription"]) || isset($_POST["eventplanner_email"]))   
 {
     require_once ("../config.php");
 
@@ -157,19 +157,27 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
     
   
         if (! $hasError) {
-            //get logged in auth id
-            $authId =  $_SESSION['authId'];
-            echo $authId;
-            //fetch eventPlannerId based on authId
-            $querya = 'SELECT eventPlannerId FROM eventPlanners WHERE authid = ?';
+        
+			echo $_POST["eventplanner_email"];
+			$eventPlannerEmail = $_POST["eventplanner_email"];
+			
+			$querya = 'SELECT authid FROM authentication WHERE email = ?';
             $stmta =mysqli_prepare ($connection,$querya);
-            $stmta->bind_param('s', $authId);
+            $stmta->bind_param('s', $eventPlannerEmail);
             $stmta->execute();
-            $stmta->bind_result($eventplannerID);
+            $stmta->bind_result($eventPlannerAuthId);
             $stmta->fetch();
             $stmta->close();
 
-			
+
+			$querya = 'SELECT eventPlannerId FROM eventplanners WHERE authid = ?';
+            $stmta =mysqli_prepare ($connection,$querya);
+            $stmta->bind_param('s', $eventPlannerAuthId);
+            $stmta->execute();
+            $stmta->bind_result($epID);
+            $stmta->fetch();
+            $stmta->close();
+
 
             //fetch venueOwnerId from vanues based on venueId
             $venue_id = $_POST["venueSelection"];
@@ -180,7 +188,16 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             $stmta->bind_result($venueOwnerId);
             $stmta->fetch();
             $stmta->close();
-            
+			
+			$querya = 'SELECT email FROM authentication WHERE authid = (select authid from entertainers where entid = ?)';
+            $stmta =mysqli_prepare ($connection,$querya);
+            $stmta->bind_param('s',$_SESSION['entid']);
+            $stmta->execute();
+            $stmta->bind_result($entertainerEmail);
+            $stmta->fetch();
+            $stmta->close();
+
+
 			$resAvailId = '1';
             
             //get selected gig id
@@ -194,19 +211,55 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             
             //get event description
             $event_description = $_POST["eventDescription"];
-            
+			
+			
             //query to insrt into bookedgigs
-            $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,resAvailId,event_name,event_date,event_description) 
-values(".$_SESSION['entid'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$venue_id.",".$resAvailId.",'".$event_name."','".$event_date."','".$event_description."');";
+            $query = "insert into bookingrequests(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
+values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."');";
             echo $query;
            //if success then show success msg else show error msg
-           if( mysqli_query($connection,$query) === TRUE)
+		   $conn =   mysqli_query($connection,$query);
+		   if($conn  === TRUE)
            {
-            
-               
+            $last_id = mysqli_insert_id($connection);
+    
+         //   echo '<script>document.write(shortUrl);</script>';
+               // the message
+              $url = $_SERVER['REQUEST_URI'];
+              $shortUrl = substr($url,0, strrpos($url, '/'));
+              $server = "http://localhost";
+               $htmlContent = ' 
+    <html> 
+    <head> 
+        <title>Welcome to WishBone</title> 
+    </head> 
+    <body> 
+        <h1>Thanks you for joining with us!</h1> 
+        <table cellspacing="0" style="border: 2px dashed #FB4314; width: 100%;"> 
+            <tr> 
+                <th>WishBone 
+            </tr> 
+            <tr style="background-color: #e0e0e0;"> 
+                <th>You got a new Booking Request</td> 
+            </tr> 
+            <tr> 
+             
+                <th>Website:</th><td><a href="'.$server.$shortUrl .'/entertainerNotificationDetails.php?id='.$last_id.'">Click here to Review Booking Request</a></td> 
+            </tr> 
+        </table> 
+    </body> 
+    </html>'; 
+
+
+			// Set content-type header for sending HTML email 
+			$headers = "MIME-Version: 1.0" . "\r\n"; 
+			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n"; 
+ 
+                // send email
+                mail($entertainerEmail,"Wishbone", $htmlContent,$headers);
               ?> <script type="text/javascript">
-               window.location.href = 'eventPlannerEventConfirmation.php';
-               </script>
+              window.location.href = 'eventPlannerEventConfirmation.php';
+              </script>
                <?php
                
                /*
@@ -218,7 +271,6 @@ values(".$_SESSION['entid'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
            }
             
          }
-    
     //testing.test@1.com
     
 }
@@ -292,8 +344,8 @@ values(".$_SESSION['entid'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 											?>
 											
 											</select>
-											<label for="eventName" class="control-label title2">Or Use Your Own</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="valueName" name="custom_venue" placeholder="Enter your own venue">
+											<label for="eventName" class="control-label title2">Event Planner Email Address</label>
+											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventplanner_email" name="eventplanner_email" placeholder="Enter Event Planner Email">
 											
 										</div>
 										

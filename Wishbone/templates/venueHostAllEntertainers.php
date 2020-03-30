@@ -40,6 +40,60 @@
 </head>
 
 <body>
+
+<?php 
+session_start();
+
+include ('../config.php');
+include ('../dto/entertainer.php');
+include ("navigationheaderVenueHost.php"); 
+
+$entertainersDTO = array();
+
+$query2 = "SELECT * 
+		FROM entertainers;";
+		
+$result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+		
+if ($count >= 1) {
+		
+	while ($row = mysqli_fetch_array($result)) {
+	
+	    $entertainerObj = new Entertainer();
+	    
+	    $entertainerObj->setEntID($row['entid']);
+	    
+	    $entertainerObj->setFirstName($row['firstName']);
+	    
+	    $entertainerObj->setLastName( $row['lastName']);
+	    
+	    $entertainerObj->setRatePerHour( $row['ratePerHour']);
+	    
+	    $entertainerObj->setProfilePicture($row['profilePicture']);
+	    
+	    $entertainerObj->setHomePagePicture( $row['homePagePicture']);
+	    
+	    $entertainerObj->setAboutMe($row['aboutMe']);
+	    
+	    $entertainerObj->setOccupation( $row['aboutMe']) ;
+	    
+	    $entertainerObj->setWorkDescription($row['aboutMe']);
+	    
+	    $entertainersDTO[] = $entertainerObj;
+	}
+} else {
+			// $fmsg = "No venues for this user";
+}
+
+$_SESSION['myEntertainers'] = $entertainersDTO;
+		
+mysqli_close($connection);
+
+
+?>
+
     <!-- Pre-loader start -->
     <div class="theme-loader">
         <div class="loader-track">
@@ -352,85 +406,20 @@ Entertainers
 <div class="card-deck spacing1">
 <div class="row">
 
+                    <?php
+					   foreach( $entertainersDTO as $entertainer) {
+    					    print '  <div class="card text-center">
+                            <img class="card-img-top event-img-size" src="../assets/img/profile/'.$entertainer->getProfilePicture().'" alt="event img">
+                            <div class="card-body">
+                              <h5 class="card-title title2">'.$entertainer->getFirstName() . " " . $entertainer->getLastName() .'</h5>
+                              <p class="card-text">'.$entertainer->getAboutMe().'</p>
+                            <button type="button" style="display:inline;"><a href="venueHostEntertainerView.php?id='.$entertainer->getEntID().'">View More</a></button>
+                            <button type="button" style="display:inline;"><a href="venueHostBookEvent.php?id='.$entertainer->getEntID().'">Book Now</a></button>
+                            </div>
+                          </div>';
+    					}
+    				?>
 
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
-  
-  
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>  
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event1.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-          </div>
-  </div>
- </div> 
- <br/>
- <br/>
-<div class="row">
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event3.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-      </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Entertainer Name</h5>
-      <p class="card-text">Musician</p>
-	<button type="button" style="display:inline;"><a href="venueHostEntertainerView.php">View More</a></button>
-	<button type="button" style="display:inline;"><a href="venueHostBookEvent.php">Book Now</a></button>
-    </div>
-  </div>
  </div> 
 
 
