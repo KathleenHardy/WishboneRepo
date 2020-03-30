@@ -60,7 +60,6 @@ include ('../dto/bookedGigDetails.php');
 
 $authId=$_SESSION['authId'];
 
-
 $query0 = "SELECT entid
           FROM entertainers
           WHERE  authid = ?";
@@ -77,6 +76,7 @@ if ($stmt0 = $connection->prepare( $query0)) {
     
     // fetch values
     $stmt0->fetch();
+    $_SESSION['entid'] = $entid;
     
     //close statement
     $stmt0->close();    
@@ -140,6 +140,7 @@ if ($stmt2 = $connection->prepare( $query2)) {
         $bookedGig->setLastName( $lastName);
         $bookedGig->setEventName( $event_name);
         $bookedGig->setEmail( $email);
+        $bookedGig->setEventDescription( $event_description);
         
         $bookedGigDetailsDT0[] = $bookedGig;
        
@@ -191,11 +192,16 @@ if ($stmt3 = $connection->prepare( $query3)) {
     		myEvent.title = "<?= $availability->getAvailTitle() ?>";
     		myEvent.sponsor_name = "My availability";
     		myEvent.isDeletable = true;
+    		myEvent.url = "entertainerEventsCalenderDetail.php?id=<?= $availability->getAvailId()?>";
 
     		myEvent.start = new Date(
     	       <?=substr( $availability->getAvailStartDate(), 0, 4)?>, 
     	       <?=substr( $availability->getAvailStartDate(), 5, 2)-1?>, 
     	       <?=substr( $availability->getAvailStartDate(), 8, 2)?>);
+
+  	       myEvent.start.setHours( <?=substr( $availability->getAvailStartTime(), 0, 2)?>);
+  	       myEvent.start.setMinutes( <?=substr( $availability->getAvailStartTime(), 3, 2)?>);
+  	       myEvent.start.setSeconds( <?=substr( $availability->getAvailStartTime(), 6, 2)?>);
 
     		myEvent.end = new Date(
     	    	       <?=substr( $availability->getAvailEndDate(), 0, 4)?>, 
@@ -392,7 +398,6 @@ if ($stmt3 = $connection->prepare( $query3)) {
 							popupWidth = "200px";
 						}
 
-						if ( event.isDeletable) {
 							var detailText = 
     							'<div id="eventContent" class="eventPopup ">' + 
     							  '<div class="">' + 
@@ -402,27 +407,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
     							          '<h3 id="event_sponcername">'+event.sponsor_name+'</h3>' + 
     							          '<h3 id="event_heading">'+event.title+'</h3>' +
     							              '<ul>' + 
-    							               	'<li> <i class="fa fa-calendar"></i> Start: <span id="startDate">'+event.start+'</span> <span id="startTime">START TIME</span></li>' + 
-    							               	'<li> <i class=" fa fa-map-marker"></i> Location:  <span id="eventLocation">'+event.location+'</span></li>' + 
-    							               	'<li class="short_description"> <i class=" fa fa-file-text"></i> Description: <span id="eventSponsorDescription">'+event.short_description+'</span></li>' + 
-    							              '</ul>' + 
-    							              '<input class ="btn-all" style="display:inline;" type="submit" id="submit" name="submit" value="Delete" /> <br>' +							              
-    							            '</div><div class="clearfix">' + 
-    							            '</div>'+
-    							         '</div>'+
-    							     '</div>'+
-    							  '</div>';
-						} else {
-    						var detailText = 
-    							'<div id="eventContent" class="eventPopup ">' + 
-    							  '<div class="">' + 
-    							    '<div class="row row-centered pos">' + 
-    							      '<div class="col-lg-12 col-xs-12 col-centered">' + 
-    							        '<img src="../assets/images/user-bg.jpg" class="img-responsive event_image " alt=""  hegiht="140px">' +
-    							          '<h3 id="event_sponcername">'+event.sponsor_name+'</h3>' + 
-    							          '<h3 id="event_heading">'+event.title+'</h3>' +
-    							              '<ul>' + 
-    							               	'<li> <i class="fa fa-calendar"></i> Start: <span id="startDate">'+event.start+'</span> <span id="startTime">START TIME</span></li>' + 
+    							               	'<li> <i class="fa fa-calendar"></i> Start: <span id="startDate">'+event.start+'</span> <span id="startTime"> </span></li>' + 
     							               	'<li> <i class=" fa fa-map-marker"></i> Location:  <span id="eventLocation">'+event.location+'</span></li>' + 
     							               	'<li class="short_description"> <i class=" fa fa-file-text"></i> Description: <span id="eventSponsorDescription">'+event.short_description+'</span></li>' + 
     							              '</ul>' + 						              
@@ -431,7 +416,6 @@ if ($stmt3 = $connection->prepare( $query3)) {
     							         '</div>'+
     							     '</div>'+
     							  '</div>';
-						}
 						
 						var eventDetail = '<div class="showEventDetail '+calendar_custom_class+'_page'+'">'+detailText+'</div>';
 						

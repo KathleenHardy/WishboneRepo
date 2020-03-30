@@ -1,60 +1,124 @@
 <?php
 session_start();
+
+include ('../config.php');
 $authId = $_SESSION['authId'];
+$entid = $_SESSION['entertainerid'];
+require_once ('../dto/gig.php');
 
-/*
- if(isset($_FILES['fileToUpload'])) {
- 
- //'../assets/img-temp/gigs/'
- $target_dir = "../assets/img-temp/portfolio/";
- $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
- $uploadOk = 1;
- $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
- // Check if image file is a actual image or fake image
- if(isset($_POST["submit"])) {
- $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
- if($check !== false) {
- echo "File is an image - " . $check["mime"] . ".";
- $uploadOk = 1;
- } else {
- echo "File is not an image.";
- $uploadOk = 0;
- }
- }
- // Check if file already exists
- 
- if (file_exists($target_file)) {
- echo "Sorry, file already exists.";
- $uploadOk = 0;
- }
- 
- 
- // Check file size
- if ($_FILES["fileToUpload"]["size"] > 500000) {
- echo "Sorry, your file is too large.";
- $uploadOk = 0;
- }
- 
- // Allow certain file formats
- if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
- && $imageFileType != "gif" ) {
- echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
- $uploadOk = 0;
- }
- // Check if $uploadOk is set to 0 by an error
- if ($uploadOk == 0) {
- echo "Sorry, your file was not uploaded.";
- // if everything is ok, try to upload file
- } else {
- if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
- echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded to ". $target_file;
- } else {
- echo "Sorry, there was an error uploading your file.";
- }
- }
- }
- */
 
+$query1 = "SELECT gigsid, gigsName, gigsCategory, gigsLabel, gigsArtType, gigsDetails, notes
+           FROM gigs
+           WHERE  entid = ?";
+
+if ($stmt1 = $connection->prepare( $query1)) {
+    
+    $stmt1->bind_param( "i", $entid);
+    
+    //execute statement
+    $stmt1->execute();
+    
+    //bind result variables
+    $stmt1->bind_result($gigsid, $gigsName, $gigsCategory, $gigsLabel,  $gigsArtType, $gigsDetails, $gigsNotes);
+    
+    // fetch values
+    while( $stmt1->fetch()) {
+        $myGigs[] = new Gig( $gigsid, $gigsName, $gigsCategory, $gigsLabel, $gigsArtType, $gigsDetails, $gigsNotes);
+    }
+    
+    //close statement
+    $stmt1->close();
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
+    
+    if (isset($_POST['update']) && $_POST['str'] != 0) {
+        
+        $query2 = "UPDATE gigs
+                      SET gigsName = ?, gigsCategory = ?, gigsLabel = ?, gigsArtType = ?, gigsDetails = ?, notes = ?
+                      WHERE  entid = ? and gigsid = ?";
+        
+        if ($stmt2 = $connection->prepare( $query2)) {
+    
+            $stmt2->bind_param( "ssssssii", $gigsName_, $gigsCategory_, $gigsLabel_, $gigsArtType_, $gigsDetails_, $gigsNotes_, $entid_, $gigsid_);
+            
+            //Set params
+            $gigsName_ = $_POST['gigs_name'];
+            $gigsCategory_ = $_POST['gigs_category'];
+            $gigsLabel_ = $_POST['gigs_label'];
+            $gigsArtType_ = $_POST['gigs_artType'];
+            $gigsDetails_ = $_POST['gigs_details'];
+            $gigsNotes_ = $_POST['gigs_notes'];
+            $entid_ = $entid;
+            $gigsid_ = $_POST['str'];
+            
+            
+            //execute statement
+            $status = $stmt2->execute();
+            
+            if ($status === false) {
+                trigger_error($stmt2->error, E_USER_ERROR);
+            } else {
+                //echo("<script>location.href = 'entertainerMainPortfolio.php?msg=$msg';</script>");
+               // header("Location: entertainerMainPortfolio.php");
+            }
+            
+            
+            //update picture
+            
+            
+            //close statement
+            $stmt2->close();
+        }
+      
+    } else if( isset($_POST['remove']) && $_POST['str'] != 0 ) {
+        $query4 = "DELETE FROM gigsimages
+                   WHERE  gigsid = ?";
+        
+        if ($stmt4 = $connection->prepare( $query4)) {
+            
+            $stmt4->bind_param( "i", $gigsid_);
+            
+            //Set params
+            $gigsid_ = $_POST['str'];
+            
+            //execute statement
+            $status = $stmt4->execute();
+
+            //close statement
+            $stmt4->close();
+        }
+        
+        
+        $query5 = "DELETE FROM gigs
+                   WHERE  entid = ? and gigsid = ?";
+        
+        if ($stmt5 = $connection->prepare( $query5)) {
+            
+            $stmt5->bind_param( "ii", $entid_, $gigsid_);
+            
+            //Set params
+            $entid_ = $entid;
+            $gigsid_ = $_POST['str'];
+            
+            //execute statement
+            $status = $stmt5->execute();
+            
+            //close statement
+            $stmt5->close();
+        }
+        
+    }
+}
+
+
+
+
+?>
+
+<?php
+/**
 if(isset($_FILES['fileToUpload'])){
     $errors= array();
     $file_name = $_FILES['fileToUpload']['name'];
@@ -65,16 +129,6 @@ if(isset($_FILES['fileToUpload'])){
     //$file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
     
     $file_path = "../assets/img-temp/portfolio/";
-    
-    /*
-     $file_ext=strtolower(end(explode('.', $file_name)));
-     
-     $extensions= array("jpeg","jpg","png");
-     
-     if(in_array($file_ext,$extensions)=== false){
-     $errors[]="extension not allowed, please choose a JPEG or PNG file.";
-     }
-     */
     
     if($file_size > 2097152){
         $errors[]='File size must be excatly 2 MB';
@@ -176,8 +230,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
 }
 
-
+*/
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -218,6 +273,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Style.css -->
     		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    
+    <script>
+            $(document).ready(function() {
+
+            $('#gigs_selection').change(function(){
+                //Selected value
+                var inputValue = $(this).val();
+
+                $('#str').val( inputValue);
+
+                
+                <?php foreach( $myGigs as $gig) { ?>
+                
+                  if ( inputValue == <?= $gig->getGigsID() ?>) {
+                	  document.getElementById("gigs_notes_id").value = "<?= $gig->getGigsNotes() ?>";
+                	  document.getElementById("gigs_details_id").value = "<?= $gig->getGigsDetails() ?>";
+                	  document.getElementById("gig_name_id").value = "<?= $gig->getGigsName() ?>";
+                	  
+                	  document.getElementById("gigs_category_id").value = "<?= $gig->getGigsCategory() ?>";
+                	  document.getElementById("gig_label_id").value = "<?= $gig->getGigsLabel() ?>";
+                	  document.getElementById("gigs_artType_id").value = "<?= $gig->getGigsArtType() ?>";
+                  }
+
+    		    <?php } ?>
+
+                
+            });
+        });
+        </script>
+        
+        
 </head>
 
 <body>
@@ -530,11 +617,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="gigs_selection" class="control-label title2">Select Gig to Update/Delete</label>
 											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigs_selection" name="gigs_selection">
-												<option value="Event">Gig1</option>
-												<option value="Music">Gig2</option>
-												<option value="Concert">Gig3</option>
-											</select>					
+												<option value="none" selected disabled hidden> Select a Gig </option>
+												<?php 
+												foreach( $myGigs as $gigs) {
+												    print
+												    '
+                                                        <option value="' . $gigs->getGigsID() . '">' . $gigs->getGigsName() . '</option>
+                                                    ';
+												}
+                                                ?>
+											</select>
+											<input type="hidden" id="str" name="str" value="0" />
 										</div>
+										
+										
 										
 							<br/>
 								<h3 class="main-title">Fill in Details to Update</h3>
@@ -580,12 +676,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="gigs_details-id" class="title2">Gigs Details</label>
-											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="gigs_details-id" name="gigs_details" placeholder ="Enter details"></textarea>
+											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="gigs_details_id" name="gigs_details" placeholder ="Enter details"></textarea>
 										</div>
 										
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="gigs_notes-id" class="title2">Notes</label>
-											<textarea class="form-control" rows="5" style="border: 2px solid #faa828;" id="gigs_notes-id" name="gigs_notes" placeholder="Add notes"></textarea>
+											<textarea class="form-control" rows="5" style="border: 2px solid #faa828;" id="gigs_notes_id" name="gigs_notes" placeholder="Add notes"></textarea>
 										</div>
 										
 										<div class="form-group">
@@ -627,8 +723,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										
 										<!-- Replace buttons with below code -->
 										<div class="form-group" style="display:inline;"> 
-											<a href="entertainerMainPortfolio.php"><button type="submit" name="submit" class="btn-all">Update</button></a>
-											<a href="entertainerMainPortfolio.php"><button type="submit" name="submit" class="btn-all">Remove</button></a>
+											<a href="entertainerMainPortfolio.php"><button type="submit" name="update" class="btn-all">Update</button></a>
+											<a href="entertainerMainPortfolio.php"><button type="submit" name="remove" class="btn-all">Remove</button></a>
 											<a href="entertainerMainPortfolio.php"><button type="button" class="btn-all">Cancel</button></a>
 
 										</div> 										 
