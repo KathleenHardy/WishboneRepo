@@ -1,12 +1,14 @@
 <?php
-
-//require_once ('../config.php');
+Session_start();
+print_r($_SESSION);
+require_once ('../config.php');
 
 //include "navigationheaderVenueHost.php";
 //require_once ('../dto/venue.php');
 //session_start();
 //$authIdLocal=$_SESSION['authId'];
-$authIdLocal=$authId;
+$authIdLocal = $_SESSION['authId'];
+//$authIdLocal=$authId;
 
 ?>
 <?php
@@ -49,28 +51,18 @@ if (! empty($_POST)) {
     $endDate = $_POST['endDate'];
     $startTime = $_POST['startTime'];
     $endTime = $_POST['endTime'];
-    
 
-    $sql = "INSERT INTO availability(availStartDate, availEndDate, availStartTime, availEndTime) 
-VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
-    
-
-    if (mysqli_query($connection, $sql)) {
-        echo "New availability created successfully";
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
-    }
-    
-    //mysqli_close($connection);
-    
-//     $sql2 = "SELECT venueID 
-//             FROM venues 
-//             WHERE venueName=$venueName";
-//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
-    $sql2 = "SELECT entid
+    $querya = 'SELECT entId FROM entertainers WHERE authId = ?';
+    $stmta =mysqli_prepare ($connection,$querya);
+    $stmta->bind_param('s', $authIdLocal);
+    $stmta->execute();
+    $stmta->bind_result($chosenEntId);
+    $stmta->fetch();
+    $stmta->close();
+/*      $sql2 = "SELECT entid
             FROM entertainers
             WHERE authid=?";
-
+    
     if ($stmt = $connection->prepare( $sql2)) {
         
         $stmt->bind_param( "i", $authIdLocal);
@@ -87,9 +79,27 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
         //close statement
         $stmt->close();
         
+    }  */
+
+    $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime) 
+VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
+    
+
+    if (mysqli_query($connection, $sql)) {
+        echo "New availability created successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
     
-    $sql3="SELECT availId
+    //mysqli_close($connection);
+    
+//     $sql2 = "SELECT venueID 
+//             FROM venues 
+//             WHERE venueName=$venueName";
+//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
+
+    
+   /*  $sql3="SELECT availId
             FROM availability
             WHERE availStartDate=? AND availEndDate=? AND availStartTime=? AND availEndTime=?";
     
@@ -113,11 +123,11 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
     $sql4="INSERT INTO resourceAvailability(availId, entId)
             VALUES ($availId, $chosenEntId)";
     
-    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection));
+    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
     ?>
-    <script type="text/javascript">
-    //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
-    window.location.href = 'entertainerAvailabilityList.php';
+     <script type="text/javascript"> 
+     //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
+    window.location.href = 'entertainerMainPortfolio.php';
     </script>
 <?php
 
@@ -488,7 +498,7 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
 									</div>
 								</div>
 							</div>
-							<form action="addEntertainerAvailability.php" method="POST">
+							<form action="addEntertainerAvailability-New.php" method="POST">
 
 								  
 								<div class="form-group">
@@ -529,10 +539,12 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
 										</div>
 										for later -->
 
-								<a href="entertainerAvailabilityList.php"><button type="submit" class="btn-all" style="display: inline;">Add</button></a>
+ 								<a href="entertainerAvailabilityList.php"> 
+								<button type="submit" class="btn-all" style="display: inline;">Add</button>
+ 								</a> 
 
 
-								<a href="entertainerEventList.php"><button class="btn-all"
+								<a href="entertainerAvailabilityList.php"><button class="btn-all"
 										type="button" style="display: inline;">Cancel</button></a>
 
 								<!-- Replace buttons with below code -->

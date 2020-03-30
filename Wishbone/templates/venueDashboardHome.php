@@ -41,7 +41,7 @@
 <?php
 session_start();
 include ('../config.php');
-include "navigationheaderVenueHost.php";
+
 
 $authId = $_SESSION['authId'];
 
