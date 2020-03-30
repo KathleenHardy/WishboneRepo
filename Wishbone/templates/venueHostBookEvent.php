@@ -55,7 +55,6 @@ include ('../dto/gig.php');
 include ('../dto/eventPlanner.php');
 
 include ('../dao/authenticationDAO.php');
-include ("navigationheaderVenueHost.php");
 require_once ("../config.php");
 
 //get selected entainer id
@@ -237,7 +236,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
                 $htmlContent = '
     <html>
     <head>
-        <title>Welcome to WishBone</title>
+        <title>Welcome to Wishbone</title>
     </head>
     <body>
         <h1>Thanks you for joining with us!</h1>
@@ -437,7 +436,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="../logout.php">
+                                        <a href="index.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -465,7 +464,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
                                         <li class="more-details">
                                             <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="index.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -482,7 +481,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
                             <div class="pcoded-navigation-label">NAVIGATION</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="active">
-                                    <a href="entertainerDashboardHome.php" class="waves-effect waves-dark">
+                                    <a href="venueDashboardHome.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Dashboard</span>
                                         <span class="pcoded-mcaret"></span>
@@ -567,7 +566,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="../logout.php" class="waves-effect waves-dark">
+                                    <a href="index.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>
@@ -599,16 +598,16 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventName" class="control-label title2">Event Name</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventName" name="eventName" placeholder="Enter a name for your event">
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventName" name="eventName" placeholder="Enter a name for your event">
 										</div>	
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventDate" class="control-label title2">Event Date/Time</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
 										</div>	
 									
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="gigSelection" class="control-label title2">Select Your Gig (based on entertainer)</label>
-											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="gigSelection" name="gigSelection">
+											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigSelection" name="gigSelection">
 											<?php
 
 											foreach($gigsDTO as $gig){
@@ -621,7 +620,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 										</div>		
 										<div class="form-group" style="padding: 20px;"> <!-- Event Planner -->
 										<label for="eventplannerSelection" class="control-label title2">Select Your Event Planner</label>
-											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="eventplannerSelection" name="eventplannerSelection">
+											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="eventplannerSelection" name="eventplannerSelection">
 											<?php
 
 												foreach($eventPlannerDTO as $eventplanner){
@@ -635,7 +634,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 										</div>									
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="venueSelection" class="control-label title2">Select Your Venue</label>
-											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="venueSelection" name="venueSelection">
+											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="venueSelection" name="venueSelection">
 											<?php
 
 											foreach($venuesDTO as $venue){
@@ -648,7 +647,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 										</div>
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="eventDescription" class="title2">Event Description</label>
-											<textarea class="form-control" style="border: 3px solid #fac668;" rows="5" id="eventDescription" name="eventDescription" placeholder ="Enter details"></textarea>
+											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="eventDescription" name="eventDescription" placeholder ="Enter details"></textarea>
 										</div>
 												<div class="form-group">
 				<label for ="eventpic" class="title2">Upload Your Event Image</label>

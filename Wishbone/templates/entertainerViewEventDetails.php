@@ -224,7 +224,7 @@ if ($stmt = $connection->prepare( $query)) {
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="../logout.php">
+                                        <a href="index.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -252,7 +252,7 @@ if ($stmt = $connection->prepare( $query)) {
                                         <li class="more-details">
                                             <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="index.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -323,6 +323,13 @@ if ($stmt = $connection->prepare( $query)) {
                                     </ul>
                                 </li>
                                 <li class="">
+                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Calendar</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>                                
+                                <li class="">
                                     <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Portfolio</span>
@@ -340,7 +347,7 @@ if ($stmt = $connection->prepare( $query)) {
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="../logout.php" class="waves-effect waves-dark">
+                                    <a href="index.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>

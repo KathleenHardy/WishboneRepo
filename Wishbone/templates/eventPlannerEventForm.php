@@ -24,7 +24,6 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css" />
 
-
 <!-- Fonts-->
 <link rel="stylesheet" type="text/css"
 	href="../assets/fonts/fontawesome/font-awesome.min.css">
@@ -41,7 +40,14 @@
 <!-- App & fonts-->
 <link rel="stylesheet" type="text/css"
 	href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i&amp;amp;subset=latin-ext">
-<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
+		    				<link rel="stylesheet" type="text/css" href="../assets/css/styles.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/custom.css" /> 
+		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/styleEventPlanner.css" />
+				<link rel="stylesheet" type="text/css" href="..assets/css2/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="..assets/css2/demo.css" />
+		<link rel="stylesheet" type="text/css" href="..assets/css2/component.css" />
+		
 <!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<![endif]-->
@@ -295,22 +301,22 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 
 							<!-- title-01 -->
 							<div class="title-01 title-01__style-04">
-								<h2 class="title-01__title">PLAN YOUR EVENT</h2>
+								<h1 class="main-title">PLAN YOUR EVENT</h1>
 							</div>
 							<form  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventName" class="control-label title2">Event Name</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventName" name="eventName" placeholder="Enter a name for your event">
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventName" name="eventName" placeholder="Enter a name for your event">
 										</div>	 
 										<div class="form-group"> <!-- Event Name -->   
 											<label for="eventDate" class="control-label title2">Event Date/Time</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
 										</div>	
 									
 										<!-- <div class="form-group" style="padding: 20px;"> 
 											<label for="entertainerSelection" class="control-label title2">Select Your Entertainer</label>
-											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="entertainerSelection" name="entertainerSelection">
+											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="entertainerSelection" name="entertainerSelection">
 												<option value="1">Jack</option>
 												<option value="2">Melody</option>
 												<option value="3">Moonstruck</option>
@@ -320,12 +326,12 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 										</div> -->
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="gigSelection" class="control-label title2">Select Your Gig (based on entertainer)</label>
-											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="gigSelection" name="gigSelection">
+											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigSelection" name="gigSelection">
 											<?php
 
 											foreach($gigsDTO as $gig){
 											?>
-											<option value="<?php echo $gig->getGigsID() ?>"><?php echo $gig->getGigsName(); ?></option>
+											<option value="<?php echo $gig->getGigsID() ?>" style = "background-color:#f8f7eb; "><?php echo $gig->getGigsName(); ?></option>
 											<?php
 											}
 											?>
@@ -333,39 +339,35 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 										</div>										
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="venueSelection" class="control-label title2">Select Your Venue</label>
-											<select class="form-control" style="border-bottom: 3px solid #fac668;" id="venueSelection" name="venueSelection">
+											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="venueSelection" name="venueSelection">
 											<?php
 
 											foreach($venuesDTO as $venue){
 											?>
-											<option value="<?php echo $venue->getVenueID() ?>"><?php echo $venue->getVenueName(); ?></option>
+											<option value="<?php echo $venue->getVenueID() ?>" style = "background-color:#f8f7eb; "><?php echo $venue->getVenueName(); ?></option>
 											<?php
 											}
 											?>
 											
 											</select>
+										</div>
+										<div class="form-group">
 											<label for="eventName" class="control-label title2">Event Planner Email Address</label>
-											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="eventplanner_email" name="eventplanner_email" placeholder="Enter Event Planner Email">
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventplanner_email" name="eventplanner_email" placeholder="Enter Event Planner Email">
 											
 										</div>
 										
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="eventDescription" class="title2">Event Description</label>
-											<textarea class="form-control" style="border: 3px solid #fac668;" rows="5" id="eventDescription" name="eventDescription" placeholder ="Enter details"></textarea>
+											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="eventDescription" name="eventDescription" placeholder ="Enter details"></textarea>
 										</div>
-										<div class="form-group">
-										<label for="gigPhoto" class="title2">Upload Event Image</label>
-                                        <div class="input-group">
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-                                          </div>
-                                          <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="gigPhoto"
-                                              aria-describedby="inputGroupFileAddon01">
-                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                          </div>
-                                        </div>
-                                        </div>
+<div class="form-group">
+				<label for ="gigimage" class="title2">Upload Your Gig Image</label>
+					<input type="file" name="file-1[]" id="gigimage" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
+					<label for="gigimage"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose image&hellip;</span></label>
+										
+										</div>
+
 										
 										<!--
 										<div class="input-group">
@@ -380,7 +382,7 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 										 
 										
 										 
-										<a href="eventPlannerEventList.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
+										<a href="entertainer.php"><button class="btn-all" type ="button" style="display:inline;">Cancel</button></a>
 										
 										<!-- Replace buttons with below code -->
 										<!--<div class="form-group" style="display:inline;"> 
@@ -428,6 +430,9 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 		src="../assets/vendors/smoothscroll/SmoothScroll.min.js"></script>
 	<!-- App-->
 	<script type="text/javascript" src="../assets/js/main.js"></script>
+	
+		<script src="../assets/js-other/custom-file-input.js"></script>
+	
 	<?php include "navigationHeadInclude2.php" ?>
 </body>
 </html>

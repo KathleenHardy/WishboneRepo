@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Upcoming Events</title>
+    <title>Calendar</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -658,7 +658,7 @@ function formatDate(string $date) {
 		/* margin-top: 40px; */
 		text-align: center;
 		font-size: 14px;
-		font-family: "Helvetica Nueue",Arial,Verdana,sans-serif;
+		font-family: 'Averta';
 		background-color: #DDDDDD;
 		}
 
@@ -868,7 +868,7 @@ function formatDate(string $date) {
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="../logout.php">
+                                        <a href="index.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -896,7 +896,7 @@ function formatDate(string $date) {
                                         <li class="more-details">
                                             <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="index.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -1010,7 +1010,7 @@ function formatDate(string $date) {
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="../logout.php" class="waves-effect waves-dark">
+                                    <a href="index.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>

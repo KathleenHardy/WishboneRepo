@@ -19,7 +19,9 @@
 									</li>
 								</ul>
 							</li>
-							
+							<li>
+								<a href="venues.php">Venues</a>
+							</li>							
 							<li>
 								<a href="event.php">Events</a>
 							</li>
