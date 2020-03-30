@@ -97,7 +97,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>Past Events</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -293,7 +293,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="../logout.php">
+                                        <a href="index.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -321,7 +321,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                                         <li class="more-details">
                                             <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="index.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -416,7 +416,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="../logout.php" class="waves-effect waves-dark">
+                                    <a href="index.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>
@@ -441,9 +441,7 @@ Past Events
 
 </h1>
 
-
-<div class="card-deck spacing1">
-<div class="row">
+<div class="row spacing1">
      <?php
      
      if ( count($bookedGigDetailsDT0) >= 1) {
@@ -451,7 +449,7 @@ Past Events
              
              print
              '
-              <div class="card text-center">
+              <div class="card text-center" style="width: 500px; margin: 30px;">
               <!-- <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 card text-center"> -->
                 <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
                 <div class="card-body">
@@ -468,7 +466,7 @@ Past Events
      } else {
          print 
          '
-            <div class="card text-center">
+            <div class="card text-center" style="width: 500px; margin: 30px;">
                 <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img"> 
                 <div class="card-body">
                   <h5 class="card-title title2">No Event Found!!!</h5>
@@ -483,8 +481,7 @@ Past Events
      }
 	
     ?>
- </div> 
-</div>
+ </div>
 
 
 

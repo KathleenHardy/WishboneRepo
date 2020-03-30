@@ -20,7 +20,7 @@ class header
 				        <li><a href=\"myNetwork.php\">My Network</a></li>
 						<li><a href=\"profile.php\">My Profile</a>
 						<li><a href=\"search.php\">Search</a>
-						<li><a href=\"../logout.php\">Log out</a>
+						<li><a href=\"index.php\">Log out</a>
 					</ul>
 					<!-- consult-menu -->
                     <div class=\"navbar-toggle\">

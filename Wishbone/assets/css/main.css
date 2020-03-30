@@ -23,7 +23,29 @@
     font-style: normal;
 }
 
+.subtitle-extra {
+	font-family: 'Intro Script';
+	color: #36454f;
+	font-size: 20px;
+	padding: -8px;
+}
 
+.subtitle-extra2 {
+	font-family: 'Intro Script';
+	font-weight: bold;
+	color: #faa828;
+	font-size: 34px;
+}
+.subtitle-extra3 {
+    font-family: 'Intro Script';
+    color: #36454f;
+    font-size: 20px;
+}
+
+.text-description {
+	font-family: 'Averta';
+	color: #36454f;
+}
 /*------------------------------------------------------------------------
 # Consult Free HTML5 Template 1.0 - Nov 16, 2017
 # ------------------------------------------------------------------------
@@ -3171,11 +3193,13 @@ mark, .mark {
 /* 25. consult_textbox_01
 --------------------------------------------------------------------------------*/
 .textbox {
-	padding: 10px;
-	margin: 50px 0;
+	padding: 5px;
+	margin: 20px 0;
 	background-color: white;
 	text-align: center;
 	transition: all ease .3s;
+	width: 300px;
+	height: 300px;
 }
 
 .textbox:hover {
@@ -3187,7 +3211,7 @@ mark, .mark {
 }
 
 .textbox__body {
-	padding: 20px;
+	padding: 0px;
 }
 
 @media ( min-width : 992px) {
@@ -3198,12 +3222,19 @@ mark, .mark {
 
 .textbox__title {
 	font-size: 24px;
-	font-weight: 400;
-	margin-bottom: 25px;
+	font-weight: bold;
+	color: #faa828;
 }
 
+.textbox__title2 {
+	font-family: 'Intro Script';
+	   font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #faa828;
+}
 .textbox__description {
-	color: #c2c2c2;
+	color: #36454f;
 }
 
 .textbox__style-02 {
@@ -3246,6 +3277,14 @@ mark, .mark {
 	font-weight: 400;
 	margin-bottom: 5px;
 	font-size: 30px;
+}
+
+.title-Ottawa {
+    font-weight: 500px;
+    margin-bottom: 5px;
+    padding: 5px;
+    font-size: 50px;
+    color: #faa828;
 }
 
 @media ( min-width : 320px) {

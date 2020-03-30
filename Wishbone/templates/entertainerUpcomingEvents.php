@@ -292,7 +292,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="../logout.php">
+                                        <a href="index.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -440,7 +440,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="../logout.php" class="waves-effect waves-dark">
+                                    <a href="index.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>
@@ -466,8 +466,7 @@ Upcoming Events
 </h1>
 
 
-<div class="card-deck spacing1">
-<div class="row">
+<div class="spacing1 row">
      <?php
      
      if ( count($bookedGigDetailsDT0) >= 1) {
@@ -475,7 +474,7 @@ Upcoming Events
              
              print
              '
-              <div class="card text-center">
+              <div class="card text-center" style="width: 500px; margin: 30px;">
               <!-- <div class="col-sm-6 col-md-6 col-lg-6 col-xl-3 card text-center"> -->
                 <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
                 <div class="card-body">
@@ -493,7 +492,7 @@ Upcoming Events
      } else {
          print 
          '
-            <div class="card text-center">
+            <div class="card text-center" style="width: 500px; margin: 30px;">
                 <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img"> 
                 <div class="card-body">
                   <h5 class="card-title title2">No Event Found!!!</h5>
@@ -509,7 +508,7 @@ Upcoming Events
 	
     ?>
  </div> 
-</div>
+
 
                                     </div>
                                     <!-- Page-body end -->

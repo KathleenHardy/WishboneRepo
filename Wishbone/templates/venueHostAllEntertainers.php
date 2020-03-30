@@ -248,7 +248,7 @@ mysqli_close($connection);
                                     </li>
                                     <li class="waves-effect waves-light">
                                         <a href="auth-normal-sign-in.html">
-                                            <i class="../logout.php"></i> Logout
+                                            <i class="index.php"></i> Logout
                                         </a>
                                     </li>
                                 </ul>
@@ -275,7 +275,7 @@ mysqli_close($connection);
                                         <li class="more-details">
                                             <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="../logout.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="index.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -292,7 +292,7 @@ mysqli_close($connection);
                             <div class="pcoded-navigation-label">NAVIGATION</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="active">
-                                    <a href="entertainerDashboardHome.php" class="waves-effect waves-dark">
+                                    <a href="venueDashboardHome.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Dashboard</span>
                                         <span class="pcoded-mcaret"></span>
@@ -377,7 +377,7 @@ mysqli_close($connection);
                                     </a>
                                 </li>
                                 <li class="">
-                                    <a href="../logout.php" class="waves-effect waves-dark">
+                                    <a href="index.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-layout-sidebar-left"></i><b>FC</b></span>
                                         <span class="pcoded-mtext">Logout</span>
                                         <span class="pcoded-mcaret"></span>

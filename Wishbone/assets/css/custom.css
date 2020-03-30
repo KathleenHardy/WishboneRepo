@@ -29,12 +29,11 @@
 }
 
 .u-portfolio-controls a {
-  color: white;
+  color: #faa828;
 }
 
 .u-portfolio-controls a.active {
-  color: #fac668;
-  font-weight: bold;
+  color: #005BAD;
 }
 
 .u-portfolio__item {

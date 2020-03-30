@@ -7,6 +7,8 @@
 		<meta name="format-detection" content="telephone=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<!-- Fonts-->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 		<link rel="stylesheet" type="text/css" href="../assets/fonts/fontawesome/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="../assets/fonts/themify-icons/themify-icons.css">
 		<!-- Vendors-->
@@ -166,8 +168,10 @@ include ("navigationBeforeLogin.php");
 									<div class="textbox">
 										<div class="textbox__image"><a href="#"><img src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone1.jpg" alt=""/></a></div>
 										<div class="textbox__body">
-											<h2 class="textbox__title"><a href="#">Discover</a></h2>
-											<div class="textbox__description">Organize local talent on demand. Social icons will be respected through our rating system to offer the finest quality of work. Explore all desired services through our discover tab.</div>
+											<h2 class="textbox__title"><a href="#">DISCOVER</a></h2>
+											<h2 class="textbox__title2"><a href="#">the city</a></h2>
+											<i class="fa fa-heart" style = "font-size: 23px; color: #faa828;"></i>
+											<div class="textbox__description">Explore what your city has to offer! Exciting events, new entertainers and artists, and a variety of venues.</div>
 										</div>
 									</div><!-- End / textbox -->
 									
@@ -178,8 +182,10 @@ include ("navigationBeforeLogin.php");
 									<div class="textbox">
 										<div class="textbox__image"><a href="#"><img src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone2.jpg" alt=""/></a></div>
 										<div class="textbox__body">
-											<h2 class="textbox__title"><a href="#">Connect</a></h2>
-											<div class="textbox__description">Network through our interconnected system of rated portfolios. Collaborate, contact and gain inspiration from similar profiles; progressing towards building your own brand.</div>
+											<h2 class="textbox__title"><a href="#">CONNECT</a></h2>
+											<h2 class="textbox__title2"><a href="#">with talent</a></h2>	
+											<i class="fa fa-handshake-o" style = "font-size: 23px; color: #faa828;"></i>										
+											<div class="textbox__description">Learn all about local entertainers - see their gigs, their talents, and their brand.</div>
 										</div>
 									</div><!-- End / textbox -->
 									
@@ -190,8 +196,10 @@ include ("navigationBeforeLogin.php");
 									<div class="textbox">
 										<div class="textbox__image"><a href="#"><img src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone3.jpg" alt=""/></a></div>
 										<div class="textbox__body">
-											<h2 class="textbox__title"><a href="#">Book</a></h2>
-											<div class="textbox__description">Ensure that your services are given the gratitudes they deserve. Charge for your services and organize clientele to manage future transactions.</div>
+											<h2 class="textbox__title"><a href="#">BOOK</a></h2>
+											<h2 class="textbox__title2"><a href="#">your entertainment</a></h2>
+											<i class="fa fa-check-circle-o" style = "font-size: 23px; color: #faa828;"></i>
+											<div class="textbox__description">Plan your event by booking an entertainer and their gigs through a simple form. No extra steps.</div>
 										</div>
 									</div><!-- End / textbox -->
 									
@@ -201,82 +209,7 @@ include ("navigationBeforeLogin.php");
 					</div>
 				</section>
 				<!-- End / Section -->
-				
-				
-				<!-- Section -->
-				<section class="md-section" style="background-color:#f7f7f7;padding-top:0;">
-					<div class="container">
-						<div class="row">
-							<div class="col-md-10 col-lg-8 offset-0 offset-sm-0 offset-md-1 offset-lg-2 ">
 								
-								<!-- iconbox -->
-								<div class="iconbox">
-									<div class="iconbox__icon"><i class="ti-headphone-alt"></i></div>
-									<div>
-										<h2 class="iconbox__title"><a href="#">Talent Around You</a></h2>
-										<div class="iconbox__description">Wishbone is geared toward structuring talented entrepreneurs by offering their service on demand. Here you will have the leniency of finding local talent, booking venues or receiving services from well respected locals demonstrating their finest quality of work. Innovation, creativity, and exposure are key qualities we ensure our talent - giving our community group the needed resources to develop their brand. Use your talents and explore the amazing opportunities that are presented within our Wishbone community.</div>
-									</div>
-								</div><!-- End / iconbox -->
-								
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-6 col-md-6 col-lg-3 ">
-								
-								<!-- iconbox -->
-								<div class="iconbox iconbox__style-02">
-									<div class="iconbox__icon"><i class="ti-announcement"></i></div>
-									<div>
-										<h2 class="iconbox__title"><a href="#">Brand &amp; Identity</a></h2>
-										<div class="iconbox__description">Moors skirt sterilized carrots cartoon. Integer No animal would. But the makeup Reserved football</div>
-									</div>
-								</div><!-- End / iconbox -->
-								
-							</div>
-							<div class="col-sm-6 col-md-6 col-lg-3 ">
-								
-								<!-- iconbox -->
-								<div class="iconbox iconbox__style-02">
-									<div class="iconbox__icon"><i class="ti-headphone"></i></div>
-									<div>
-										<h2 class="iconbox__title"><a href="#">Marketing Planning</a></h2>
-										<div class="iconbox__description">In regards to our partnership, Wishbone contains a service which provides members discounted rates to enhance a clientele base through our operated marketing services. Regulate your marketing strategies by working with experienced recruits at the touch of your fingertips </div>
-									</div>
-								</div><!-- End / iconbox -->
-								
-							</div>
-							<div class="col-sm-6 col-md-6 col-lg-3 ">
-								
-								<!-- iconbox -->
-								<div class="iconbox iconbox__style-02">
-									<div class="iconbox__icon"><i class="ti-timer"></i></div>
-									<div>
-										<h2 class="iconbox__title"><a href="#">Production Planning</a></h2>
-										<div class="iconbox__description">Renting spaces has never been so easy - members will have discounted rates to rent halls, attend wishbone presented events and organize future event planning</div>
-									</div>
-								</div><!-- End / iconbox -->
-								
-							</div>
-							<div class="col-sm-6 col-md-6 col-lg-3 ">
-								
-								<!-- iconbox -->
-								<div class="iconbox iconbox__style-02">
-									<div class="iconbox__icon"><i class="ti-briefcase"></i></div>
-									<div>
-										<h2 class="iconbox__title"><a href="#">Media Planning</a></h2>
-										<div class="iconbox__description">Coverage through the community helps get your name out there; through Wishbones developed partnerships, we have partnered with well respected media sources to offer members credible insight and coverage based on the content you post. 
-
-- From blogs, interviews, articles, and more, we provide you with inclusive media coverage throughout numerous media outlets along your journey as an independent entertainer.
-</div>
-									</div>
-								</div><!-- End / iconbox -->
-								
-							</div>
-						</div>
-					</div>
-				</section>
-				<!-- End / Section -->
-				
 				<!-- About-->
 				
 				<!-- Section -->
@@ -287,11 +220,20 @@ include ("navigationBeforeLogin.php");
 								
 								<!-- title-01 -->
 								<div class="title-01 title-01__style-03 md-text-left">
-									<h6 class="title-01__subTitle">about</h6>
-									<h2 class="title-01__title">Journey to become leaders in entertainment</h2>
-									<div>As leaders - we are able to guide our lives towards an innovative path by creating new forms of passions, opportunities and ideas. Wishbone favours the idea of unity as a determining factor for the success of any pursued organization. Our values lie on creating a platform where we will optimize networking amongst diverse groups; making it easily accessible to reach different crowds, and build relationships that benefit all individuals. Through our rating system, we propose that satisfaction will appeal to the wishbone community by encouraging our clientele to earn and strive for the finest quality of work - making their rating a mere reflection of their work.</div>
+                                    <div style="position: relative; margin: 0 auto;">
+                                        <p class ="subtitle-extra">support local entertainment</p>
+                                        <div style="position: absolute; top: 20px; left: 100px; width: 100%"><p class="subtitle-extra2">&</p></div>
+                                         <div style="position: absolute; top: 30px; left: 126px; width: 100%"><p class="subtitle-extra3">still organize great events</p></div>
+                                    </div>
+                                <br/>
+                                <br/>
+                                <br/>
+								<div style = "text-align: center;">	
+									<h2 class="title-Ottawa" style = "padding: 20px;">OTTAWA</h2>								
+									<p class="text-description">Canada's capital city is a melting pot of different cultures, and a booming marketplace for new, exciting talents. Discover your local capital city by learning about new, upcoming entertainers and booking them for your own customized events.</p>
+								</div>
 								</div><!-- End / title-01 -->
-								
+						
 								<div class="row">
 									<div class="col-sm-4 ">
 										
@@ -300,7 +242,7 @@ include ("navigationBeforeLogin.php");
 											<div class="box-number__number">
 												<h2 class="js-counter" data-counter-time="2000" data-counter-delay="10">99</h2>
 											</div>
-											<div class="box-number__description">Happy clients</div>
+											<div class="box-number__description">Happy event planners</div>
 										</div><!-- End / box-number -->
 										
 									</div>
@@ -311,7 +253,7 @@ include ("navigationBeforeLogin.php");
 											<div class="box-number__number">
 												<h2 class="js-counter" data-counter-time="2000" data-counter-delay="10">1200</h2>
 											</div>
-											<div class="box-number__description">Message per Day</div>
+											<div class="box-number__description">Bookings per day</div>
 										</div><!-- End / box-number -->
 										
 									</div>
@@ -322,7 +264,7 @@ include ("navigationBeforeLogin.php");
 											<div class="box-number__number">
 												<h2 class="js-counter" data-counter-time="2000" data-counter-delay="10">15</h2>
 											</div>
-											<div class="box-number__description">Awards</div>
+											<div class="box-number__description">Growth in entertainer branding</div>
 										</div><!-- End / box-number -->
 										
 									</div>
@@ -332,11 +274,9 @@ include ("navigationBeforeLogin.php");
 								<div class="js-consult-slider">
 									
 									<!-- carousel__element owl-carousel -->
-									<div class="carousel__element owl-carousel" data-options='{"items":1,"loop":true,"dots":false,"nav":false,"margin":30,"responsive":{"0":{"items":2},"576":{"items":3},"992":{"items":1}}}'>
-										<div class="image-full"><img src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone4.jpg" alt=""></div>
+										<img style = "height: 600px; width: 440px;" src="../assets/img/backgrounds/img-main-2.jpg" alt="">
 										<!--div class="image-full"><img src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone5.jpg" alt=""></div-->
-									</div><!-- End / carousel__element owl-carousel -->
-									
+										<p> Photo by Tim Mossholder on Unsplash</p>
 								</div>
 							</div>
 						</div>
@@ -346,191 +286,6 @@ include ("navigationBeforeLogin.php");
 				
 				<!-- Contact us-->
 				
-				<!-- Section -->
-				<section class="md-section md-skin-dark js-consult-form" style="background-image:url(&quot;../assets/img/backgrounds/1.jpg&quot;);">
-					<div class="md-overlay"></div>
-					<div class="container">
-						<div class="row">
-							<div class="col-lg-8 offset-0 offset-sm-0 offset-md-0 offset-lg-2 ">
-								
-								<!-- title-01 -->
-								<div class="title-01 title-01__style-02">
-									<h2 class="title-01__title">Contact With Us via Hot Line</h2>
-									<div>However, at airports, in ferment and antioxidants, the biggest</div>
-								</div><!-- End / title-01 -->
-								
-								<div class="consult-phone">(+88) 242 2323 777</div>
-							</div>
-						</div>
-						
-						<!-- form-01 -->
-						<div class="form-01 consult-form js-consult-form__content">
-							<h2 class="form-01__title">Give Us Your Feedback</h2>
-							<form class="form-01__form">
-								<div class="form__item form__item--03">
-									<input type="text" name="name" placeholder="Your name"/>
-								</div>
-								<div class="form__item form__item--03">
-									<input type="text" name="phone" placeholder="Your Email"/>
-								</div>
-								<div class="form__item form__item--03">
-									<input type="email" name="email" placeholder="Your Email"/>
-								</div>
-								<div class="form__item">
-									<textarea rows="3" name="Your message" placeholder="Your message"></textarea>
-								</div>
-								<div class="form__button"><a class="btn btn-primary btn-w180" href="#">send message</a>
-								</div>
-							</form>
-						</div><!-- End / form-01 -->
-						
-					</div>
-				</section>
-				<!-- End / Section -->
-				
-				<!-- What’s Client Say ?-->
-				
-				<!-- Section -->
-				<section class="md-section" style="padding-bottom:0;">
-					<div class="container">
-						<div class="row">
-							<div class="col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-2 offset-lg-2 ">
-								
-								<!-- title-01 -->
-								<div class="title-01" style="margin-bottom:50px;">
-									<h2 class="title-01__title">What’s Client Say?</h2>
-								</div><!-- End / title-01 -->
-								
-							</div>
-						</div>
-						<div class="consult-slide">
-							
-							<!-- carousel__element owl-carousel -->
-							<div class="carousel__element owl-carousel" data-options='{"loop":true,"dots":true,"nav":false,"margin":30,"responsive":{"0":{"items":1},"992":{"items":2}}}'>
-								
-								<!-- testimonial -->
-								<div class="testimonial">
-									<div class="testimonial__info"><a class="testimonial__avatar" href="#"><img src="../assets/img/avatars/avatar-01.jpg" alt=""/></a>
-										<h5 class="testimonial__name">Brandon Hanson</h5><span class="testimonial__position">Support</span>
-									</div>
-									<div class="testimonial__content">
-										<div class="testimonial__text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Architex lake and a headset. Quisque luctus nibh augue, non ultrices arcu molestie in. In</div>
-									</div>
-								</div><!-- End / testimonial -->
-								
-								
-								<!-- testimonial -->
-								<div class="testimonial">
-									<div class="testimonial__info"><a class="testimonial__avatar" href="#"><img src="../assets/img/avatars/avatar-02.jpg" alt=""/></a>
-										<h5 class="testimonial__name">Brandon Hanson</h5><span class="testimonial__position">CEO &amp; Founder</span>
-									</div>
-									<div class="testimonial__content">
-										<div class="testimonial__text">However, at airports, in ferment and antioxidants, but the biggest thing. Tomorrow Bureau feugiat to ecological boundaries, but now. Each of said propaganda, V</div>
-									</div>
-								</div><!-- End / testimonial -->
-								
-								
-								<!-- testimonial -->
-								<div class="testimonial">
-									<div class="testimonial__info"><a class="testimonial__avatar" href="#"><img src="../assets/img/avatars/1.jpg" alt=""/></a>
-										<h5 class="testimonial__name">Maria Gutierrez</h5><span class="testimonial__position">Designer</span>
-									</div>
-									<div class="testimonial__content">
-										<div class="testimonial__text">Moors skirt sterilized carrots cartoon. Integer No animal would. But the makeup Reserved football arrows weekend. Gluten. praesen</div>
-									</div>
-								</div><!-- End / testimonial -->
-								
-							</div><!-- End / carousel__element owl-carousel -->
-							
-						</div>
-					</div>
-				</section>
-				<!-- End / Section -->
-				
-				
-				<!-- Latest Blogs -->
-				
-				<!-- Section -->
-				<section class="md-section consult-background">
-					<div class="container">
-						<div class="row">
-							<div class="col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-2 offset-lg-2 ">
-								
-								<!-- title-01 -->
-								<div class="title-01">
-									<h2 class="title-01__title">Upcoming Events</h2>
-								</div><!-- End / title-01 -->
-								
-							</div>
-						</div>
-						
-						<!-- carousel__element owl-carousel -->
-						<div class="carousel__element owl-carousel" data-options='{"loop":false,"dots":false,"nav":true,"margin":30,"responsive":{"0":{"items":1},"768":{"items":2},"992":{"items":3}}}'>
-							
-							<!--  -->
-							<div>
-								<div class="post-01__media"><a href="#"><img src="../assets/img/blogs/related-1.jpg" alt=""/></a>
-								</div>
-								<div>
-									<ul class="post-01__categories">
-										<li><a href="#">Services</a></li>
-									</ul>
-									<h2 class="post-01__title"><a href="#">Getting Started with Vue.Js</a></h2>
-									<div class="post-01__time">Nov 16, 2017</div>
-									<div class="post-01__note">by Bryan Ryan</div>
-								</div>
-							</div><!-- End /  -->
-							
-							
-							<!--  -->
-							<div>
-								<div class="post-01__media"><a href="#"><img src="../assets/img/blogs/related-2.jpg" alt=""/></a>
-								</div>
-								<div>
-									<ul class="post-01__categories">
-										<li><a href="#">Services</a></li>
-									</ul>
-									<h2 class="post-01__title"><a href="#">Getting Started with Vue.Js</a></h2>
-									<div class="post-01__time">Nov 4, 2017</div>
-									<div class="post-01__note">by Ashley Mills</div>
-								</div>
-							</div><!-- End /  -->
-							
-							
-							<!--  -->
-							<div>
-								<div class="post-01__media"><a href="#"><img src="../assets/img/blogs/related-3.jpg" alt=""/></a>
-								</div>
-								<div>
-									<ul class="post-01__categories">
-										<li><a href="#">Services</a></li>
-									</ul>
-									<h2 class="post-01__title"><a href="#">How to Create and Manage SVG Sprites</a></h2>
-									<div class="post-01__time">Nov 21, 2017</div>
-									<div class="post-01__note">by Alan Lane</div>
-								</div>
-							</div><!-- End /  -->
-							
-							
-							<!--  -->
-							<div>
-								<div class="post-01__media"><a href="#"><img src="../assets/img/blogs/related-4.jpg" alt=""/></a>
-								</div>
-								<div>
-									<ul class="post-01__categories">
-										<li><a href="#">Business</a></li>
-									</ul>
-									<h2 class="post-01__title"><a href="#">Free Sketch Plugins</a></h2>
-									<div class="post-01__time">Nov 2, 2017</div>
-									<div class="post-01__note">by Alan Lane</div>
-								</div>
-							</div><!-- End /  -->
-							
-						</div><!-- End / carousel__element owl-carousel -->
-						
-					</div>
-				</section>
-				<!-- End / Section -->
 				
 			</div>
 			<!-- End / Content-->

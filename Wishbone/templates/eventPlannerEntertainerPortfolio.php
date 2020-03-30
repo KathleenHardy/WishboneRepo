@@ -27,15 +27,19 @@
     <link rel="stylesheet" type="text/css" href="../assets/vendors/magnific-popup/magnific-popup.css">
 
     <!-- Theme Styles -->
-    <link rel="stylesheet" type="text/css" href="../assets/css/styles.css">
         <link rel="stylesheet" type="text/css" href="../assets/css/footer.css">
     
     <!-- Button Styles -->
     <link rel="stylesheet" type="text/css" href="../assets/css/buttonEffects.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" rel="stylesheet" />
     
-    
-		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" /> 
+     
+		    				<link rel="stylesheet" type="text/css" href="../assets/css/styles.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/custom.css" /> 
+		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/styleEventPlanner.css" />
+		
+		
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   </head>
   <!-- End Head -->
@@ -180,27 +184,27 @@ $connection->close();
                 <ul class="list-inline text-center mb-0">
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Facebook">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-facebook"></i>
+                      <i class="fab fa-facebook fa-2x"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Dribbble">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-dribbble"></i>
+                      <i class="fab fa-dribbble fa-2x"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Linkedin">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-linkedin"></i>
+                      <i class="fab fa-linkedin fa-2x"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Twitter">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-twitter"></i>
+                      <i class="fab fa-twitter fa-2x"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Twitter">
                     <a class="text-white" href="#!">
-                      <i class="fab fa-instagram"></i>
+                      <i class="fab fa-instagram fa-2x"></i>
                     </a>
                   </li>
                 </ul>
@@ -222,7 +226,7 @@ $connection->close();
           <div class="row">
             <div class="col-md-4 mx-auto">
               <div class="u-pull-half text-center">
-                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="200" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="Image Description">
+                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="300" height="300" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="Image Description">
               </div>
             </div>
           </div>
@@ -231,13 +235,13 @@ $connection->close();
           <!-- About and Contact -->
           <div class="row u-content-space-bottom">
             <div class="col-lg-12" style="text-align: center;">
-              <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">ABOUT ME</h2>
-              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;"><?= $aboutMe ?></p>
-              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;"><?= $myQuote ?></p>
+              <h1 class="main-title">ABOUT ME</h1>
+              <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;"><?= $aboutMe ?></p>
+              <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;"><?= $myQuote ?></p>
               <p class="blockquote-footer"><?= $firstName . ' ' . $lastName . ', ' . $occupation?></p>
               <br/>
-              <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">CONTACT ME</h2>
-              <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">EMAIL: <?= $email ?></p>
+              <h1 class="main-title">CONTACT ME</h1>
+              <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;">EMAIL: <?= $email ?></p>
             </div>
                     
           <!-- End About and Contact -->
@@ -249,13 +253,24 @@ $connection->close();
       <div class="container">
         <hr class="my-0">
       </div>
+<!-- New Media section -->
+          <div class="row u-content-space-bottom">
+            <div class="col-lg-12" style="text-align: center;">
+            <h1 class="main-title">MY MEDIA</h1>
+            
+            </div>
+            </div>
+<!-- end -->
+      <div class="container">
+        <hr class="my-0">
+      </div>
 
       <!-- Portfolio -->
       <section class="u-content-space">
         <div class="container">
           <header class="text-center w-md-50 mx-auto mb-8">
-            <h2 class="h1" style="font-family: 'Archivo', sans-serif; font-weight: bold; color:#fac668;">MY GIGS</h2>
-            <p class="h5" style="font-family: 'Archivo', sans-serif; color:white;">I play soulful music for a variety of audiences to enjoy.</p>            
+            <h1 class="main-title">MY GIGS</h1>
+            <p class="h5" style="font-family: 'Averta'; color:#005BAD;">I play soulful music for a variety of audiences to enjoy.</p>            
           </header>
 
           <ul class="js-shuffle-controls u-portfolio-controls text-center mb-5">
@@ -292,16 +307,19 @@ $connection->close();
           </div>
           <!-- End Work Content -->
         </div>
+        </section>
             <!-- End Portfolio -->
          <div class="row">
          <div class="col-md-12" style="text-align: center;">   
-           <a href="eventPlannerEventForm.php"><button type="button" style="display:inline; padding: 8px 20px; background: #fac668; border: 0; outline: none; border-radius: 25px; color: #fff; font-size: 20px;">Book</button></a>
-           <a href="eventPlannerEntertainerList.php"><button type="button" style="display:inline; padding: 8px 20px; background: #fac668; border: 0; outline: none; border-radius: 25px; color: #fff; font-size: 20px;">Back</button></a>
-
+           <a href="eventPlannerEventForm.php"><button type="button" style="display:inline; font-family:'Averta'; padding: 8px 20px; background: #faa828; border: 0; outline: none; border-radius: 25px; color: #fff; font-size: 20px;">Book</button></a>
+           <a href="entertainer.php"><button type="button" style="display:inline; font-family:'Averta'; padding: 8px 20px; background: #faa828; border: 0; outline: none; border-radius: 25px; color: #fff; font-size: 20px;">Back</button></a>
+<br/>
+<br/>
     </div>
     </div>
     </main>
 </div>
+
     <!-- Footer -->
         <?php include "footer.php" ?>
     <!-- End Call Us Modal Window -->
@@ -326,6 +344,24 @@ $connection->close();
     <script src="../assets/js/vendors/magnific-popup.js"></script>
     <script src="../assets/js/vendors/shuffle.js"></script>
     <!-- END JAVASCRIPTS -->
+    <!-- Required Jquery -->
+    <script type="text/javascript" src="../assets/javascript/jquery/jquery.min.js "></script>
+    <script type="text/javascript" src="../assets/javascript/jquery-ui/jquery-ui.min.js "></script>
+    <script type="text/javascript" src="../assets/javascript/popper.js/popper.min.js"></script>
+    <script type="text/javascript" src="../assets/javascript/bootstrap/js/bootstrap.min.js "></script>
+    <!-- waves js -->
+    <script src="../assets/pages/waves/js/waves.min.js"></script>
+    <!-- jquery slimscroll js -->
+    <script type="text/javascript" src="../assets/javascript/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- slimscroll js -->
+    <script src="../assets/javascript/jquery.mCustomScrollbar.concat.min.js "></script>
+
+    <!-- menu js -->
+    <script src="../assets/javascript/pcoded.min.js"></script>
+    <script src="../assets/javascript/vertical/vertical-layout.min.js "></script>
+
+    <script type="text/javascript" src="../assets/javascript/script.js "></script>
   </body>
   <!-- End Body -->
 </html>
