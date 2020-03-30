@@ -67,11 +67,76 @@ if ($stmt = $connection->prepare( $query)) {
     
 }
 
-
 $_SESSION['venueOwnerfirstname'] = $firstName;
 $_SESSION['venueOwnerlastname'] = $lastName;
 $_SESSION['venueOwnerId'] = $venueOwnerId;
-print_r($_SESSION);
+
+$query_owned = "select count(*) AS owned from venues ve
+                inner join venueowners vo on vo.venueOwnerId = ve.venueOwnerId
+                where vo.authId = ?";   
+
+if ($stmt = $connection->prepare( $query_owned)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $owned);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+
+$query_ent_booked = "select count(distinct entid) AS entertainers_booked from bookedgigs bg
+                     inner join venueowners vo on vo.venueOwnerId = bg.venueOwnerId
+                     where vo.authId = ?";    
+
+        if ($stmt = $connection->prepare( $query_ent_booked)) {
+                         
+                         $stmt->bind_param( "i", $authId);
+                         
+                         //execute statement
+                         $stmt->execute();
+                         
+                         //bind result variables
+                         $stmt->bind_result( $entertainers_booked);
+                         
+                         // fetch values
+                         $stmt->fetch();
+                         
+                         //close statement
+                         $stmt->close();
+                         
+        }
+        
+        $query_venues_not_booked = "select count(*) AS venues_not_booked from venues v
+                INNER join venueowners vo on vo.venueownerid = v.venueownerid
+                where vo.authid = ? and v.venueid not in ( select venueid from bookedvenues)";
+        
+        if ($stmt = $connection->prepare( $query_venues_not_booked)) {
+            
+            $stmt->bind_param( "i", $authId);
+            
+            //execute statement
+            $stmt->execute();
+            
+            //bind result variables
+            $stmt->bind_result( $venues_not_booked );
+            
+            // fetch values
+            $stmt->fetch();
+            
+            //close statement
+            $stmt->close();
+            
+        }
+//print_r($_SESSION);
 ?>
 <body>
     <!-- Pre-loader start -->
@@ -388,7 +453,7 @@ print_r($_SESSION);
                                                                         <i class="far fa-user text-c-purple f-24"></i>
                                                                     </div>
                                                                     <div class="col-8 p-l-0">
-                                                                        <h5>30</h5>
+                                                                        <h5><?php echo $entertainers_booked;?></h5>
                                                                         <p class="text-muted m-b-0">Total Number of Entertainers Booked</p>
                                                                     </div>
                                                                 </div>
@@ -399,8 +464,8 @@ print_r($_SESSION);
                                                                         <i class="fas fa-volume-down text-c-green f-24"></i>
                                                                     </div>
                                                                     <div class="col-8 p-l-0">
-                                                                        <h5>100%</h5>
-                                                                        <p class="text-muted m-b-0">Volume</p>
+                                                                        <h5><?php echo $venues_not_booked?></h5>
+                                                                        <p class="text-muted m-b-0">Venues not booked</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -412,7 +477,7 @@ print_r($_SESSION);
                                                                         <i class="far fa-file-alt text-c-red f-24"></i>
                                                                     </div>
                                                                     <div class="col-8 p-l-0">
-                                                                        <h5>10</h5>
+                                                                        <h5><?php echo $owned;?></h5>
                                                                         <p class="text-muted m-b-0">Total Venues Owned</p>
                                                                     </div>
                                                                 </div>

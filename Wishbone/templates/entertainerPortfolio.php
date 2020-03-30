@@ -43,17 +43,19 @@
 <body>
   
 <?php 
-include "navigationheaderEntertainer.php";
+
+session_start();
 include ('../config.php');
+include "navigationheaderVenueHost.php";
 require_once ('../dto/gig.php');
 
-
+//session_start();
 $authId = $_SESSION['authId'];
 
-$query = "SELECT entid, firstName, lastName, ratePerHour, occupation, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus 
+$query = "SELECT entid, firstName, lastName, ratePerHour, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus 
           FROM entertainers
           WHERE  authid = ?";
-
+//var_dump('Auth ID | '.$authId);
 if ($stmt = $connection->prepare( $query)) {
 
     $stmt->bind_param( "i", $authId);
@@ -62,8 +64,8 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->execute();
 
     //bind result variables
-    $stmt->bind_result($entid, $firstName, $lastName, $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
-    
+    $stmt->bind_result($entid, $firstName, $lastName, $ratePerHour, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
+    //var_dump('Firstname | '.$firstName);
     // fetch values
     $stmt->fetch();
     
@@ -71,6 +73,8 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->close();
       
 }
+
+//var_dump('Firstname2 | '.$firstName);
 
 $_SESSION['entertainerfirstname'] = $firstName;
 $_SESSION['entertainerlastname'] = $lastName;
@@ -173,7 +177,7 @@ $connection->close();
             <div class="col-12">
               <div class="text-center">
                 <h1 class="display-sm-4 display-lg-3"><?= $firstName . ' ' . $lastName  ?></h1>
-                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= $occupation ?></p>
+                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= $workDescription ?></p>
 
                 <ul class="list-inline text-center mb-0">
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Facebook">
@@ -233,7 +237,7 @@ $connection->close();
               <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">ABOUT ME</h2>
               <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;"><?= $aboutMe ?></p>
               <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;"><?= $myQuote ?></p>
-              <p class="blockquote-footer"> <?= $firstName . ' ' . $lastName . ', ' . $occupation?></p>
+              <p class="blockquote-footer"> <?= $firstName . ' ' . $lastName . ', ' . $workDescription?></p>
               <br/>
               <h2 class="mb-3 h1" style="font-family: 'Archivo', sans-serif; text-align:center; font-weight: bold; color:#fac668;">CONTACT ME</h2>
               <p class="h5" style="font-family: 'Archivo', sans-serif; text-align:center; color:white;">EMAIL: <?= $email ?></p>

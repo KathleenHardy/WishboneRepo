@@ -30,6 +30,49 @@
           
     }
     
+    $query_gigs = "SELECT COUNT(*) AS gigs FROM gigs g 
+                   INNER join entertainers e on e.entid = g.entid
+                   WHERE e.authid = ?";
+    
+    if ($stmt = $connection->prepare( $query_gigs)) {
+        
+        $stmt->bind_param( "i", $authId);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables
+        $stmt->bind_result( $gigs );
+        
+        // fetch values
+        $stmt->fetch();
+        
+        //close statement
+        $stmt->close();
+        
+    }
+    
+    $query_gigs_not_booked = "select count(*) AS gigs_not_booked from gigs g
+                INNER join entertainers e on e.entid = g.entid
+                where e.authid = ? and g.gigsid not in ( select gigsid from bookedgigs)";
+    
+    if ($stmt = $connection->prepare( $query_gigs_not_booked)) {
+        
+        $stmt->bind_param( "i", $authId);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables
+        $stmt->bind_result( $gigs_not_booked );
+        
+        // fetch values
+        $stmt->fetch();
+        
+        //close statement
+        $stmt->close();
+        
+    }
     
     
 ?>
@@ -415,8 +458,8 @@
                                                                         <i class="fas fa-volume-down text-c-green f-24"></i>
                                                                     </div>
                                                                     <div class="col-8 p-l-0">
-                                                                        <h5>100%</h5>
-                                                                        <p class="text-muted m-b-0">Volume</p>
+                                                                        <h5><?php echo $gigs_not_booked?></h5>
+                                                                        <p class="text-muted m-b-0">Gigs not booked</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -428,7 +471,7 @@
                                                                         <i class="far fa-file-alt text-c-red f-24"></i>
                                                                     </div>
                                                                     <div class="col-8 p-l-0">
-                                                                        <h5>10+</h5>
+                                                                        <h5><?php echo $gigs;?></h5>
                                                                         <p class="text-muted m-b-0">Gigs Added</p>
                                                                     </div>
                                                                 </div>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+include ('../config.php');
 $authId = $_SESSION['authId'];
 
 /*
