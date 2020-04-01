@@ -2,8 +2,8 @@
 session_start();
 include ('config.php');
 include ('../dto/bookedGigDetails.php');
-//print_r($_SESSION);
-//$_SESSION['bookedGigsId']=$_GET['id'];
+
+$_SESSION['bookedGigsId']=$_GET['id'];
 $bookedGigsId = $_SESSION['bookedGigsId'];
 
 $query3 = "SELECT profileStatus, firstName, lastName, profilePicture

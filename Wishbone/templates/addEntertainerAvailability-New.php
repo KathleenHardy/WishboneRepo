@@ -13,7 +13,6 @@ $authIdLocal = $_SESSION['authId'];
 //$authIdLocal=$authId;
 
 
-if (!empty($_POST)) {
 
 
 // $_SESSION['venueOwnerId'] = $venueOwnerId;
@@ -35,8 +34,6 @@ $requiredFields=0;
 
 if (! empty($_POST)) {
 
-    
-    
     if (empty($_POST["startDate"])) {
         $startDateErr = "Start date is required";
     } else {
@@ -91,61 +88,61 @@ if (! empty($_POST)) {
             $startBeforeEndErr = "Start time cannot be after end time";
         }
         else{
-    $querya = 'SELECT entId FROM entertainers WHERE authId = ?';
-    $stmta =mysqli_prepare ($connection,$querya);
-    $stmta->bind_param('s', $authIdLocal);
-    $stmta->execute();
-    $stmta->bind_result($chosenEntId);
-    $stmta->fetch();
-    $stmta->close();
-
-    $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) 
-VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime', '$availTitle')";
-    
-
-    if (mysqli_query($connection, $sql)) {
-        echo "";
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+            $querya = 'SELECT entId FROM entertainers WHERE authId = ?';
+            $stmta =mysqli_prepare ($connection,$querya);
+            $stmta->bind_param('s', $authIdLocal);
+            $stmta->execute();
+            $stmta->bind_result($chosenEntId);
+            $stmta->fetch();
+            $stmta->close();
+        
+            $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) 
+        VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime', '$availTitle')";
+            
+        
+                if (mysqli_query($connection, $sql)) {
+                    echo "";
+                } else {
+                    echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+                }
+        
+                    
+        }
     }
 
+        $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+                      FROM entertainers
+                      WHERE  authid = ?";
+
+        if ($stmt3 = $connection->prepare( $query3)) {
+        
+            $stmt3->bind_param( "i", $authId);
             
-}
+            //execute statement
+            $stmt3->execute();
+            
+            //bind result variables
+            $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+            
+            // fetch values
+            $stmt3->fetch();
+            
+        
+            //close statement
+            $stmt3->close();
+        
+            
+        }
+        
+    }
 
-$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
-              FROM entertainers
-              WHERE  authid = ?";
+?>
 
-if ($stmt3 = $connection->prepare( $query3)) {
-
-    $stmt3->bind_param( "i", $authId);
-    
-    //execute statement
-    $stmt3->execute();
-    
-    //bind result variables
-    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
-    
-    // fetch values
-    $stmt3->fetch();
-    
-
-    //close statement
-    $stmt3->close();
-
-    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
-    ?>
-     <!--  <script type="text/javascript"> -->
+<!--  <script type="text/javascript"> -->
 <!--      //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php'; -->
 <!--     //window.location.href = 'entertainerMainPortfolio.php'; -->
 <!--     </script> -->
-<?php
 
-
-    
-}
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -342,7 +339,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span><?= $_SESSION['entertainerfirstname']." ".$_SESSION['entertainerlastname'] ?></span>
+                                    <span> NEED A NAME HERE @NIKHIL </span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -377,7 +374,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details"><?= $_SESSION['entertainerfirstname']." ".$_SESSION['entertainerlastname'] ?><i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details">NEED A NAME HERE @NIKHIL<i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -501,11 +498,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
 							<div class="row">
 								<div class="col-md-4 mx-auto">
 									<div class="u-pull-half text-center">
-										<img
-											class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3"
-											style ="border-radius: 50%;"
-											src="../assets/img-temp/200x200/img1.jpg"
-											alt="Image Description">
+										
 									</div>
 								</div>
 							</div>
