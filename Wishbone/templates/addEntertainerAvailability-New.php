@@ -1,6 +1,6 @@
 <?php
-Session_start();
-print_r($_SESSION);
+session_start();
+//print_r($_SESSION);
 require_once ('../config.php');
 
 //include "navigationheaderVenueHost.php";
@@ -10,43 +10,10 @@ require_once ('../config.php');
 $authIdLocal = $_SESSION['authId'];
 //$authIdLocal=$authId;
 
-?>
-<?php
 
+if (!empty($_POST)) {
 
-//$venueDTO = $_SESSION['myVenues'];
-
-// $authId = $_SESSION['authId'];
-
-// $query = "SELECT venueOwnerId
-// FROM venueowners
-// WHERE authid = ?";
-
-// if ($stmt = $connection->prepare( $query)) {
-
-// $stmt->bind_param( "i", $authId);
-
-// //execute statement
-// $stmt->execute();
-
-// //bind result variables
-// $stmt->bind_result( $venueOwnerId);
-
-// // fetch values
-// $stmt->fetch();
-
-// //close statement
-// $stmt->close();
-
-// }
-
-// $_SESSION['venueOwnerId'] = $venueOwnerId;
-
-if (! empty($_POST)) {
-
-    echo "Posting";
-
-    //$venueName = $_POST['venueName'];
+    
     $startDate = $_POST['startDate'];
     $endDate = $_POST['endDate'];
     $startTime = $_POST['startTime'];
@@ -59,27 +26,6 @@ if (! empty($_POST)) {
     $stmta->bind_result($chosenEntId);
     $stmta->fetch();
     $stmta->close();
-/*      $sql2 = "SELECT entid
-            FROM entertainers
-            WHERE authid=?";
-    
-    if ($stmt = $connection->prepare( $sql2)) {
-        
-        $stmt->bind_param( "i", $authIdLocal);
-        
-        //execute statement
-        $stmt->execute();
-        
-        //bind result variables
-        $stmt->bind_result( $chosenEntId);
-        
-        // fetch values
-        $stmt->fetch();
-        
-        //close statement
-        $stmt->close();
-        
-    }  */
 
     $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime) 
 VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
@@ -90,47 +36,28 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
-    
-    //mysqli_close($connection);
-    
-//     $sql2 = "SELECT venueID 
-//             FROM venues 
-//             WHERE venueName=$venueName";
-//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
+            
+}
 
-    
-   /*  $sql3="SELECT availId
-            FROM availability
-            WHERE availStartDate=? AND availEndDate=? AND availStartTime=? AND availEndTime=?";
-    
-    if ($stmt = $connection->prepare( $sql3)) {
-        
-        $stmt->bind_param( "ssss", $startDate, $endDate, $startTime, $endTime);
-        
-        //execute statement
-        $stmt->execute();
-        
-        //bind result variables
-        $stmt->bind_result( $availId);
-        
-        // fetch values
-        $stmt->fetch();
-        
-        //close statement
-        $stmt->close();
-        
-    }
-    $sql4="INSERT INTO resourceAvailability(availId, entId)
-            VALUES ($availId, $chosenEntId)";
-    
-    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
-    ?>
-     <script type="text/javascript"> 
-     //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
-    window.location.href = 'entertainerMainPortfolio.php';
-    </script>
-<?php
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
 
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
     
 }
 
@@ -300,7 +227,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
+                                                <h5 class="notification-user"><?= $_SESSION['authId']  ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -331,7 +258,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $_SESSION['entertainerfirstname']." ".$_SESSION['entertainerlastname'] ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -366,7 +293,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $_SESSION['entertainerfirstname']." ".$_SESSION['entertainerlastname'] ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">

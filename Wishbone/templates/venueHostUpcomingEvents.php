@@ -37,6 +37,40 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+    <?php
+session_start();
+include ('../config.php');
+
+
+$authId = $_SESSION['authId'];
+
+$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
+          FROM venueowners
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+
+$_SESSION['venueOwnerfirstname'] = $firstName;
+$_SESSION['venueOwnerlastname'] = $lastName;
+$_SESSION['venueOwnerId'] = $venueOwnerId;
+
+?>
 </head>
 
 <body>
@@ -178,7 +212,7 @@
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -213,7 +247,7 @@
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
