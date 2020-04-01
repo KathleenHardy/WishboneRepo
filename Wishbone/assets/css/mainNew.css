@@ -3392,7 +3392,6 @@ mark, .mark {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    background-color: #ccc;
 }
 
 .video-background:after {

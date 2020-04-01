@@ -46,6 +46,11 @@
 	font-family: 'Averta';
 	color: #36454f;
 }
+
+.card-img-top {
+	height: 300px;
+	width: 400px;
+}
 /*------------------------------------------------------------------------
 # Consult Free HTML5 Template 1.0 - Nov 16, 2017
 # ------------------------------------------------------------------------
@@ -3285,6 +3290,7 @@ mark, .mark {
     padding: 5px;
     font-size: 50px;
     color: #faa828;
+    letter-spacing: 3px;
 }
 
 @media ( min-width : 320px) {

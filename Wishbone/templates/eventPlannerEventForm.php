@@ -69,11 +69,11 @@
 </head>
 
 <body>
+<?php include ("navigationBeforeLogin.php")?>
 <?php
 include ('../dto/venue.php');
 include ('../dto/gig.php');
 include ('../dao/authenticationDAO.php');
-include ("navigationheaderEventPlanner.php");
 require_once ("../config.php");
 
 
