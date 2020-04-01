@@ -43,7 +43,7 @@ $authIdLocal=$authId;
 
 if (! empty($_POST)) {
 
-    echo "Posting";
+
 
     //$venueName = $_POST['venueName'];
     $startDate = $_POST['startDate'];
@@ -57,7 +57,7 @@ VALUES( '$startDate', '$endDate', '$startTime', '$endTime')";
     
 
     if (mysqli_query($connection, $sql)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }

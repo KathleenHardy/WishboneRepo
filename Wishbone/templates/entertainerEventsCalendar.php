@@ -1036,6 +1036,19 @@ function formatDate(string $date) {
 <div style='clear:both'></div>
 </div>
 
+ <div style="text-align: center;">
+ <h1 class="main-title" style="padding: 50px; text-align: center;">
+My Availabilities
+
+</h1>
+</div>
+
+
+
+<div class="buttons-section" style="text-align: center;">
+<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="addEntertainerAvailability-New.php">Add New Availability</a></div>
+ </div>
+
 
 
                                     </div>

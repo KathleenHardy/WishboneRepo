@@ -1,6 +1,5 @@
 <?php
 Session_start();
-print_r($_SESSION);
 require_once ('../config.php');
 
 //include "navigationheaderVenueHost.php";
@@ -42,16 +41,78 @@ $authIdLocal = $_SESSION['authId'];
 
 // $_SESSION['venueOwnerId'] = $venueOwnerId;
 
+
+$startDateErr = "";
+$endDateErr = "";
+$startTimeErr = "";
+$endTimeErr = "";
+$startBeforeEndErr = "";
+
+$startDate = "";
+$endDate = "";
+$startTime = "";
+$endTime = "";
+$availTitle = "";
+
+$requiredFields=0;
+
 if (! empty($_POST)) {
 
-    echo "Posting";
+    
+    
+    if (empty($_POST["startDate"])) {
+        $startDateErr = "Start date is required";
+    } else {
+        $startDate = $_POST['startDate'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["endDate"])) {
+        $endDateErr = "End date is required";
+    } else {
+        $endDate = $_POST['endDate'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["startTime"])) {
+        $startTimeErr = "Start time is required";
+    } else {
+        $startTime = $_POST['startTime'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["endTime"])) {
+        $endTimeErr = "End time is required";
+    } else {
+        $endTime = $_POST['endTime'];
+        $requiredFields++;
+    }
 
+    $availTitle = $_POST['availTitle'];
+    
     //$venueName = $_POST['venueName'];
-    $startDate = $_POST['startDate'];
+/*     $startDate = $_POST['startDate'];
     $endDate = $_POST['endDate'];
     $startTime = $_POST['startTime'];
-    $endTime = $_POST['endTime'];
+    $endTime = $_POST['endTime']; */
 
+    if($requiredFields==4){
+
+        $begin=$startDate."".$startTime;
+        $end=$endDate."".$endTime;
+        
+        $beginTimeStamp=strtotime($begin);
+        $endTimeStamp=strtotime($end);
+        
+        
+        
+        $diff=$endTimeStamp-$beginTimeStamp;
+        
+        
+        if($diff<0){
+            $startBeforeEndErr = "Start time cannot be after end time";
+        }
+        else{
     $querya = 'SELECT entId FROM entertainers WHERE authId = ?';
     $stmta =mysqli_prepare ($connection,$querya);
     $stmta->bind_param('s', $authIdLocal);
@@ -81,14 +142,16 @@ if (! empty($_POST)) {
         
     }  */
 
-    $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime) 
-VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
+    $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) 
+VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime', '$availTitle')";
     
 
     if (mysqli_query($connection, $sql)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+    }
+        }
     }
     
     //mysqli_close($connection);
@@ -125,10 +188,10 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
     
     $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
     ?>
-     <script type="text/javascript"> 
-     //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
-    window.location.href = 'entertainerMainPortfolio.php';
-    </script>
+     <!--  <script type="text/javascript"> -->
+<!--      //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php'; -->
+<!--     //window.location.href = 'entertainerMainPortfolio.php'; -->
+<!--     </script> -->
 <?php
 
     
@@ -499,7 +562,11 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 								</div>
 							</div>
 							<form action="addEntertainerAvailability-New.php" method="POST">
-
+							
+								<div class="form-group">
+											<label for="availTitle" class="control-label title2">Availability Name</label>
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="availTitle" name="availTitle">
+										</div>
 								  
 								<div class="form-group">
 									<!-- Event Name -->
@@ -507,6 +574,8 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 									<input type="date" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="startDate"
 										name="startDate" placeholder="Enter the start date of the avilability">
+										<span class="error"> <?php echo $startDateErr;?></span>
+										
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -514,6 +583,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 									<input type="date" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="endDate"
 										name="endDate" placeholder="Enter the end date of the avilability">
+										<span class="error"> <?php echo $endDateErr;?></span>
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -521,6 +591,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 										</label> <input type="time" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="startTime"
 										name="startTime">
+										<span class="error"> <?php echo $startTimeErr;?></span>
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -528,6 +599,8 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 										</label> <input type="time" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="endTime"
 										name="endTime">
+										<span class="error"> <?php echo $endTimeErr;?></span>
+										<span class="error"> <?php echo $startBeforeEndErr;?></span>
 								</div>
 
 								<!--
@@ -539,12 +612,12 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 										</div>
 										for later -->
 
- 								<a href="entertainerAvailabilityList.php"> 
+<!--  								<a href="entertainerAvailabilityList.php">  -->
 								<button type="submit" class="btn-all" style="display: inline;">Add</button>
- 								</a> 
+<!--  								</a>  -->
 
 
-								<a href="entertainerAvailabilityList.php"><button class="btn-all"
+								<a href="entertainerEventsCalendar.php"><button class="btn-all"
 										type="button" style="display: inline;">Cancel</button></a>
 
 								<!-- Replace buttons with below code -->

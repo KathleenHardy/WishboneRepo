@@ -36,15 +36,70 @@ $venueDTO = $_SESSION['myVenues'];
 
 // $_SESSION['venueOwnerId'] = $venueOwnerId;
 
+$venueNameErr = "";
+$startDateErr = "";
+$endDateErr = "";
+$startTimeErr = "";
+$endTimeErr = "";
+$startBeforeEndErr = "";
+
+$venueName = "";
+$startDate = "";
+$endDate = "";
+$startTime = "";
+$endTime = "";
+$availTitle = "";
+
+
+$requiredFields=0;
+
 if (! empty($_POST)) {
+    
+    if (($_POST["venueName"])=="Choose a Venue") {
+        $venueNameErr = "Name is required";
+    } else {
+        $venueName = $_POST['venueName'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["startDate"])) {
+        $startDateErr = "Start date is required";
+    } else {
+        $startDate = $_POST['startDate'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["endDate"])) {
+        $endDateErr = "End date is required";
+    } else {
+        $endDate = $_POST['endDate'];
+        $requiredFields++;
+    }
 
-    echo "Posting";
+    if (empty($_POST["startTime"])) {
+        $startTimeErr = "Start time is required";
+    } else {
+        $startTime = $_POST['startTime'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["endTime"])) {
+        $endTimeErr = "End time is required";
+    } else {
+        $endTime = $_POST['endTime'];
+        $requiredFields++;
+    }
+    
+    $availTitle = $_POST['availTitle'];
+    
 
-    $venueName = $_POST['venueName'];
-    $startDate = $_POST['startDate'];
-    $endDate = $_POST['endDate'];
-    $startTime = $_POST['startTime'];
-    $endTime = $_POST['endTime'];
+   // $venueName = $_POST['venueName'];
+    //$startDate = $_POST['startDate'];
+    //$endDate = $_POST['endDate'];
+    //$startTime = $_POST['startTime'];
+    //$endTime = $_POST['endTime'];
+    
+    
     
 //      $sql2 = "SELECT venueID
 //             FROM venues
@@ -54,6 +109,27 @@ if (! empty($_POST)) {
     //$authId =  $_SESSION['authId'];
     //echo $authId;
     //fetch eventPlannerId based on authId
+    
+    if($requiredFields==5){
+        
+        //$diff=strtotime($startDate."".$startTime, $endDate."".$endTime);
+        //$diff= strtotime ( $startDate."".$startTime, $endDate."".$endTime ) : int
+        $begin=$startDate."".$startTime;
+        $end=$endDate."".$endTime;
+        
+        $beginTimeStamp=strtotime($begin);
+        $endTimeStamp=strtotime($end);
+        
+
+        
+        $diff=$endTimeStamp-$beginTimeStamp;
+
+        
+        if($diff<0){
+            $startBeforeEndErr = "Start time cannot be after end time";
+        }
+        else{
+        
     $querya = 'SELECT venueId FROM venues WHERE venueName = ?';
     $stmta =mysqli_prepare ($connection,$querya);
     $stmta->bind_param('s', $venueName);
@@ -61,6 +137,7 @@ if (! empty($_POST)) {
     $stmta->bind_result($chosenVenueId);
     $stmta->fetch();
     $stmta->close();
+    
      
 /*      //$db = new mysqli($host, $username, $password, $database_name); // connect to the DB
      $query = $connection->prepare("SELECT venueId FROM venues WHERE venueName=?"); // prepate a query
@@ -70,9 +147,7 @@ if (! empty($_POST)) {
      $r = $result->fetch_array(MYSQLI_ASSOC); // bind the data from the first result row to $r
      //echo $r['price']; // will return the price
      $chosenVenueId=$r['venueId']; */
-     
-     echo $venueName;
-     echo $chosenVenueId;
+
     
     /*if ($stmt = $connection->prepare( $sql2)) {
         
@@ -109,16 +184,17 @@ if (! empty($_POST)) {
     //echo $chosenVenueId;
     //mysql
 
-    $sql = "INSERT INTO venueavailability(venueId, availStartDate, availEndDate, availStartTime, availEndTime) 
-VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
+    $sql = "INSERT INTO venueavailability(venueId, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) 
+VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime','$availTitle')";
     
 
     if (mysqli_query($connection, $sql)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
-    
+    }
+    }
     //mysqli_close($connection);
     
 //     $sql2 = "SELECT venueID 
@@ -153,9 +229,9 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
     
     $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
     ?>
-    <script type="text/javascript">
-    window.location.href = 'http://localhost:7331/Wishbone/templates/venueHostVenueList.php';
-    </script>
+<!--     <script type="text/javascript"> -->
+ <!--     window.location.href = 'http://localhost:7331/Wishbone/templates/venueHostVenueList.php';-->
+ <!--    </script>-->
 <?php
 
     
@@ -166,7 +242,7 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
 <html lang="en">
 
 <head>
-    <title>Delete Venue</title>
+    <title>Add Availability</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -514,6 +590,11 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
+<h1 class="main-title">
+Add a Venue Availability
+
+
+</h1>
 				<div class="container">
 					<div class="row">
 						<div
@@ -522,11 +603,7 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
 							<div class="row">
 								<div class="col-md-4 mx-auto">
 									<div class="u-pull-half text-center">
-										<img
-											class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3"
-											width="200" height="auto"
-											src="../assets/img-temp/200x200/img1.jpg"
-											alt="Image Description">
+										
 									</div>
 								</div>
 							</div>
@@ -536,23 +613,34 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
 									<!-- Event Name -->
 									<label for="venueName" class="control-label title2">Venue Name</label>
 										<select name="venueName">
+										
         <option selected="venueName">Choose a Venue</option>
+        
         <?php
 
         foreach($venueDTO as $venue){
         ?>
         <option value="<?php echo strtolower($venue->getVenueName()); ?>"><?php echo $venue->getVenueName(); ?></option>
+        
         <?php
         }
         ?>
     </select>
+    <span class="error"> <?php echo $venueNameErr;?></span>
+    
 								</div>
+								<div class="form-group">
+											<label for="availTitle" class="control-label title2">Availability Name</label>
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="availTitle" name="availTitle">
+										</div>
 								<div class="form-group">
 									<!-- Event Name -->
 									<label for="venueCity" class="control-label title2">Availability Start Date</label>
 									<input type="date" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="startDate"
 										name="startDate" placeholder="Enter the start date of the avilability">
+										<span class="error"> <?php echo $startDateErr;?></span>
+										
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -560,6 +648,7 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
 									<input type="date" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="endDate"
 										name="endDate" placeholder="Enter the end date of the avilability">
+										<span class="error"> <?php echo $endDateErr;?></span>
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -567,6 +656,7 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
 										</label> <input type="time" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="startTime"
 										name="startTime">
+										<span class="error"> <?php echo $startTimeErr;?></span>
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -574,6 +664,8 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
 										</label> <input type="time" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="endTime"
 										name="endTime">
+										<span class="error"> <?php echo $endTimeErr;?></span>
+										<span class="error"> <?php echo $startBeforeEndErr;?></span>
 								</div>
 
 								<!--
@@ -585,10 +677,14 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime')";
 										</div>
 										for later -->
 
-								<a href="venueHostVenueList.php"><button type="submit" class="btn-all" style="display: inline;">Add</button></a>
+<!-- 								<a href="venueHostVenueList.php"> -->
 
 
-								<a href="venueHostVenueList.php"><button class="btn-all"
+								<button type="submit" class="btn-all" style="display: inline;">Add</button>
+<!-- 								</a> -->
+
+
+								<a href="venueAvailabilityCalendar.php"><button class="btn-all"
 										type="button" style="display: inline;">Cancel</button></a>
 
 								<!-- Replace buttons with below code -->

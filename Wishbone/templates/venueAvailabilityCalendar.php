@@ -132,7 +132,10 @@ if ($stmt = $connection->prepare( $query)) {
 
     		var myEvent = new Object();
     		myEvent.title = "<?= $availability->getAvailTitle() ?>";
-
+    		myEvent.sponsor_name = "My availability";
+    		myEvent.isDeletable = true;
+    		myEvent.url = "venueCalenderDetail.php?id=<?= $availability->getAvailId()?>";
+    		
     		myEvent.start = new Date(
     	       <?=substr( $availability->getAvailStartDate(), 0, 4)?>, 
     	       <?=substr( $availability->getAvailStartDate(), 5, 2)-1?>, 
@@ -869,6 +872,16 @@ function formatDate(string $date) {
 <div id='calendar'></div>
 
 <div style='clear:both'></div>
+</div>
+ <div style="text-align: center;">
+ <h1 class="main-title" style="padding: 50px; text-align: center;">
+Venue Availabilities
+
+</h1>
+</div>
+
+<div class="outer">
+	<button type="button"><a href="addVenueAvailability-New.php">Add New Availability</a></button>
 </div>
 
 

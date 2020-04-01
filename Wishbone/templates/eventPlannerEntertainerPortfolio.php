@@ -50,6 +50,8 @@ session_start();
 include "navigationheaderEventPlanner.php"; 
 include ('../config.php');
 require_once ('../dto/gig.php');
+include ('../dto/entVideo.php');
+
 
 $_SESSION['entid']=$_GET['id'];
 $entid = $_SESSION['entid'];
@@ -160,7 +162,26 @@ if ($stmt4 = $connection->prepare( $query4)) {
     
 }
 
+$videoDTO = array();
 
+
+$vidQuery = "SELECT *
+        FROM entertainerVideos
+        WHERE entId=$entid";
+
+$result = mysqli_query($connection, $vidQuery) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+
+if ($count >= 1) {
+    
+    while ($row = mysqli_fetch_array($result)) {
+        
+        $videoDTO[] = new entVideo($row['entVideoId'], $row['entId'], $row['entVideoEmbedCode']);
+    }
+} else {
+    // $fmsg = "No venues for this user";
+}
 
 $connection->close();
 
@@ -257,7 +278,19 @@ $connection->close();
           <div class="row u-content-space-bottom">
             <div class="col-lg-12" style="text-align: center;">
             <h1 class="main-title">MY MEDIA</h1>
-            
+                        <?php
+foreach ($videoDTO as $entVid) {
+    ?>
+    <iframe width="420" height="315"
+    <?php
+    echo $entVid ->getEntVideoEmbedCode();
+    ?>>
+    </iframe> 
+
+<?php    
+}
+
+?>
             </div>
             </div>
 <!-- end -->
