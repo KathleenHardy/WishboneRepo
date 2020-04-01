@@ -1,6 +1,116 @@
 <?php
-Session_start();
-require_once ('../config.php');
+
+session_start();
+include ('../config.php');
+$authId = $_SESSION['authId'];
+
+/*
+ if(isset($_FILES['fileToUpload'])) {
+ 
+ //'../assets/img-temp/gigs/'
+ $target_dir = "../assets/img-temp/portfolio/";
+ $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+ $uploadOk = 1;
+ $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+ // Check if image file is a actual image or fake image
+ if(isset($_POST["submit"])) {
+ $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+ if($check !== false) {
+ echo "File is an image - " . $check["mime"] . ".";
+ $uploadOk = 1;
+ } else {
+ echo "File is not an image.";
+ $uploadOk = 0;
+ }
+ }
+ // Check if file already exists
+ 
+ if (file_exists($target_file)) {
+ echo "Sorry, file already exists.";
+ $uploadOk = 0;
+ }
+ 
+ 
+ // Check file size
+ if ($_FILES["fileToUpload"]["size"] > 500000) {
+ echo "Sorry, your file is too large.";
+ $uploadOk = 0;
+ }
+ 
+ // Allow certain file formats
+ if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+ && $imageFileType != "gif" ) {
+ echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+ $uploadOk = 0;
+ }
+ // Check if $uploadOk is set to 0 by an error
+ if ($uploadOk == 0) {
+ echo "Sorry, your file was not uploaded.";
+ // if everything is ok, try to upload file
+ } else {
+ if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+ echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded to ". $target_file;
+ } else {
+ echo "Sorry, there was an error uploading your file.";
+ }
+ }
+ }
+ */
+
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
+
+if(isset($_FILES['fileToUpload'])){
+    $errors= array();
+    $file_name = $_FILES['fileToUpload']['name'];
+    $file_size =$_FILES['fileToUpload']['size'];
+    $file_tmp =$_FILES['fileToUpload']['tmp_name'];
+    $file_type=$_FILES['fileToUpload']['type'];
+    //$file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
+    //$file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
+    
+    $file_path = "../assets/img-temp/portfolio/";
+    
+    /*
+     $file_ext=strtolower(end(explode('.', $file_name)));
+     
+     $extensions= array("jpeg","jpg","png");
+     
+     if(in_array($file_ext,$extensions)=== false){
+     $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+     }
+     */
+    
+    if($file_size > 2097152){
+        $errors[]='File size must be excatly 2 MB';
+    }
+    
+    if(empty($errors)==true){
+        move_uploaded_file($file_tmp, $file_path.$file_name);
+    }else{
+        print_r($errors);
+    }
+}
+
 
 //include "navigationheaderVenueHost.php";
 //require_once ('../dto/venue.php');
@@ -40,6 +150,7 @@ $authIdLocal = $_SESSION['authId'];
 // }
 
 // $_SESSION['venueOwnerId'] = $venueOwnerId;
+
 
 
 
@@ -312,7 +423,7 @@ VALUES( '$chosenEntId', '$entVideoEmbedCode')";
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
+                                                <h5 class="notification-user"><?= $entFirstName. " " . $entLastName ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -343,7 +454,7 @@ VALUES( '$chosenEntId', '$entVideoEmbedCode')";
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $entFirstName. " " . $entLastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -378,7 +489,7 @@ VALUES( '$chosenEntId', '$entVideoEmbedCode')";
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $entFirstName. " " . $entLastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">

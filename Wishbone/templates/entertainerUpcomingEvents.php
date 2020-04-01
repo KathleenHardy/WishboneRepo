@@ -276,7 +276,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                             </li>
                             <li class="user-profile header-notification">
 								<a href="#!" class="waves-effect waves-light">
-                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius-40" alt="User-Profile-Image">
                                     <span><?= $entFirstName. " " . $entLastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
