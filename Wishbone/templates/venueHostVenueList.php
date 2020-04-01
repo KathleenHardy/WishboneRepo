@@ -402,13 +402,12 @@ My Venues
 
 
 </h1>
-
-<div class="card-deck spacing1" style = "text-align: center;">
-<div class="row">
+<div style ="text-align: center;">
+<div class="row spacing1">
 <?php
 foreach ($venueDTO as $venue) {
     print '
-    <div class="card text-center">
+    <div class="card text-center" style="width: 500px; margin: 30px;">
     <img class="card-img-top event-img-size" src='."../assets/img-temp/portfolio/" .$venue->getVenuePicture().' alt="event img">
     <div class="card-body">
     <a href=venueDetail.php?venueId='. $venue->getvenueId().'>$venueId><h5 class="card-title title2">' . $venue->getVenueName() . '</h5></a>
@@ -429,6 +428,7 @@ foreach ($venueDTO as $venue) {
    <div class="outer">
 	<button type="button"><a href="deleteVenue.php">Delete Venue</a></button>
 </div> 
+</div>
  <br/>
  <br/>
  <div style="text-align: center;">

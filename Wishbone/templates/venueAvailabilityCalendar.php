@@ -815,14 +815,14 @@ function formatDate(string $date) {
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class=" ">
-                                            <a href="entertainerUpcomingEvents.php" class="waves-effect waves-dark">
+                                            <a href="venueHostUpcomingEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Upcoming</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
                                         <li class=" ">
-                                            <a href="entertainerPastEvents.php" class="waves-effect waves-dark">
+                                            <a href="venueHostPastEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Past</span>
                                                 <span class="pcoded-mcaret"></span>
@@ -831,12 +831,26 @@ function formatDate(string $date) {
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Portfolio</span>
+                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>                                                                
+                                </li>                                
+                                <li class="">
+                                    <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Book Entertainers</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li> 
+                                <li class="">
+                                    <a href="venueHostVenueList.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fas fa-building"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">My Venues</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>                                                                                               
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">
