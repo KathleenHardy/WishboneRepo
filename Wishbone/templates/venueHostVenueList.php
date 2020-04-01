@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>My Venues</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -50,7 +50,7 @@ include ('../dto/availability.php');
 session_start();
 $venueOwnerId = $_SESSION['venueOwnerId'];
 $venueDTO = array();
-//print_r($_SESSION);
+
 
 $query2 = "SELECT *
         FROM venues
@@ -367,12 +367,12 @@ mysqli_close($connection);
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>                                
+                                </li>  	                               
                                 <li class="">
                                     <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
@@ -423,16 +423,15 @@ My Venues
 
 
 </h1>
-
-<div class="card-deck spacing1" style = "text-align: center;">
-<div class="row">
+<div style ="text-align: center;">
+<div class="row spacing1">
 <?php
 foreach ($venueDTO as $venue) {
     print '
-    <div class="card text-center">
+    <div class="card text-center" style="width: 500px; margin: 30px;">
     <img class="card-img-top event-img-size" src='."../assets/img-temp/portfolio/" .$venue->getVenuePicture().' alt="event img">
     <div class="card-body">
-    <h5 class="card-title title2">' . $venue->getVenueName() . '</h5>
+    <a href=venueDetail.php?venueId='. $venue->getvenueId().'>$venueId><h5 class="card-title title2">' . $venue->getVenueName() . '</h5></a>
     <p class="card-text">' . $venue->getVenueCity() . '</p>
     </div>
     </div>
@@ -450,18 +449,11 @@ foreach ($venueDTO as $venue) {
    <div class="outer">
 	<button type="button"><a href="deleteVenue.php">Delete Venue</a></button>
 </div> 
+</div>
  <br/>
  <br/>
  <div style="text-align: center;">
- <h1 class="main-title" style="padding: 50px; text-align: center;">
-Venue Availabilities
 
-</h1>
-</div>
-
-<div class="outer">
-	<button type="button"><a href="addVenueAvailability-New.php">Add New Availability</a></button>
-</div>
 </div>
                                     </div>
                                     <!-- Page-body end -->

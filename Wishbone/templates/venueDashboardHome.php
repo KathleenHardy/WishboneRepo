@@ -41,9 +41,12 @@
 <?php
 session_start();
 include ('../config.php');
+include ('../dto/venue.php');
 
 
 $authId = $_SESSION['authId'];
+
+
 
 $query = "SELECT venueOwnerId, firstName, lastName, imageLocation
           FROM venueowners
@@ -136,7 +139,28 @@ $query_ent_booked = "select count(distinct entid) AS entertainers_booked from bo
             $stmt->close();
             
         }
-//print_r($_SESSION);
+        
+        $venueDTO = array();
+        
+        
+        $query2 = "SELECT *
+        FROM venues
+        WHERE venueOwnerId=$venueOwnerId";
+        
+        $result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+        
+        $count = mysqli_num_rows($result);
+        
+        if ($count >= 1) {
+            
+            while ($row = mysqli_fetch_array($result)) {
+                
+                $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);
+            }
+        } else {
+            // $fmsg = "No venues for this user";
+        }
+        $_SESSION['myVenues'] = $venueDTO;
 ?>
 <body>
     <!-- Pre-loader start -->

@@ -46,7 +46,6 @@ session_start();
 
 include ('../config.php');
 include ('../dto/entertainer.php');
-include ("navigationheaderVenueHost.php"); 
 
 $entertainersDTO = array();
 
@@ -270,7 +269,7 @@ mysqli_close($connection);
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="auth-normal-sign-in.html">
+                                        <a href="index.php">
                                             <i class="index.php"></i> Logout
                                         </a>
                                     </li>
@@ -369,7 +368,7 @@ mysqli_close($connection);
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
@@ -425,13 +424,11 @@ Entertainers
 
 </h1>
 
-
-<div class="card-deck spacing1">
-<div class="row">
+<div class="row spacing1">
 
                     <?php
 					   foreach( $entertainersDTO as $entertainer) {
-    					    print '  <div class="card text-center">
+    					    print '  <div class="card text-center" style="width: 300px; margin: 30px;">
                             <img class="card-img-top event-img-size" src="../assets/img/profile/'.$entertainer->getProfilePicture().'" alt="event img">
                             <div class="card-body">
                               <h5 class="card-title title2">'.$entertainer->getFirstName() . " " . $entertainer->getLastName() .'</h5>
@@ -447,7 +444,6 @@ Entertainers
 
 
 
-</div>
 
 
                                     </div>

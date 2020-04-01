@@ -9,6 +9,25 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
       <![endif]-->
+      <!-- Copyright (c) 2018 Html Stream
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. -->
     <!-- Meta -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -50,7 +69,8 @@
 Session_start();
 include ('../config.php');
 require_once ('../dto/gig.php');
-print_r($_SESSION);
+include ('../dto/entVideo.php');
+
 
 
 $authId = $_SESSION['authId'];
@@ -141,7 +161,6 @@ foreach( $myGigs as $gigs) {
 }
 
 
-
 $query4 = "SELECT email
           FROM authentication
           WHERE  authid = ?";
@@ -165,6 +184,28 @@ if ($stmt4 = $connection->prepare( $query4)) {
 }
 
 
+//$connection->close();
+
+$videoDTO = array();
+
+
+$vidQuery = "SELECT *
+        FROM entertainerVideos
+        WHERE entId=$entid";
+
+$result = mysqli_query($connection, $vidQuery) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+
+if ($count >= 1) {
+    
+    while ($row = mysqli_fetch_array($result)) {
+        
+        $videoDTO[] = new entVideo($row['entVideoId'], $row['entId'], $row['entVideoEmbedCode']);
+    }
+} else {
+    // $fmsg = "No venues for this user";
+}
 $connection->close();
 
 ?>
@@ -305,8 +346,11 @@ $connection->close();
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
+                                <span class="img-small">
                                     <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
+
                                     <span><?= $firstName. " " . $lastName ?></span>
+
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -464,7 +508,7 @@ $connection->close();
                                     <!-- Page-body start -->
                                     <div class="page-body">
       <!-- Promo Block -->
-      <section class="js-parallax u-promo-block u-promo-block--mheight-500 u-overlay u-overlay--dark text-white" style="background-image: url(../assets/img-temp/1920x1080/img3.jpg);">  
+      <section class="js-parallax u-promo-block u-promo-block--mheight-500 u-overlay text-white" style="background-image: url(../assets/img-temp/1920x1080/img3.jpg);">  
         <!-- Promo Content -->
         <div class="container u-overlay__inner u-ver-center u-content-space">
           <div class="row justify-content-center">
@@ -552,6 +596,20 @@ $connection->close();
           <div class="row u-content-space-bottom">
             <div class="col-lg-12" style="text-align: center;">
             <h1 class="main-title">MY MEDIA</h1>
+            
+            <?php
+foreach ($videoDTO as $entVid) {
+    ?>
+    <iframe width="420" height="315"
+    <?php
+    echo $entVid ->getEntVideoEmbedCode();
+    ?>>
+    </iframe> 
+
+<?php    
+}
+
+?>
             <div class="button_entertainer" align="center"><a class="button_add_gigs" href="entertainerAddNewMedia.php">Add Media</a></div>
             
             </div>
@@ -591,7 +649,7 @@ $connection->close();
                         <h6 class="mb-0">' . $gigs->getGigsName() . '</h6>
                         <small class="d-block">' . $gigs->getGigsCategory() . '</small>
     				 </figcaption>
-                     <a class="js-popup-image u-portfolio__zoom" href=' ."../assets/img-temp/portfolio/" . $imgSrc . '>Zoom</a>
+                     <!-- <a class="js-popup-image u-portfolio__zoom" href=' ."../assets/img-temp/portfolio/" . $imgSrc . '>Zoom</a> -->
                </figure>
                ';
           }
@@ -680,19 +738,7 @@ $connection->close();
   <br/>
  <br/>
  <br/>
- <div style="text-align: center;">
- <h1 class="main-title" style="padding: 50px; text-align: center;">
-My Availabilities
 
-</h1>
-</div>
-
-
-
-<div class="buttons-section" style="text-align: center;">
-<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="addEntertainerAvailability-New.php">Add New Availability</a></div>
-<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="deleteAvailability.php">Remove an Availability</a></div>
- </div>
       <!-- End Portfolio -->
   
       

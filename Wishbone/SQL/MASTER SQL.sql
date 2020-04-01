@@ -8,7 +8,7 @@ drop table if exists eventPlanners;
 drop table if exists venueOwners;
 drop table if exists entertainerAvailability;
 drop table if exists venueAvailability;
-drop table if exists gigsVideos;
+drop table if exists entertainerVideos;
 drop table if exists gigsImages;
 drop table if exists gigs;
 drop table if exists gigsPendingBookings;
@@ -391,13 +391,13 @@ CREATE TABLE gigsImages (
 );
 
 
-CREATE TABLE gigsVideos (
-    gigsVideoid int not null auto_increment,
-    gigsid int not null,
-    gigsVideoLocation varchar(100),
+CREATE TABLE entertainerVideos (
+    entVideoId int not null auto_increment,
+    entId int not null,
+    entVideoEmbedCode varchar(100),
     
-    FOREIGN KEY (gigsid) REFERENCES gigs(gigsid),
-    primary key (gigsVideoid)
+    FOREIGN KEY (entId) REFERENCES entertainers(entId),
+    primary key (entVideoId)
 );
 
 
@@ -468,7 +468,7 @@ CREATE TABLE venues (
 CREATE TABLE venueVideos (
     venueVideoid int not null auto_increment,
     venueId int not null,
-    venueVideoLocation varchar(100),
+    venueVideoEmbedCode varchar(100),
     
     FOREIGN KEY (venueId) REFERENCES venues(venueId),
     primary key (venueVideoid)
@@ -634,6 +634,11 @@ bookedgigs.eventPlannerId = eventplanners.eventPlannerId JOIN venues ON
 bookedgigs.venueId = venues.venueId JOIN authentication ON
 eventplanners.authid = authentication.authid
 );
+
+ALTER TABLE `bookingrequests`  ADD `gigsid` INT NOT NULL  AFTER `venueOwnerId`,  ADD `venueid` INT NOT NULL  AFTER `gigsid`,  ADD `event_name` VARCHAR(50) NOT NULL  AFTER `venueid`,  ADD `event_date` DATE NOT NULL  AFTER `event_name`,  ADD `event_description` VARCHAR(250) NOT NULL  AFTER `event_date`;
+
+ALTER TABLE `bookingrequests` ADD CONSTRAINT `bookingrequests_ibfk_4` FOREIGN KEY (`gigsid`) REFERENCES `gigs`(`gigsid`) ON DELETE RESTRICT ON UPDATE RESTRICT; ALTER TABLE `bookingrequests` ADD CONSTRAINT `bookingrequests_ibfk_5` FOREIGN KEY (`venueid`) REFERENCES `venues`(`venueId`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 
 
 
@@ -912,9 +917,10 @@ insert into feeds values(7, "Is space real if you can't see it? ",current_time()
 insert into feeds values(7, 'Ksenia is a pro in GitHub',current_time()); 
 **/
 
+
 INSERT into authentication (email,pass, userType) VALUES ('silas@fish.com','password', 2);
 INSERT into authentication (email,pass, userType) VALUES ('keller@mathew.com','password', 2);
-INSERT into authentication (email,pass, userType) VALUES ('Sotie@Erikzon.com','password', 2);
+INSERT into authentication (email,pass, userType) VALUES ('Sam@Erikzon.com','password', 2);
 INSERT into authentication (email,pass, userType) VALUES ('Etlana@Fries.com','password', 2);
 
 INSERT into authentication (email,pass, userType) VALUES ('madison@kindler.com','password', 3);
@@ -942,7 +948,7 @@ INSERT INTO entertainers (authid, firstName, lastName, ratePerHour, profilePictu
 							(14,'Keller','Mathew', 35.6, 'M1.jpg','Cover Band');
 
 INSERT INTO entertainers (authid, firstName, lastName, ratePerHour, profilePicture, aboutMe) VALUES 
-							(15,'Sotie','Erikzon', 75.8, 'F3.jpg','The ultimate show of a life time. Come and be blown away');
+							(15,'Sam','Erikzon', 75.8, 'F3.jpg','The ultimate show of a life time. Come and be blown away');
 							
 INSERT INTO entertainers (authid, firstName, lastName, ratePerHour, profilePicture, aboutMe) VALUES 
 							(16,'Etlana','Fries', 98.56,  'pro-photo.jpg','I have been playing music all my life and I play professionally over 3 instruments. I also know how to create my own music, including song lyrics.');
@@ -973,6 +979,28 @@ INSERT INTO gigs (entid, gigsName, gigsCategory, gigsArttype, gigsDetails, notes
     	                       
 INSERT INTO gigs (entid, gigsName, gigsCategory, gigsArttype, gigsDetails, notes) VALUES 
     	                       (3,'Laugh your guts out','Party','Comedian','Forget about your sorrows. Come and laugh and dine', 'laugh out loud');
+    	                       
+    	                       
+INSERT INTO gigsimages ( gigsid, gigsImageLocation) values
+                       ( 1, 'chad-kirchoff-ivqGyYLtBI8-unsplash.jpg'); 
+                       
+INSERT INTO gigsimages ( gigsid, gigsImageLocation) values
+                       ( 2, 'img7.jpg');
+                       
+INSERT INTO gigsimages ( gigsid, gigsImageLocation) values
+                       ( 3, 'img8.jpg');
+                       
+INSERT INTO gigsimages ( gigsid, gigsImageLocation) values
+                       ( 4, 'maxime-bhm-icyZmdkCGZ0-unsplash.jpg');
+                       
+INSERT INTO gigsimages ( gigsid, gigsImageLocation) values
+                       ( 5, 'samplevenue1.jpg');
+                       
+INSERT INTO gigsimages ( gigsid, gigsImageLocation) values
+                       ( 6, 'vidar-nordli-mathisen-JoxgCs5h8FA-unsplash.jpg'); 
+                       
+INSERT INTO gigsimages ( gigsid, gigsImageLocation) values
+                       ( 7, 'photo-1460723237483-7a6dc9d0b212.jpg');
     
     	                       
 
@@ -1033,13 +1061,13 @@ INSERT INTO bookedvenues (eventPlannerId, venueId) VALUES
 					     (5, 1);
 					 
 
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (1,3, 1,1,1); 
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (2,3, 2,1,2);	
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (2,2, 3,2,1);
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (3,4, 1,2,2);
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,6, 2,1,1);
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,6, 3,1,1);
-INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId) VALUES (4,6, 1,1,1);
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId, event_name, event_date, event_description) VALUES (1,3, 1,1,1, 'Birthday surprise','2020-04-10','Your birthday is the day of your birth! Its the yearly anniversary that marks the day you were born'); 
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId, event_name, event_date, event_description) VALUES (2,3, 2,1,2, 'Wedding','2020-04-11','A wedding is a ceremony where two or more people are united in marriage. ... Most wedding ceremonies involve an exchange of marriage vows by a couple');	
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId, event_name, event_date, event_description) VALUES (2,2, 3,2,1, 'DJ','2020-04-18','Disc Jockeys, also known as DJs, play musical recordings on radio shows, at nightclubs, and at public events. DJs mostly work for radio stations presenting programs, talks shows, and chart shows');
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId, event_name, event_date, event_description) VALUES (3,4, 1,2,2, 'Party all Night','2020-04-19','A party is a gathering of people who have been invited by a host for the purposes of socializing, conversation, recreation, or as part of a festival or other commemoration of a special occasion.');
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId, event_name, event_date, event_description) VALUES (4,6, 2,1,1, 'Concert in my Living room','2020-04-19','Here are some adjectives for concert: sonorous and never-ending, usual open-air, modest chamber-music, constant and outrageous, mournfal, strange and mournfal, next sold-out, fine matinee, unannounced free, high-quality full-sized, open or private, rival canine, delightful gratuitous, strange but not inharmonious');
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId, event_name, event_date, event_description) VALUES (4,6, 3,1,1, 'Photography','2020-04-17','Photographers are artists with the camera, using a blend of technical skills and an artistic eye to take pictures of people, places, landscapes');
+INSERT INTO bookedgigs (entid, gigsid, eventPlannerId, venueOwnerId, venueId, event_name, event_date, event_description) VALUES (4,6, 1,1,1, 'Model','2020-04-12','Models promote, advertise, and showcase clothing, footwear, and other products. They participate in photoshoots, fashion shows, commercials, trade shows, and conventions as well as pose for sculptors, artists, and painters');
 
 
 INSERT INTO occupation (entid, occupation) VALUES (1, "Dancer");
@@ -1051,7 +1079,9 @@ INSERT INTO occupation (entid, occupation) VALUES (3, "Model");
 INSERT INTO occupation (entid, occupation) VALUES (1, "Comedian");
 INSERT INTO occupation (entid, occupation) VALUES (3, "DJ");
 
-			 
+insert into entertainerVideos(entid, entVideoEmbedCode) VALUES (4, '<iframe width="1263" height="480" src="https://www.youtube.com/embed/uJ74cXI6KYg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+insert into venueVideos(venueid, venueVideoEmbedCode) VALUES (1, '<iframe width="1263" height="480" src="https://www.youtube.com/embed/9ScwCBQkhIY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+
 					 
 /*
 INSERT INTO `eventplanners` (`authid`, `firstName`, `lastName`, `imageLocation`) VALUES 

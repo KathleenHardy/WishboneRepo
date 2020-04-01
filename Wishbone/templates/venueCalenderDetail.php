@@ -1,8 +1,160 @@
+ <?php
+session_start();
+include ('config.php');
+include ('../enums/profileStatus.php');
+
+$authId = $_SESSION['authId'];
+
+
+if ( isset ($_GET['id'])) {
+    $_SESSION['availid'] = $_GET['id'];
+    $availid = $_GET['id'];
+    echo $availid;
+}
+
+
+
+$query = "SELECT venueOwnerId
+          FROM venueOwners
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result($venueOwnerId);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+}
+
+$query3 = "SELECT firstName, lastName, imageLocation
+              FROM venueOwners
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $venueOwnerId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $venueOwnerFirstName, $venueOwnerLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
+
+$query4 = "SELECT availStartDate, availEndDate, availStartTime, availEndTime, availTitle
+          FROM venueAvailability
+          WHERE availid = ?";
+
+if ($stmt4 = $connection->prepare( $query4)) {
+    
+    $stmt4->bind_param( "i", $availid);
+    
+    //execute statement
+    $stmt4->execute();
+    
+    //bind result variables
+    $stmt4->bind_result( $availStartDate, $availEndDate, $availStartTime, $availEndTime, $availTitle);
+    
+    // fetch values
+    $stmt4->fetch();
+    
+    //close statement
+    $stmt4->close();
+}
+
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
+    
+    if (isset($_POST['update'])) {
+        
+        $query5 = "UPDATE venueAvailability
+                      SET availTitle = ?, availStartDate = ?, availEndDate = ?, availStartTime = ?, availEndTime = ?
+                      WHERE availid = ?";
+        
+        if ($stmt5 = $connection->prepare( $query5)) {
+            
+            $stmt5->bind_param( "sssssi", $availTitle_, $availStartDate_, $availEndDate_, $availStartTime_, $availEndTime_, $availid_);
+            
+            //Set params
+            $availTitle_ = $_POST['avail_name'];
+            $availStartDate_ = $_POST['avail_start_date'];
+            $availEndDate_ = $_POST['avail_end_date'];
+            $availStartTime_ = $_POST['avail_start_time'];
+            $availEndTime_ = $_POST['avail_end_time'];
+            //$entid_ = $entid;
+            $availid_ = $_SESSION['availid'];
+            
+            
+            //execute statement
+            $status = $stmt5->execute();
+            
+            if ($status === false) {
+                trigger_error($stmt5->error, E_USER_ERROR);
+            } else {
+                //echo("<script>location.href = 'entertainerMainPortfolio.php?msg=$msg';</script>");
+                header("Location: venueAvailabilityCalendar.php");
+            }
+            
+            
+            //update picture
+            
+            
+            //close statement
+            $stmt5->close();
+        }
+        
+    } else if( isset($_POST['remove'])) {
+        $query6 = "DELETE FROM venueavailability
+                   WHERE availid = ?";
+        
+        if ($stmt6 = $connection->prepare( $query6)) {
+            
+            $stmt6->bind_param( "i", $availid_);
+            
+            //Set params
+            //$entid_ = $entid;
+            $availid_ = $_SESSION['availid'];
+            
+            //execute statement
+            $status = $stmt6->execute();
+            
+            if ($status === false) {
+                trigger_error($stmt6->error, E_USER_ERROR);
+            } else {
+                //echo("<script>location.href = 'entertainerMainPortfolio.php?msg=$msg';</script>");
+                header("Location: venueAvailabilityCalendar.php");
+            }
+            
+            //close statement
+            $stmt6->close();
+        }
+        
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Entertainer Portfolio</title>
+    <title>Edit Venue Availability</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -10,25 +162,6 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
       <![endif]-->
     <!-- Meta -->
-    <!-- Copyright (c) 2018 Html Stream
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE. -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -55,135 +188,14 @@ SOFTWARE. -->
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
-    
-    				<link rel="stylesheet" type="text/css" href="../assets/css/styles.css" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/custom.css" />    
-		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />    
+    		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        
+        
 </head>
 
 <body>
-<?php 
-session_start();
-include ('../config.php');
-require_once ('../dto/gig.php');
-
-$_SESSION['entid']=$_GET['id'];
-$entid = $_SESSION['entid'];
-
-$query = "SELECT authid, firstName, lastName, ratePerHour, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus
-          FROM entertainers
-          WHERE  entid = ?";
-
-if ($stmt = $connection->prepare( $query)) {
-    
-    $stmt->bind_param( "i", $entid);
-    
-    //execute statement
-    $stmt->execute();
-    
-    //bind result variables
-    $stmt->bind_result($authId, $firstName, $lastName, $ratePerHour, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
-    
-    // fetch values
-    $stmt->fetch();
-    
-    //close statement
-    $stmt->close();
-    
-}
-
-$myGigs = array();
-$query2 = "SELECT gigsid, gigsName, gigsCategory, gigsLabel, gigsArtType, gigsDetails, notes
-           FROM gigs
-           WHERE  entid = ?";
-
-if ($stmt2 = $connection->prepare( $query2)) {
-    
-    $stmt2->bind_param( "i", $entid);
-    
-    //execute statement
-    $stmt2->execute();
-    
-    //bind result variables
-    $stmt2->bind_result($gigsid, $gigsName, $gigsCategory, $gigsLabel,  $gigsArtType, $gigsDetails, $gigsNotes);
-    
-    // fetch values
-    while( $stmt2->fetch()) {
-        
-        $myGigs[] = new Gig( $gigsid, $gigsName, $gigsCategory, $gigsLabel, $gigsArtType, $gigsDetails, $gigsNotes);
-        
-    }
-    
-    //close statement
-    $stmt2->close();
-}
-
-$myGigsPictures = array();
-
-foreach( $myGigs as $gigs) {
-    $query3 = "SELECT gigsImageLocation
-              FROM gigsImages
-              WHERE  gigsid = ?";
-    
-    if ($stmt3 = $connection->prepare( $query3)) {
-        $gigsId = $gigs->getGigsID();
-        
-        $stmt3->bind_param( "i", $gigsId);
-        
-        //execute statement
-        $stmt3->execute();
-        
-        //bind result variables
-        $stmt3->bind_result($gigsImageLocation);
-        
-        // fetch values
-        while( $stmt3->fetch()) {
-            $myGigsPictures[] = $gigsImageLocation;
-        }
-        
-        $gigs->addGigsPictures($myGigsPictures);
-        
-        unset($myGigsPictures);
-        $myGigsPictures = array();
-        
-        //close statement
-        $stmt3->close();
-        
-    }
-    
-}
-
-
-$query4 = "SELECT email
-          FROM authentication
-          WHERE  authid = ?";
-
-if ($stmt4 = $connection->prepare( $query4)) {
-    
-    $stmt4->bind_param( "i", $authId);
-    
-    //execute statement
-    $stmt4->execute();
-    
-    //bind result variables
-    $stmt4->bind_result($email);
-    
-    // fetch values
-    $stmt4->fetch();
-    
-    //close statement
-    $stmt4->close();
-    
-}
-
-
-
-$connection->close();
-
-
-?>
-
     <!-- Pre-loader start -->
     <div class="theme-loader">
         <div class="loader-track">
@@ -258,8 +270,8 @@ $connection->close();
                                 </div>
                             </div>
                         </div>
-                        <a href="entertainerDashboardHome.php">
-                            <h4>WISHBONE</h4>
+                        <a href="venueProfileView.php">
+                            <h4 style="color:white;">WISHBONE</h4>
                         </a>
                         <a class="mobile-options waves-effect waves-light">
                             <i class="ti-more"></i>
@@ -321,8 +333,8 @@ $connection->close();
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
+                                    <span><?= $venueOwnerFirstName. " " . $venueOwnerLastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -332,12 +344,12 @@ $connection->close();
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="venueHostProfileView.php">
+                                        <a href="venueProfileView.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="auth-normal-sign-in.html">
+                                        <a href="index.php">
                                             <i class="ti-layout-sidebar-left"></i> Logout
                                         </a>
                                     </li>
@@ -355,15 +367,15 @@ $connection->close();
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $venueOwnerFirstName. " " . $venueOwnerLastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
+                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -382,7 +394,7 @@ $connection->close();
                             <div class="pcoded-navigation-label">NAVIGATION</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="active">
-                                    <a href="entertainerDashboardHome.php" class="waves-effect waves-dark">
+                                    <a href="venueProfileView.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Dashboard</span>
                                         <span class="pcoded-mcaret"></span>
@@ -420,14 +432,14 @@ $connection->close();
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class=" ">
-                                            <a href="eventPlannerUpcomingEvents.php" class="waves-effect waves-dark">
+                                            <a href="venueHostUpcomingEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Upcoming</span>
                                                 <span class="pcoded-mcaret"></span>
                                             </a>
                                         </li>
                                         <li class=" ">
-                                            <a href="eventPlannerPastEvents.php" class="waves-effect waves-dark">
+                                            <a href="venueHostPastEvents.php" class="waves-effect waves-dark">
                                                 <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                 <span class="pcoded-mtext">Past</span>
                                                 <span class="pcoded-mcaret"></span>
@@ -436,19 +448,43 @@ $connection->close();
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="eventPlannerAllEntertainers.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Entertainers</span>
+                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li> 
+                                </li>
+                                <?php
+                                    if ( $profileStatus == ProfileStatus::INCOMPLETE || $profileStatus == ProfileStatus::NOT_CREATED) {
+                                      print'
+                                           <li class="">
+                                                <a href="venueProfileCreate.php" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                                    <span class="pcoded-mtext">Create Portfolio</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li> 
+                                           '; 
+                                    } else {
+                                        print'
+                                            <li class="">
+                                                <a href="venueDashboardHome.php" class="waves-effect waves-dark">
+                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                                    <span class="pcoded-mtext">Portfolio</span>
+                                                    <span class="pcoded-mcaret"></span>
+                                                </a>
+                                            </li>
+                                             ';
+                                        
+                                    }
+                                ?>
                                 <li class="">
-                                    <a href="eventPlannerAllVenues.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fas fa-building"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Venues</span>
+                                    <a href="venueProfileView.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Portfolio</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>                                                                                                
+                                </li>                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">
@@ -480,163 +516,54 @@ $connection->close();
                                     <!-- Page-body start -->
                                     <div class="page-body">
 
-<!-- Profile start -->
-<div>
-      <!-- Promo Block -->
-      <section class="js-parallax u-promo-block u-promo-block--mheight-500 u-overlay u-overlay--dark text-white" style="background-image: url(../assets/img-temp/1920x1080/img5.jpg);">
-        <!-- Promo Content -->
-        <div class="container u-overlay__inner u-ver-center u-content-space">
-          <div class="row justify-content-center">
-            <div class="col-12">
-              <div class="text-center">
-                <h1 class="display-sm-4 display-lg-3"><?= $firstName . ' ' . $lastName  ?></h1>
-                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= 'Occupation Here' ?></p>
+				<div class="container">
+					<div class="row">
+						<div
+							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 ">
 
-                <ul class="list-inline text-center mb-0">
-                  <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Facebook">
-                    <a class="text-white" href="#!">
-                      <i class="fab fa-facebook fa-2x"></i>
-                    </a>
-                  </li>
-                  <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Dribbble">
-                    <a class="text-white" href="#!">
-                      <i class="fab fa-dribbble fa-2x"></i>
-                    </a>
-                  </li>
-                  <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Linkedin">
-                    <a class="text-white" href="#!">
-                      <i class="fab fa-linkedin fa-2x"></i>
-                    </a>
-                  </li>
-                  <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Twitter">
-                    <a class="text-white" href="#!">
-                      <i class="fab fa-twitter fa-2x"></i>
-                    </a>
-                  </li>
-                  <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Twitter">
-                    <a class="text-white" href="#!">
-                      <i class="fab fa-instagram fa-2x"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Promo Content -->
-      </section>
-      <!-- End Promo Block -->
-    </header>
-    <!-- End Header -->
+							<!-- title-01 -->
+							<div class="title-01 title-01__style-04">
+								<h1 class="main-title">Edit Availability</h1>
+							</div>
+							<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST" enctype="multipart/form-data">
 
-    <main role="main">
-      <!-- About Section -->
-      <section>
-        <div class="container">
-          <!-- Profile Block -->
-          <div class="row">
-            <div class="col-md-4 mx-auto">
-              <div class="u-pull-half text-center">
-                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="300" height="300" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="Image Description">
-              </div>
-            </div>
-          </div>
-          <!-- End Profile Block -->
+										<div class="form-group">
+											<label for="avail_name_id" class="control-label title2">Availability Name</label>
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="avail_name_id" name="avail_name" value="<?= $availTitle ?>">
+										</div>	
+										
+										<div class="form-group">
+											<label for="avail_start_date_id" class="control-label title2">Availability Start Date</label>
+											<input type="date" class="form-control" style="border-bottom: 2px solid #faa828;" id="avail_start_date_id" name="avail_start_date" value=<?= $availStartDate ?>>
+										</div>
+										
+										<div class="form-group">
+											<label for="avail_end_date_id" class="control-label title2">Availability End Date</label>
+											<input type="date" class="form-control" style="border-bottom: 2px solid #faa828;" id="avail_end_date_id" name="avail_end_date" value=<?= $availEndDate ?>>
+										</div>
+										
+										<div class="form-group">
+											<label for="avail_start_time_id" class="control-label title2">Availability Start Time</label>
+											<input type="time" class="form-control" style="border-bottom: 2px solid #faa828;" id="avail_start_time_id" name="avail_start_time" value=<?= $availStartTime ?>>
+										</div>
+										
+										<div class="form-group">
+											<label for="avail_end_time_id" class="control-label title2">Availability End Time</label>
+											<input type="time" class="form-control" style="border-bottom: 2px solid #faa828;" id="avail_end_time_id" name="avail_end_time" value=<?= $availEndTime ?>>
+										</div>
 
-          <!-- About and Contact -->
-          <div class="row u-content-space-bottom">
-            <div class="col-lg-12" style="text-align: center;">
-              <h1 class ="main-title">ABOUT ME</h1>
-              <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;"><?= $aboutMe ?></p>
-              <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;"><?= $myQuote ?></p>
-              <p class="blockquote-footer"><?= $firstName . ' ' . $lastName . ', ' . $occupation?></p>
-              <br/>
-              <h1 class="main-title">CONTACT ME</h1>
-              <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;">EMAIL: <?= $email ?></p>
-            </div>
-                    
-          <!-- End About and Contact -->
-        </div>
-        </div>
-      </section>
-      <!-- End About Section -->
+										<!-- Replace buttons with below code -->
+										<div class="form-group" style="display:inline;"> 
+											<button type="submit" name="update" class="btn-all">Update</button>
+											<button type="submit" name="remove" class="btn-all">Remove</button>
+											<!-- <a href="entertainerMainPortfolio.php"><button type="button" class="btn-all">Cancel</button></a> -->
 
-      <div class="container">
-        <hr class="my-0">
-      </div>
+										</div> 										 
+							</form>
+							</div>
+							</div>
+							</div>
 
-<!-- New Media section -->
-          <div class="row u-content-space-bottom">
-            <div class="col-lg-12" style="text-align: center;">
-            <h1 class="main-title">MY MEDIA</h1>
-            <p align="center">New Media Files Show Up Here</p>
-            
-            </div>
-            </div>
-<!-- end -->
-      <div class="container">
-        <hr class="my-0">
-      </div>
-      <!-- Portfolio -->
-      <section class="u-content-space">
-        <div class="container">
-          <header class="text-center w-md-50 mx-auto mb-8">
-            <h1 class="main-title">MY GIGS</h1>
-            <p class="h5" style="font-family: 'Averta'; color:#005BAD;">I play soulful music for a variety of audiences to enjoy.</p>            
-          </header>
-
-          <ul class="js-shuffle-controls u-portfolio-controls text-center mb-5">
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="all" class="active">ALL</a></li>
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="its-illustration">PERSONAL</a></li>
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="its-design">PROFESSIONAL</a></li>
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="its-graphic">BEST</a></li>
-            <li class="u-portfolio-controls__item"><a href="#!" data-group="its-logo">OTHER</a></li>
-          </ul>
-
-          <!-- Work Content -->
-          <div class="js-shuffle u-portfolio row no-gutters mb-6">
-          
-          
-          <?php 
-          foreach( $myGigs as $gigs) {
-              $picArray = $gigs->getGigsPictures();
-              $imgSrc = reset( $picArray);
-              
-              print
-              '<figure class="col-sm-6 col-md-4 u-portfolio__item" data-groups=' . "[\"" . $gigs->getGigsLabel() . "\"]" . '>
-    		      <img class="u-portfolio__image" src=' ."../assets/img-temp/portfolio/" . $imgSrc . ' alt="Image Description">
-    				 <figcaption class="u-portfolio__info">
-                        <h6 class="mb-0">' . $gigs->getGigsName() . '</h6>
-                        <small class="d-block">' . $gigs->getGigsCategory() . '</small>
-    				 </figcaption>
-                     <a class="js-popup-image u-portfolio__zoom" href=' ."../assets/img-temp/portfolio/" . $imgSrc . '>Zoom</a>
-               </figure>
-               ';
-          }
-          
-          ?>
-            <figure class="col-sm-6 col-md-4 u-portfolio__item shuffle_sizer"></figure>
-          </div>
-          <!-- End Work Content -->
-        </div>
-      
-      <!--  Button to Add Gigs -->  
-      <div class="buttons-section" style="text-align: center;">
-<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="eventPlannerBookEvent.php">Book</a></div>
-<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="eventPlannerAllEntertainers.php">Back</a></div>
- </div>
-      <!-- End Portfolio -->
-  
-      
-    </main>
-</div>
-
-<!-- end -->
-
-
-                                            </div>
-                                            <!-- Project statustic end -->
-                                        </div>
                                     </div>
                                     <!-- Page-body end -->
                                 </div>
@@ -692,28 +619,7 @@ $connection->close();
 </div>
 <![endif]-->
     <!-- Warning Section Ends -->
-    <!-- JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) -->
-    <!-- Global Vendor -->
-    <script src="../assets/vendors/jquery.min.js"></script>
-    <script src="../assets/vendors/jquery.migrate.min.js"></script>
-    <script src="../assets/vendors/popper.min.js"></script>
-    <script src="../assets/vendors/bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- Components Vendor  -->
-    <script src="../assets/vendors/jquery.parallax.js"></script>
-    <script src="../assets/vendors/magnific-popup/jquery.magnific-popup.min.js"></script>
-    <script src="../assets/vendors/shuffle/jquery.shuffle.min.js"></script>
-
-    <!-- Theme Settings and Calls -->
-    <script src="../assets/js/global.js"></script>
-
-    <!-- Theme Components and Settings -->
-    <script src="../assets/js/vendors/parallax.js"></script>
-    <script src="../assets/js/vendors/magnific-popup.js"></script>
-    <script src="../assets/js/vendors/shuffle.js"></script>
-    <!-- END JAVASCRIPTS -->
-    
-    
     <!-- Required Jquery -->
     <script type="text/javascript" src="../assets/javascript/jquery/jquery.min.js "></script>
     <script type="text/javascript" src="../assets/javascript/jquery-ui/jquery-ui.min.js "></script>

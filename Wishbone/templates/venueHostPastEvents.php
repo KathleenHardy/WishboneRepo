@@ -327,7 +327,7 @@ $_SESSION['venueOwnerId'] = $venueOwnerId;
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>

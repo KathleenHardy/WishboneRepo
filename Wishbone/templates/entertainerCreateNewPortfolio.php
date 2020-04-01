@@ -11,6 +11,8 @@ include ('../enums/profileStatus.php');
 
 $authId = $_SESSION['authId'];
 
+$profileStatus = ProfileStatus::NOT_CREATED;
+
 if(isset($_FILES['profilepic'])){
     $errors= array();
     $profilePic_file_name = $_FILES['profilepic']['name'];
@@ -57,107 +59,144 @@ if(isset($_FILES['bgimage'])){
 
 function profileStatus() {
     
-    if ( isset($_POST['hourlyrate']) && isset($_POST['occupation']) && isset($_POST['aboutme']) && isset($_POST['gigsdetails'])) {
+    if ( isset($_POST['hourlyrate']) && isset($_POST['occupation']) && isset($_POST['aboutme']) && isset($_POST['occList'])
+                                     && isset($_POST['gigsdetails']) && isset($_FILES['profilepic']) && isset($_FILES['bgimage']) && isset($_FILES['quote']) ) {
         $result = ProfileStatus::COMPLETE;
-    } else if ( isset($_POST['hourlyrate']) || isset($_POST['occupation']) || isset($_POST['aboutme']) || isset($_POST['gigsdetails'])) {
+                                     } else if ( isset($_POST['hourlyrate']) || isset($_POST['occupation']) || isset($_POST['aboutme']) || isset($_POST['occList'])
+                                    || isset($_POST['gigsdetails']) || isset($_FILES['profilepic']) || isset($_FILES['bgimage']) || isset($_FILES['quote'])) {
         $result = ProfileStatus::INCOMPLETE;
     }
     
     return $result;
 }
 
-
+$ratePerHourErr = $workDescriptionErr = $aboutMeErr = $occupationErr = "";
+$createPortfolioErr = array();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    $query0 = "SELECT entid
+    if (empty($_POST["hourlyrate"])) {
+        $ratePerHourErr = "Rate per hour is required";
+        $createPortfolioErr[] = $ratePerHourErr;
+        
+    } else if( !filter_var( $_POST['hourlyrate'], FILTER_VALIDATE_FLOAT)) {
+        $ratePerHourErr = "Numeric value is required";
+        $createPortfolioErr[] = $ratePerHourErr;
+    }
+    
+    if (empty($_POST["gigsdetails"])) {
+        $workDescriptionErr = "Work description is required";
+        $createPortfolioErr[] = $workDescriptionErr; 
+    }
+    
+    if (empty($_POST["aboutme"])) {
+        $aboutMeErr = "About me is required";
+        $createPortfolioErr[] = $aboutMeErr;
+    }
+    
+    if( isset( $_POST['str']) ) { 
+        $occupations = json_decode($_POST['str'], true);
+        
+        if ( $occupations == "") {
+            $occupationErr = "Occupation is required";
+            $createPortfolioErr[] = $occupationErr;
+        }
+    }
+    
+    
+
+    if ( sizeof( $createPortfolioErr) == 0) { 
+        
+        $query0 = "SELECT entid
                FROM entertainers
                WHERE  authid = ?";
-    
-    if ($stmt0 = $connection->prepare( $query0)) {
         
-        $stmt0->bind_param( "i", $authId);
-        
-        //execute statement
-        $stmt0->execute();
-        
-        //bind result variables
-        $stmt0->bind_result($entid);
-        
-        // fetch values
-        $stmt0->fetch();
-        
-        //close statement
-        $stmt0->close();
-    }
-    
-    
-    
-    $query = "UPDATE entertainers
-                  SET ratePerHour = ?, workDescription = ?, profilePicture = ?, homePagePicture = ?, aboutMe = ?, myQuote = ?, profileStatus = ?
-                  WHERE  authid = ?";
-    
-    if ($stmt = $connection->prepare( $query)) {
-        $profileStatus = profileStatus();
-        
-        $stmt->bind_param( "dsssssii", $ratePerHour, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus, $authId);
-        
-        //Set params
-        $ratePerHour = $_POST['hourlyrate'];
-        $workDescription = $_POST['gigsdetails'];
-        $profilePicture = basename($_FILES["profilepic"]["name"]);
-        $homePagePicture = basename($_FILES["bgimage"]["name"]);
-        $aboutMe = $_POST['aboutme'];
-        $myQuote = $_POST['quote'];
-        $profileStatus = profileStatus();
-        
-        
-        //execute statement
-        $status = $stmt->execute();
-        
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
-        } else {
-            //echo("<script>location.href = 'entertainerMainPortfolio.php?msg=$msg';</script>");
-            header("Location: entertainerMainPortfolio.php");
+        if ($stmt0 = $connection->prepare( $query0)) {
+            
+            $stmt0->bind_param( "i", $authId);
+            
+            //execute statement
+            $stmt0->execute();
+            
+            //bind result variables
+            $stmt0->bind_result($entid);
+            
+            // fetch values
+            $stmt0->fetch();
+            
+            //close statement
+            $stmt0->close();
         }
         
-        //close statement
-        $stmt->close();
-    }
-      
-  
-
-    if( isset( $_POST['str'])) {
         
-        $occupations = json_decode($_POST['str'], true);
-        //print_r($occupations);
         
-        foreach( $occupations as $occupation_) {
-
-            $query2 = "INSERT INTO occupation
+        $query = "UPDATE entertainers
+                  SET ratePerHour = ?, workDescription = ?, profilePicture = ?, homePagePicture = ?, aboutMe = ?, myQuote = ?, profileStatus = ?
+                  WHERE  authid = ?";
+        
+        if ($stmt = $connection->prepare( $query)) {
+            $profileStatus = profileStatus();
+            
+            $stmt->bind_param( "dsssssii", $ratePerHour, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus, $authId);
+            
+            //Set params
+            $ratePerHour = $_POST['hourlyrate'];
+            $workDescription = $_POST['gigsdetails'];
+            $profilePicture = basename($_FILES["profilepic"]["name"]);
+            $homePagePicture = basename($_FILES["bgimage"]["name"]);
+            $aboutMe = $_POST['aboutme'];
+            $myQuote = $_POST['quote'];
+            $profileStatus = profileStatus();
+            
+            
+            //execute statement
+            $status = $stmt->execute();
+            
+            if ($status === false) {
+                trigger_error($stmt->error, E_USER_ERROR);
+            } else {
+                //echo("<script>location.href = 'entertainerMainPortfolio.php?msg=$msg';</script>");
+                header("Location: entertainerMainPortfolio.php");
+            }
+            
+            //close statement
+            $stmt->close();
+        }
+        
+        
+        
+        if( isset( $_POST['str'])) {
+            
+            $occupations = json_decode($_POST['str'], true);
+            //print_r($occupations);
+            
+            foreach( $occupations as $occupation_) {
+                
+                $query2 = "INSERT INTO occupation
                   ( entid, occupation)
                   VALUES
                   ( ?,?)";
-            
-            if ( $stmt2 = $connection->prepare( $query2)) {
                 
-                $stmt2->bind_param( "is", $entid, $occupation);
-                //Set params
-                $occupation = $occupation_;
+                if ( $stmt2 = $connection->prepare( $query2)) {
+                    
+                    $stmt2->bind_param( "is", $entid, $occupation);
+                    //Set params
+                    $occupation = $occupation_;
+                    
+                    //execute statement
+                    $status = $stmt2->execute();
+                    
+                    //close statement
+                    $stmt2->close();
+                }
                 
-                //execute statement
-                $status = $stmt2->execute();
-
-                //close statement
-                $stmt2->close();
             }
             
         }
-  
+        mysqli_close($connection);
+        
     }
-    mysqli_close($connection);
-  
+
 }
 
 ?>
@@ -539,11 +578,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 							<div class="title-01 title-01__style-04">
 								<h1 class="main-title">CREATE YOUR PORTFOLIO</h1>
 							</div>
+	
 							<form  id="myForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
 
 										<div class="form-group"> <!-- Event Name -->
 											<label for="hourlyrate" class="control-label title2">What's your hourly rate?</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="hourlyrate" name="hourlyrate">
+											<span class="error">* <?php echo $ratePerHourErr;?></span>
 										</div>
 										<!--	 
 										<div class="form-group">   
@@ -563,16 +604,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <input type="hidden" id="str" name="str" value="" />
 
 </div>
+<span class="error">* <?php echo $occupationErr;?></span>
 </div>
                                         <!-- end of occupations list -->
                                  							
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="aboutme" class="title2">Tell us about yourself</label>
 											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="aboutme" name="aboutme" placeholder ="Anything you want"></textarea>
+											<span class="error">* <?php echo $aboutMeErr;?></span>
 										</div>
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="gigsdetails" class="title2">Tell us about your work</label>
 											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="gigsdetails" name="gigsdetails" placeholder ="Anything you want"></textarea>
+										    <span class="error">* <?php echo $workDescriptionErr;?></span>
 										</div>										
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="quote" class="title2">An inspirational quote or your favourite one</label>
@@ -707,7 +751,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     function changeText2() {
     	var occupationToAdd = $('#occupationAdded').val();
 
-    	$('ol').append( '<li class = "items">' + occupationToAdd + '</li>' );
+    	$('ol').append( '<li name = "occList" class = "items">' + occupationToAdd + '</li>' );
 
     	myOccupation.push( occupationToAdd);
 
