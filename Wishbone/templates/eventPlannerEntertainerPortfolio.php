@@ -45,10 +45,11 @@
   <!-- End Head -->
 
   <body>
+
 <?php 
 session_start();
-include "navigationheaderEventPlanner.php"; 
 include ('../config.php');
+include ("navigationBeforeLogin.php");
 require_once ('../dto/gig.php');
 include ('../dto/occupation.php');
 

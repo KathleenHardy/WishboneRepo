@@ -221,7 +221,7 @@ include ("navigationBeforeLogin.php");
 								<!-- title-01 -->
 								<div class="title-01 title-01__style-03 md-text-left">
                                     <div style="position: relative; margin: 0 auto;">
-                                        <p class ="subtitle-extra">support local entertainment</p>
+                                        <p class ="subtitle-extra">support local entertainers</p>
                                         <div style="position: absolute; top: 20px; left: 100px; width: 100%"><p class="subtitle-extra2">&</p></div>
                                          <div style="position: absolute; top: 30px; left: 126px; width: 100%"><p class="subtitle-extra3">still organize great events</p></div>
                                     </div>
@@ -242,7 +242,7 @@ include ("navigationBeforeLogin.php");
 											<div class="box-number__number">
 												<h2 class="js-counter" data-counter-time="2000" data-counter-delay="10">99</h2>
 											</div>
-											<div class="box-number__description">Happy event planners</div>
+											<div class="box-number__description">Happy planners</div>
 										</div><!-- End / box-number -->
 										
 									</div>
@@ -253,7 +253,7 @@ include ("navigationBeforeLogin.php");
 											<div class="box-number__number">
 												<h2 class="js-counter" data-counter-time="2000" data-counter-delay="10">1200</h2>
 											</div>
-											<div class="box-number__description">Bookings per day</div>
+											<div class="box-number__description">Bookings</div>
 										</div><!-- End / box-number -->
 										
 									</div>
@@ -264,7 +264,7 @@ include ("navigationBeforeLogin.php");
 											<div class="box-number__number">
 												<h2 class="js-counter" data-counter-time="2000" data-counter-delay="10">15</h2>
 											</div>
-											<div class="box-number__description">Growth in entertainer branding</div>
+											<div class="box-number__description">Entertainers</div>
 										</div><!-- End / box-number -->
 										
 									</div>

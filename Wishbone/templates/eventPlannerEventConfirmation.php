@@ -26,13 +26,17 @@
 <link rel="stylesheet" type="text/css"
 	href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i&amp;amp;subset=latin-ext">
 <link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
+		    				<link rel="stylesheet" type="text/css" href="../assets/css/styles.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/custom.css" /> 
+		<link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/styleEventPlanner.css" />
 <!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<![endif]-->
 </head>
 
 <body>
-<?php include "navigationheaderEventPlanner.php" ?>
+<?php include ("navigationBeforeLogin.php"); ?>
 	<div class="page-wrap">
 
 		<!-- header -->
