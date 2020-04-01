@@ -8,7 +8,7 @@ drop table if exists eventPlanners;
 drop table if exists venueOwners;
 drop table if exists entertainerAvailability;
 drop table if exists venueAvailability;
-drop table if exists gigsVideos;
+drop table if exists entertainerVideos;
 drop table if exists gigsImages;
 drop table if exists gigs;
 drop table if exists gigsPendingBookings;
@@ -391,13 +391,13 @@ CREATE TABLE gigsImages (
 );
 
 
-CREATE TABLE gigsVideos (
-    gigsVideoid int not null auto_increment,
-    gigsid int not null,
-    gigsVideoLocation varchar(100),
+CREATE TABLE entertainerVideos (
+    entVideoId int not null auto_increment,
+    entId int not null,
+    entVideoEmbedCode varchar(100),
     
-    FOREIGN KEY (gigsid) REFERENCES gigs(gigsid),
-    primary key (gigsVideoid)
+    FOREIGN KEY (entId) REFERENCES entertainers(entId),
+    primary key (entVideoId)
 );
 
 
@@ -468,7 +468,7 @@ CREATE TABLE venues (
 CREATE TABLE venueVideos (
     venueVideoid int not null auto_increment,
     venueId int not null,
-    venueVideoLocation varchar(100),
+    venueVideoEmbedCode varchar(100),
     
     FOREIGN KEY (venueId) REFERENCES venues(venueId),
     primary key (venueVideoid)
@@ -638,6 +638,7 @@ eventplanners.authid = authentication.authid
 ALTER TABLE `bookingrequests`  ADD `gigsid` INT NOT NULL  AFTER `venueOwnerId`,  ADD `venueid` INT NOT NULL  AFTER `gigsid`,  ADD `event_name` VARCHAR(50) NOT NULL  AFTER `venueid`,  ADD `event_date` DATE NOT NULL  AFTER `event_name`,  ADD `event_description` VARCHAR(250) NOT NULL  AFTER `event_date`;
 
 ALTER TABLE `bookingrequests` ADD CONSTRAINT `bookingrequests_ibfk_4` FOREIGN KEY (`gigsid`) REFERENCES `gigs`(`gigsid`) ON DELETE RESTRICT ON UPDATE RESTRICT; ALTER TABLE `bookingrequests` ADD CONSTRAINT `bookingrequests_ibfk_5` FOREIGN KEY (`venueid`) REFERENCES `venues`(`venueId`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
 
 
 
@@ -916,6 +917,7 @@ insert into feeds values(7, "Is space real if you can't see it? ",current_time()
 insert into feeds values(7, 'Ksenia is a pro in GitHub',current_time()); 
 **/
 
+
 INSERT into authentication (email,pass, userType) VALUES ('silas@fish.com','password', 2);
 INSERT into authentication (email,pass, userType) VALUES ('keller@mathew.com','password', 2);
 INSERT into authentication (email,pass, userType) VALUES ('Sam@Erikzon.com','password', 2);
@@ -1077,7 +1079,9 @@ INSERT INTO occupation (entid, occupation) VALUES (3, "Model");
 INSERT INTO occupation (entid, occupation) VALUES (1, "Comedian");
 INSERT INTO occupation (entid, occupation) VALUES (3, "DJ");
 
-			 
+insert into entertainerVideos(entid, entVideoEmbedCode) VALUES (4, '<iframe width="1263" height="480" src="https://www.youtube.com/embed/uJ74cXI6KYg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+insert into venueVideos(venueid, venueVideoEmbedCode) VALUES (1, '<iframe width="1263" height="480" src="https://www.youtube.com/embed/9ScwCBQkhIY" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+
 					 
 /*
 INSERT INTO `eventplanners` (`authid`, `firstName`, `lastName`, `imageLocation`) VALUES 

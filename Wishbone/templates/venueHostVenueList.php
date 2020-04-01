@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Material Able bootstrap admin template by Codedthemes</title>
+    <title>My Venues</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -50,7 +50,7 @@ include ('../dto/availability.php');
 session_start();
 $venueOwnerId = $_SESSION['venueOwnerId'];
 $venueDTO = array();
-print_r($_SESSION);
+
 
 $query2 = "SELECT *
         FROM venues
@@ -351,7 +351,7 @@ mysqli_close($connection);
                                         <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>                                
+                                </li>  	                               
                                 <li class="">
                                     <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
@@ -410,7 +410,7 @@ foreach ($venueDTO as $venue) {
     <div class="card text-center" style="width: 500px; margin: 30px;">
     <img class="card-img-top event-img-size" src='."../assets/img-temp/portfolio/" .$venue->getVenuePicture().' alt="event img">
     <div class="card-body">
-    <h5 class="card-title title2">' . $venue->getVenueName() . '</h5>
+    <a href=venueDetail.php?venueId='. $venue->getvenueId().'>$venueId><h5 class="card-title title2">' . $venue->getVenueName() . '</h5></a>
     <p class="card-text">' . $venue->getVenueCity() . '</p>
     </div>
     </div>
@@ -432,14 +432,7 @@ foreach ($venueDTO as $venue) {
  <br/>
  <br/>
  <div style="text-align: center;">
- <h1 class="main-title" style="padding: 50px; text-align: center;">
-Venue Availabilities
 
-</h1>
-
-<div class="outer">
-	<button type="button"><a href="addVenueAvailability-New.php">Add New Availability</a></button>
-</div>
 </div>
                                     </div>
                                     <!-- Page-body end -->

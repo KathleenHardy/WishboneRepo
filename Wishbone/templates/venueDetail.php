@@ -1,193 +1,164 @@
 <?php
-
-require_once ('../config.php');
-require_once ('../dto/venue.php');
 session_start();
 ?>
 <?php
 
+include ('../config.php');
+include ('../dto/venue.php');
+include ('../dto/venueVideo.php');
 
-$venueDTO = $_SESSION['myVenues'];
+if ( isset ($_GET['venueId'])) {
+    $_SESSION['venueId'] = $_GET['venueId'];
+    $venueId = $_GET['venueId'];
+}
 
-// $authId = $_SESSION['authId'];
 
-// $query = "SELECT venueOwnerId
-// FROM venueowners
-// WHERE authid = ?";
+$venueOwnerId = $_SESSION['venueOwnerId'];
 
-// if ($stmt = $connection->prepare( $query)) {
+$venueNameErr = "";
+$venueName = "";
+$requiredFields=0;
 
-// $stmt->bind_param( "i", $authId);
+$query = "SELECT venueOwnerId, venueName, venueCity, venueProvince, venueDescription, venuePicture
+          FROM venues
+          WHERE  venueId = ?";
 
-// //execute statement
-// $stmt->execute();
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $venueId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result($venueOwnerId, $venueName, $venueCity, $venueProvince, $venueDescription, $venuePicture);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
 
-// //bind result variables
-// $stmt->bind_result( $venueOwnerId);
+$videoDTO = array();
 
-// // fetch values
-// $stmt->fetch();
 
-// //close statement
-// $stmt->close();
+$vidQuery = "SELECT *
+        FROM venueVideos
+        WHERE venueId=$venueId";
 
-// }
+$result = mysqli_query($connection, $vidQuery) or die(mysqli_error($connection));
 
-// $_SESSION['venueOwnerId'] = $venueOwnerId;
+$count = mysqli_num_rows($result);
 
+if ($count >= 1) {
+    
+    while ($row = mysqli_fetch_array($result)) {
+        
+        $videoDTO[] = new venueVideo($row['venueVideoid'], $row['venueId'], $row['venueVideoEmbedCode']);
+    }
+} else {
+    // $fmsg = "No venues for this user";
+}
 if (! empty($_POST)) {
 
 
+    if (empty($_POST["venueName"])) {
+        $venueNameErr = "Name is required";
+    } else {
+        $venueName = $_POST['venueName'];
+        $requiredFields++;
+    }
+    
+    
+    $venueCity = $_POST['venueCity'];
+    //$venueState = $_POST['venueState'];
+    $venueState = "";
+    
+    $venueProvince = $_POST['venueProvince'];
+    $venueDescription = $_POST['venueDescription'];    
+    $venuePicture = $_FILES['venuePicture']['name'];
 
-    $venueName = $_POST['venueName'];
+    $target = "../assets/img-temp/portfolio/".basename($venuePicture);
     
+    if($requiredFields==1){
+        
+        if (isset($_FILES['venuePicture'])) {
+            $errors = array();
+            $file_name = $_FILES['venuePicture']['name'];
+            $file_size = $_FILES['venuePicture']['size'];
+            $file_tmp = $_FILES['venuePicture']['tmp_name'];
+            $file_type = $_FILES['venuePicture']['type'];
+            $file_path = "C:/Users/kate/git/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
+            
+            
+            if ($file_size > 2097152) {
+                $errors[] = 'File size must be excately 2 MB';
+            }
+            
+            if (empty($errors) == true) {
+                //echo $file_tmp;
+                //echo "          ";
+                //echo $file_name;
+                
+                move_uploaded_file($file_tmp, $file_path . $file_name);
+            } else {
+                print_r($errors);
+            }
+        }
 
-    
-    
-    $querya = 'SELECT venueId FROM venues WHERE venueName = ?';
-    $stmta =mysqli_prepare ($connection,$querya);
-    $stmta->bind_param('s', $venueName);
-    $stmta->execute();
-    $stmta->bind_result($chosenVenueId);
-    $stmta->fetch();
-    $stmta->close();
-    
-/*     $sql2 = "SELECT venueID
-            FROM venues
-            WHERE venueName=?";
-    
-    if ($stmt = $connection->prepare( $sql2)) {
-        
-        $stmt->bind_param( "i", $venueName);
-        
-        //execute statement
-        $stmt->execute();
-        
-        //bind result variables
-        $stmt->bind_result( $chosenVenueId);
-        
-        // fetch values
-        $stmt->fetch();
-        
-        //close statement
-        $stmt->close();
-        
-    } */
+    $sql = "INSERT INTO venues(venueOwnerId, venueName, venueCity, venueState, venueProvince, venueDescription, venuePicture) 
+VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince','$venueDescription','$venuePicture')";
 
-//     echo $chosenVenueId;
-//     $sql = "DELETE FROM venues WHERE venueId=?";
-    
-//     if ($stmt = $connection->prepare( $sql)) {
-        
-//         $stmt->bind_param( "i", $chosenVenueId);
-        
-//         //execute statement
-//         $stmt->execute();
-        
-//         //close statement
-//         $stmt->close();
-        
-//     }
-    $sql3 = "DELETE FROM bookedGigs WHERE venueId=$chosenVenueId";
-    if (mysqli_query($connection, $sql3)) {
-        echo "";
-    } else {
-        echo "Error: " . $sql3 . "<br>" . mysqli_error($connection);
-    }
-    $sql4 = "DELETE FROM bookedVenues WHERE venueId=$chosenVenueId";
-    if (mysqli_query($connection, $sql4)) {
-        echo "";
-    } else {
-        echo "Error: " . $sql4 . "<br>" . mysqli_error($connection);
-    }
-    $sql5 = "DELETE FROM venueBookingNotifications WHERE venueId=$chosenVenueId";
-    if (mysqli_query($connection, $sql5)) {
-        echo "";
-    } else {
-        echo "Error: " . $sql5 . "<br>" . mysqli_error($connection);
-    }
-    $sql6 = "DELETE FROM venueAvailability WHERE venueId=$chosenVenueId";
-    if (mysqli_query($connection, $sql6)) {
-        echo "";
-    } else {
-        echo "Error: " . $sql6 . "<br>" . mysqli_error($connection);
-    }
-    $sql7 = "DELETE FROM venuePendingBookings WHERE venueId=$chosenVenueId";
-    if (mysqli_query($connection, $sql7)) {
-        echo "";
-    } else {
-        echo "Error: " . $sql7 . "<br>" . mysqli_error($connection);
-    }
-    $sql8 = "DELETE FROM venueVideos WHERE venueId=$chosenVenueId";
-    if (mysqli_query($connection, $sql8)) {
-        echo "";
-    } else {
-        echo "Error: " . $sql8 . "<br>" . mysqli_error($connection);
-    }
-    $sql = "DELETE FROM venues WHERE venueId=$chosenVenueId";
-    
-    
     if (mysqli_query($connection, $sql)) {
         echo "";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
     
-
-//     if (mysqli_query($connection, $sql)) {
-//         echo "Venue deleted";
-//     } else {
-//         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
-//     }
-    
-    //mysqli_close($connection);
-    
-//     $sql2 = "SELECT venueID 
-//             FROM venues 
-//             WHERE venueName=$venueName";
-//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
-    
-    
-    /* $sql3="SELECT availId
-            FROM availability
-            WHERE availStartDate=? AND availEndDate=? AND availStartTime=? AND availEndTime=?";
-    
-    if ($stmt = $connection->prepare( $sql3)) {
-        
-        $stmt->bind_param( "ssss", $startDate, $endDate, $startTime, $endTime);
-        
-        //execute statement
-        $stmt->execute();
-        
-        //bind result variables
-        $stmt->bind_result( $availId);
-        
-        // fetch values
-        $stmt->fetch();
-        
-        //close statement
-        $stmt->close();
-        
+    if (move_uploaded_file($_FILES['venuePicture']['tmp_name'], $target)) {
+        $sf="s";
+    }else{
+        $sf="f";
     }
-    $sql4="INSERT INTO resourceAvailability(availId, venueId)
-            VALUES ($availId, $chosenVenueId)";
     
-    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
+    $videoDTO = array();
+    
+    
+    $vidQuery = "SELECT *
+        FROM venueVideos
+        WHERE venueId=$venueId";
+    
+    $result = mysqli_query($connection, $vidQuery) or die(mysqli_error($connection));
+    
+    $count = mysqli_num_rows($result);
+    
+    if ($count >= 1) {
+        
+        while ($row = mysqli_fetch_array($result)) {
+            
+            $videoDTO[] = new venueVideo($row['venueVideoId'], $row['venueId'], $row['venueVideoEmbedCode']);
+        }
+    } else {
+        // $fmsg = "No venues for this user";
+    }
+
+    mysqli_close($connection);
+    }
+
     ?>
-    <script type="text/javascript">
-      window.location.href = 'http://localhost:7331/Wishbone/templates/venueHostVenueList.php';
-    </script>
+
 <?php
 
-    
-} 
-?>
+}
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Delete Venue</title>
+    <title>Venue Details</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -535,11 +506,6 @@ if (! empty($_POST)) {
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
-                                    									<h1 class="main-title">
-Delete a Venue
-
-
-</h1>
 				<div class="container">
 					<div class="row">
 						<div
@@ -548,63 +514,76 @@ Delete a Venue
 							<div class="row">
 								<div class="col-md-4 mx-auto">
 									<div class="u-pull-half text-center">
-									
-
-										<!-- <img
-											class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3"
-											width="200" height="auto"
-											src="../assets/img-temp/200x200/img1.jpg"
-											alt="Image Description"> -->
+	
 									</div>
 								</div>
 							</div>
-							<form action="deleteVenue.php" method="POST">
+
+							<form action="createVenue.php" method="POST" enctype="multipart/form-data">
 
 								<div class="form-group">
 									<!-- Event Name -->
 									<label for="venueName" class="control-label title2">Venue Name</label>
-										<select name="venueName">
-        <option selected="venueName">Choose a Venue</option>
-        <?php
-
-        foreach($venueDTO as $venue){
-        ?>
-        <option value="<?php echo strtolower($venue->getVenueName()); ?>"><?php echo $venue->getVenueName(); ?></option>
-        <?php
-        }
-        ?>
-    </select>
+									<input type="text" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="venueName"
+										name="venueName" value="<?= $venueName ?>">
+									<span class="error"> <?php echo $venueNameErr;?></span>
+										
+								</div>
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueCity" class="control-label title2">City</label>
+									<input type="text" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="venueCity"
+										name="venueCity" value="<?= $venueCity ?>">
 								</div>
 
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueProvince" class="control-label title2">Venue
+										Province</label> <input type="text" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="venueProvince"
+										name="venueProvince"value="<?= $venueProvince ?>">
+								</div>
+								<div class="form-group">
+									<label for="venueDescription" class="title2">Venue Description</label>
+									<textarea class="form-control" rows="5"
+										style="border: 3px solid #fac668;" id="venueDescription"
+										name="venueDescription"value="<?= $venueDescription ?>"></textarea>
+								</div>
 
-								<!--
-										<div class="input-group">
-											  <div class="input-group-prepend">
-												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-											  </div>
-												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
-										</div>
-										for later -->
- <br/>
-  <br/>
-   <br/>
-    <br/>
-     <br/>
- 								<a href="venueHostVenueList.php">
-								<button type="submit" class="btn-all" style="display: inline;">Delete</button>
- 								</a>
+								<div class="form-group">
+									<label for="venueMedia" class="title2">Media</label>
+									
+								</div>
+                        <?php
+foreach ($videoDTO as $venueVid) {
+    ?>
+    <iframe width="420" height="315"
+    <?php
+    echo $venueVid ->getVenueVideoEmbedCode();
+    ?>>
+    </iframe> 
 
+<?php    
+}
 
-								<a href="venueHostVenueList.php"><button class="btn-all"
-										type="button" style="display: inline;">Cancel</button></a>
+?>
+<br>
+<br>
+<br>
 
-								<!-- Replace buttons with below code -->
-								<!--<div class="form-group" style="display:inline;"> 
-											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>
-										</div> 
-										<div class="form-group" style="display:inline;"> 
-											<button class="btn-all">Cancel</button>
-										</div>   -->
+								 <div class="form-group" style="display:inline;"> 
+											   <a href="venueHostVenueList.php">
+											 
+
+<!--<button type="button" class="btn-all" onclick="history.go(-1);">Return to Venue List </button>-->
+
+											 
+											 <button type="button" class="btn-all">Return to Venue List</button>
+											 </a>
+
+										</div> 		
 
 
 							</form>

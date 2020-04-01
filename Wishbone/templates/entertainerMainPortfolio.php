@@ -69,7 +69,8 @@ SOFTWARE. -->
 Session_start();
 include ('../config.php');
 require_once ('../dto/gig.php');
-print_r($_SESSION);
+include ('../dto/entVideo.php');
+
 
 
 $authId = $_SESSION['authId'];
@@ -160,7 +161,6 @@ foreach( $myGigs as $gigs) {
 }
 
 
-
 $query4 = "SELECT email
           FROM authentication
           WHERE  authid = ?";
@@ -184,6 +184,28 @@ if ($stmt4 = $connection->prepare( $query4)) {
 }
 
 
+//$connection->close();
+
+$videoDTO = array();
+
+
+$vidQuery = "SELECT *
+        FROM entertainerVideos
+        WHERE entId=$entid";
+
+$result = mysqli_query($connection, $vidQuery) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+
+if ($count >= 1) {
+    
+    while ($row = mysqli_fetch_array($result)) {
+        
+        $videoDTO[] = new entVideo($row['entVideoId'], $row['entId'], $row['entVideoEmbedCode']);
+    }
+} else {
+    // $fmsg = "No venues for this user";
+}
 $connection->close();
 
 ?>
@@ -573,6 +595,20 @@ $connection->close();
           <div class="row u-content-space-bottom">
             <div class="col-lg-12" style="text-align: center;">
             <h1 class="main-title">MY MEDIA</h1>
+            
+            <?php
+foreach ($videoDTO as $entVid) {
+    ?>
+    <iframe width="420" height="315"
+    <?php
+    echo $entVid ->getEntVideoEmbedCode();
+    ?>>
+    </iframe> 
+
+<?php    
+}
+
+?>
             <div class="button_entertainer" align="center"><a class="button_add_gigs" href="entertainerAddNewMedia.php">Add Media</a></div>
             
             </div>
@@ -701,19 +737,7 @@ $connection->close();
   <br/>
  <br/>
  <br/>
- <div style="text-align: center;">
- <h1 class="main-title" style="padding: 50px; text-align: center;">
-My Availabilities
 
-</h1>
-</div>
-
-
-
-<div class="buttons-section" style="text-align: center;">
-<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="addEntertainerAvailability-New.php">Add New Availability</a></div>
-<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="deleteAvailability.php">Remove an Availability</a></div>
- </div>
       <!-- End Portfolio -->
   
       
