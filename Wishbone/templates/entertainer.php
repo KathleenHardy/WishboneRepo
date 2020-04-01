@@ -11,8 +11,9 @@ include ('../dto/occupation.php');
 $entertainersDTO = array();
 $occupationsDTO = array();
 
-$query1 = "SELECT entid, firstName, lastName, profilePicture, aboutMe
-           FROM entertainers";
+$query1 = "SELECT entid, firstName, lastName, ratePerHour, profilePicture, aboutMe
+           FROM entertainers
+           WHERE NOT profilePicture ='' ";
 
 if ($stmt1 = $connection->prepare( $query1)) {
     
@@ -20,7 +21,7 @@ if ($stmt1 = $connection->prepare( $query1)) {
     $stmt1->execute();
     
     //bind result variables
-    $stmt1->bind_result( $entid, $firstName, $lastName, $profilePicture, $aboutMe);
+    $stmt1->bind_result( $entid, $firstName, $lastName, $ratePerHour, $profilePicture, $aboutMe);
     
     //fetch values
     while( $stmt1->fetch()) {
@@ -32,6 +33,7 @@ if ($stmt1 = $connection->prepare( $query1)) {
         $entertainer->setLastName($lastName);      
         $entertainer->setProfilePicture($profilePicture);
         $entertainer->setAboutMe($aboutMe);
+        $entertainer->setRatePerHour($ratePerHour);
         
         $entertainersDT0[] = $entertainer;
     }
@@ -243,35 +245,6 @@ function sortEntertainer( $occupation) {
         								</div>';
         							 }
 							?>
-							
-							
-						
-							<div class="col-lg-4 col-md-6 mb-4">
-									<div class="card h-100">
-										<a href="#"><img class="card-img-top"
-											src="C:/Users/nanda/Desktop/Algonquin/wishbone/wishbone pictures/wishbone6.jpg"
-											alt=""></a>
-										<div class="card-body text-center">
-											<h2 class="post-02__title" style="color: #f39c12;">
-												<a href="#">Jonathon Moody</a>
-											</h2>
-											<div class="post-02__department">Cover Band</div>
-											<p class="card-text" style="margin-top: 10px;">
-												From <span>$24.99 CAD</span> per hour
-											</p>
-											<p style="margin-top: 50px;">
-												<button onclick='goToEntertainerDetailsPage()'
-													type="button" class="btn btn-default btn-block" name="viewDetails">View</button>
-											</p>
-										</div>
-										<div class="card-footer">
-											<small class="text-muted"> &#9733; &#9733; &#9733;
-												&#9733; &#9734; <span>6</span>
-											</small>
-										</div>
-									</div>
-								</div>
-									
 								</div>
 
 							</div>

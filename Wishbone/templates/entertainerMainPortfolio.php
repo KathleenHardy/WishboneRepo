@@ -591,7 +591,7 @@ $connection->close();
                         <h6 class="mb-0">' . $gigs->getGigsName() . '</h6>
                         <small class="d-block">' . $gigs->getGigsCategory() . '</small>
     				 </figcaption>
-                     <a class="js-popup-image u-portfolio__zoom" href=' ."../assets/img-temp/portfolio/" . $imgSrc . '>Zoom</a>
+                     <!-- <a class="js-popup-image u-portfolio__zoom" href=' ."../assets/img-temp/portfolio/" . $imgSrc . '>Zoom</a> -->
                </figure>
                ';
           }
