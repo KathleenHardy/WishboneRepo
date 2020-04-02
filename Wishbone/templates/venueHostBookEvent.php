@@ -196,7 +196,7 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             //get selected gig id
 			$gigsid = $_POST["gigSelection"];
 			
-			$eventplannerID = $_POST["eventplannerSelection"];
+			//$eventplannerID = $_POST["eventplannerSelection"];
             
             //get evenet name
             $event_name = $_POST["eventName"];
@@ -209,7 +209,7 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             
             //query to insrt into bookedgigs
             $query = "insert into bookingrequests(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
-values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."');";
+values(".$_SESSION['entId'].",".$gigsid.",1,".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."');";
             echo $query;
            //if success then show success msg else show error msg
             $conn =   mysqli_query($connection,$query);
@@ -263,7 +263,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
                 // send email
                 mail($entertainerEmail,"Wishbone", $htmlContent,$headers);
                 ?> <script type="text/javascript">
-             window.location.href = 'eventPlannerEventConfirmation.php';
+             window.location.href = 'venueEventConfirmation.php';
            
               </script>
                <?php
@@ -599,10 +599,16 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventName" class="control-label title2">Event Name</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventName" name="eventName" placeholder="Enter a name for your event">
+											<span class="error"><?php 
+											if(isset($errorMessages['eventName']))
+											echo $errorMessages['eventName'];?></span>
 										</div>	
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventDate" class="control-label title2">Event Date/Time</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
+											<span class="error"><?php 
+											if(isset($errorMessages['eventDate']))
+											echo $errorMessages['eventDate'];?></span>
 										</div>	
 									
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
@@ -618,20 +624,7 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 											?>
 											</select>					
 										</div>		
-										<div class="form-group" style="padding: 20px;"> <!-- Event Planner -->
-										<label for="eventplannerSelection" class="control-label title2">Select Your Event Planner</label>
-											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="eventplannerSelection" name="eventplannerSelection">
-											<?php
-
-												foreach($eventPlannerDTO as $eventplanner){
-												?>
-												<option value="<?php echo $eventplanner->getEventPlannerID() ?>"><?php echo $eventplanner->getFirstName()." ".$eventplanner->getLastName() ?></option>
-												<?php
-												}
-												?>
-
-											</select>					
-										</div>									
+																	
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="venueSelection" class="control-label title2">Select Your Venue</label>
 											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="venueSelection" name="venueSelection">
@@ -648,6 +641,9 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="eventDescription" class="title2">Event Description</label>
 											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="eventDescription" name="eventDescription" placeholder ="Enter details"></textarea>
+											<span class="error"><?php 
+											if(isset($errorMessages['eventDescription']))
+											echo $errorMessages['eventDescription'];?></span>
 										</div>
 												<div class="form-group">
 				<label for ="eventpic" class="title2">Upload Your Event Image</label>
@@ -763,3 +759,22 @@ values(".$_SESSION['entId'].",".$gigsid.",".$eventplannerID.",".$venueOwnerId.",
 </body>
 
 </html>
+
+
+
+<!-- 
+	<div class="form-group" style="padding: 20px;"> <!-- Event Planner -->
+<!-- 										<label for="eventplannerSelection" class="control-label title2">Select Your Event Planner</label> -->
+					<!--						<select class="form-control" style="border-bottom: 2px solid #faa828;" id="eventplannerSelection" name="eventplannerSelection">  -->
+				<!-- 							<?php 
+
+// 												foreach($eventPlannerDTO as $eventplanner){
+// 												?>
+												<option value="<?php echo $eventplanner->getEventPlannerID() ?>"><?php echo $eventplanner->getFirstName()." ".$eventplanner->getLastName() ?></option>
+												<?php
+// 												}
+// 												?>
+
+											</select>		-->			
+										</div>	
+  -->
