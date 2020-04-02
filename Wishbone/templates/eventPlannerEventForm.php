@@ -189,7 +189,7 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
 //             $stmta->execute();
 //             $stmta->bind_result($epID);
 //             $stmta->fetch();
-//             $stmta->close();
+//             $stmta->close()
 
 
             //fetch venueOwnerId from vanues based on venueId
