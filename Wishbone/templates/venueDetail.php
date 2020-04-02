@@ -1,8 +1,164 @@
+<?php
+session_start();
+?>
+<?php
+
+include ('../config.php');
+include ('../dto/venue.php');
+include ('../dto/venueVideo.php');
+
+if ( isset ($_GET['venueId'])) {
+    $_SESSION['venueId'] = $_GET['venueId'];
+    $venueId = $_GET['venueId'];
+}
+
+
+$venueOwnerId = $_SESSION['venueOwnerId'];
+
+$venueNameErr = "";
+$venueName = "";
+$requiredFields=0;
+
+$query = "SELECT venueOwnerId, venueName, venueCity, venueProvince, venueDescription, venuePicture
+          FROM venues
+          WHERE  venueId = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $venueId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result($venueOwnerId, $venueName, $venueCity, $venueProvince, $venueDescription, $venuePicture);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+
+$videoDTO = array();
+
+
+$vidQuery = "SELECT *
+        FROM venueVideos
+        WHERE venueId=$venueId";
+
+$result = mysqli_query($connection, $vidQuery) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+
+if ($count >= 1) {
+    
+    while ($row = mysqli_fetch_array($result)) {
+        
+        $videoDTO[] = new venueVideo($row['venueVideoid'], $row['venueId'], $row['venueVideoEmbedCode']);
+    }
+} else {
+    // $fmsg = "No venues for this user";
+}
+if (! empty($_POST)) {
+
+
+    if (empty($_POST["venueName"])) {
+        $venueNameErr = "Name is required";
+    } else {
+        $venueName = $_POST['venueName'];
+        $requiredFields++;
+    }
+    
+    
+    $venueCity = $_POST['venueCity'];
+    //$venueState = $_POST['venueState'];
+    $venueState = "";
+    
+    $venueProvince = $_POST['venueProvince'];
+    $venueDescription = $_POST['venueDescription'];    
+    $venuePicture = $_FILES['venuePicture']['name'];
+
+    $target = "../assets/img-temp/portfolio/".basename($venuePicture);
+    
+    if($requiredFields==1){
+        
+        if (isset($_FILES['venuePicture'])) {
+            $errors = array();
+            $file_name = $_FILES['venuePicture']['name'];
+            $file_size = $_FILES['venuePicture']['size'];
+            $file_tmp = $_FILES['venuePicture']['tmp_name'];
+            $file_type = $_FILES['venuePicture']['type'];
+            $file_path = "C:/Users/kate/git/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
+            
+            
+            if ($file_size > 2097152) {
+                $errors[] = 'File size must be excately 2 MB';
+            }
+            
+            if (empty($errors) == true) {
+                //echo $file_tmp;
+                //echo "          ";
+                //echo $file_name;
+                
+                move_uploaded_file($file_tmp, $file_path . $file_name);
+            } else {
+                print_r($errors);
+            }
+        }
+
+    $sql = "INSERT INTO venues(venueOwnerId, venueName, venueCity, venueState, venueProvince, venueDescription, venuePicture) 
+VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince','$venueDescription','$venuePicture')";
+
+    if (mysqli_query($connection, $sql)) {
+        echo "";
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+    }
+    
+    if (move_uploaded_file($_FILES['venuePicture']['tmp_name'], $target)) {
+        $sf="s";
+    }else{
+        $sf="f";
+    }
+    
+    $videoDTO = array();
+    
+    
+    $vidQuery = "SELECT *
+        FROM venueVideos
+        WHERE venueId=$venueId";
+    
+    $result = mysqli_query($connection, $vidQuery) or die(mysqli_error($connection));
+    
+    $count = mysqli_num_rows($result);
+    
+    if ($count >= 1) {
+        
+        while ($row = mysqli_fetch_array($result)) {
+            
+            $videoDTO[] = new venueVideo($row['venueVideoId'], $row['venueId'], $row['venueVideoEmbedCode']);
+        }
+    } else {
+        // $fmsg = "No venues for this user";
+    }
+
+    mysqli_close($connection);
+    }
+
+    ?>
+
+<?php
+
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>My Venues</title>
+    <title>Venue Details</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -36,85 +192,25 @@
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
+        <link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
+    
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="date"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'mm/dd/yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+</script>    
 </head>
 
 <body>
-
-<?php
-include ('../config.php');
-//include "navigationheaderVenueHost.php";
-include ('../dto/venue.php');
-include ('../dto/availability.php');
-
-session_start();
-$venueOwnerId = $_SESSION['venueOwnerId'];
-$venueDTO = array();
-
-
-$query2 = "SELECT *
-        FROM venues
-        WHERE venueOwnerId=$venueOwnerId";
-
-$result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
-
-$count = mysqli_num_rows($result);
-
-if ($count >= 1) {
-    
-    while ($row = mysqli_fetch_array($result)) {
-        
-        $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);
-    }
-} else {
-    // $fmsg = "No venues for this user";
-}
-$_SESSION['myVenues'] = $venueDTO;
-
-/* $availabilityDTO = array();
-$query3 = "SELECT *
-        FROM availability";
-
-$result2 = mysqli_query($connection, $query3) or die(mysqli_error($connection));
-
-$count2 = mysqli_num_rows($result2);
-
-if ($count2 >= 1) {
-    
-    while ($row = mysqli_fetch_array($result2)) {
-        
-        $availabilityDTO[] = new Availability($row['availId'], $row['availStartDate'], $row['availEndDate'], $row['availStartTime'], $row['availEndTime']);
-    }
-} else { */
-    // $fmsg = "No availabilities";
-//}
-//$_SESSION['avails'] = $availabilityDTO;
-$authId = $_SESSION['authId'];
-
-$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
-          FROM venueowners
-          WHERE  authid = ?";
-
-if ($stmt = $connection->prepare( $query)) {
-    
-    $stmt->bind_param( "i", $authId);
-    
-    //execute statement
-    $stmt->execute();
-    
-    //bind result variables
-    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
-    
-    // fetch values
-    $stmt->fetch();
-    
-    //close statement
-    $stmt->close();
-    
-}
-mysqli_close($connection);
-
-?>
     <!-- Pre-loader start -->
     <div class="theme-loader">
         <div class="loader-track">
@@ -222,7 +318,7 @@ mysqli_close($connection);
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user"><?= $firstName. " " . $lastName ?></h5>
+                                                <h5 class="notification-user">John Doe</h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -253,7 +349,7 @@ mysqli_close($connection);
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span><?= $firstName. " " . $lastName ?></span>
+                                    <span>John Doe</span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -288,7 +384,7 @@ mysqli_close($connection);
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -367,13 +463,6 @@ mysqli_close($connection);
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Calendar</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>  	                               
-                                <li class="">
                                     <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Book Entertainers</span>
@@ -417,45 +506,91 @@ mysqli_close($connection);
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
-                                    
-<div class="pg-start">
-<h1 class="main-title">
-My Venues
+				<div class="container">
+					<div class="row">
+						<div
+							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 ">
 
+							<div class="row">
+								<div class="col-md-4 mx-auto">
+									<div class="u-pull-half text-center">
+	
+									</div>
+								</div>
+							</div>
 
-</h1>
-<div style ="text-align: center;">
-<div class="row spacing1">
-<?php
-foreach ($venueDTO as $venue) {
-    print '
-    <div class="card text-center" style="width: 500px; margin: 30px;">
-    <img class="card-img-top event-img-size" src='."../assets/img-temp/portfolio/" .$venue->getVenuePicture().' alt="event img">
-    <div class="card-body">
-    <a href=venueDetail.php?venueId='. $venue->getvenueId().'>$venueId><h5 class="card-title title2">' . $venue->getVenueName() . '</h5></a>
-    <p class="card-text">' . $venue->getVenueCity() . '</p>
-    </div>
-    </div>
-';
+							<form action="createVenue.php" method="POST" enctype="multipart/form-data">
+
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueName" class="control-label title2">Venue Name</label>
+									<input type="text" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="venueName"
+										name="venueName" value="<?= $venueName ?>">
+									<span class="error"> <?php echo $venueNameErr;?></span>
+										
+								</div>
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueCity" class="control-label title2">City</label>
+									<input type="text" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="venueCity"
+										name="venueCity" value="<?= $venueCity ?>">
+								</div>
+
+								<div class="form-group">
+									<!-- Event Name -->
+									<label for="venueProvince" class="control-label title2">Venue
+										Province</label> <input type="text" class="form-control"
+										style="border-bottom: 3px solid #fac668;" id="venueProvince"
+										name="venueProvince"value="<?= $venueProvince ?>">
+								</div>
+								<div class="form-group">
+									<label for="venueDescription" class="title2">Venue Description</label>
+									<textarea class="form-control" rows="5"
+										style="border: 3px solid #fac668;" id="venueDescription"
+										name="venueDescription"value="<?= $venueDescription ?>"></textarea>
+								</div>
+
+								<div class="form-group">
+									<label for="venueMedia" class="title2">Media</label>
+									
+								</div>
+                        <?php
+foreach ($videoDTO as $venueVid) {
+    ?>
+    <iframe width="420" height="315"
+    <?php
+    echo $venueVid ->getVenueVideoEmbedCode();
+    ?>>
+    </iframe> 
+
+<?php    
 }
+
 ?>
+<br>
+<br>
+<br>
+
+								 <div class="form-group" style="display:inline;"> 
+											   <a href="venueHostVenueList.php">
+											 
+
+<!--<button type="button" class="btn-all" onclick="history.go(-1);">Return to Venue List </button>-->
+
+											 
+											 <button type="button" class="btn-all">Return to Venue List</button>
+											 </a>
+
+										</div> 		
 
 
- </div>
- </div>
-  <div class="outer">
-	<button type="button"><a href="createVenue.php">Create New Venue</a></button>
-</div> 
- <br/>
-   <div class="outer">
-	<button type="button"><a href="deleteVenue.php">Delete Venue</a></button>
-</div> 
-</div>
- <br/>
- <br/>
- <div style="text-align: center;">
+							</form>
 
-</div>
+						</div>
+					</div>
+				</div>
                                     </div>
                                     <!-- Page-body end -->
                                 </div>

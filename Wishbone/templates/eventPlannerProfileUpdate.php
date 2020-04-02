@@ -38,16 +38,17 @@ if($userType==1){//Event Planer
     $_SESSION['entertainerlastname'] = $lastName;  
     
     mysqli_close($connection);
-    header('Location: ' . 'entertainerPortfolio.php');
+    header('Location: ' . 'entertainerMainPortfolio.php');
 }else if($userType==3){//Venue Owner
     $updateQuery = "UPDATE venueowners set firstName='$firstName' , lastName='$lastName' where authid='$auth_id'";
     $result = mysqli_query($connection, $updateQuery) or die(mysqli_error($connection));
-    $_SESSION['entertainerfirstname'] = $firstName;
-    $_SESSION['entertainerlastname'] = $lastName;
+    $_SESSION['venueOwnerfirstname'] = $firstName;
+    $_SESSION['venueOwnerlastname'] = $lastName;
     
     
     mysqli_close($connection);
     
+    //header('Location: ' . 'venueHostProfileView.php');
     header('Location: ' . $_SERVER['HTTP_REFERER']);
 }
 

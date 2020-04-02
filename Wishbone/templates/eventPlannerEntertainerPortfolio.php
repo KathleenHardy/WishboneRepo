@@ -45,11 +45,18 @@
   <!-- End Head -->
 
   <body>
+
 <?php 
 session_start();
-include "navigationheaderEventPlanner.php"; 
 include ('../config.php');
+include ("navigationBeforeLogin.php");
 require_once ('../dto/gig.php');
+
+include ('../dto/entVideo.php');
+
+include ('../dto/occupation.php');
+
+
 
 $_SESSION['entid']=$_GET['id'];
 $entid = $_SESSION['entid'];
@@ -160,7 +167,63 @@ if ($stmt4 = $connection->prepare( $query4)) {
     
 }
 
+$videoDTO = array();
 
+
+$vidQuery = "SELECT *
+        FROM entertainerVideos
+        WHERE entId=$entid";
+
+$occupationsDTO = array();
+$query5 = "SELECT occupation 
+           FROM occupation
+           WHERE entid = ?";
+
+if ($stmt5 = $connection->prepare( $query5)) {
+    
+    $stmt5->bind_param( "i", $entid);
+    //execute statement
+    $stmt5->execute();
+    
+    //bind result variables
+    $stmt5->bind_result( $occupation);
+    
+    while ($stmt5->fetch()){
+        $occupation_ = new Occupation();
+        $occupation_->setOccupation( $occupation);
+        
+        $occupationsDTO[] = $occupation_;
+    }
+    
+    
+    //close statement
+    $stmt5->close();
+    
+    $allOccupations="";
+    foreach($occupationsDTO as $occu) {
+            if ($allOccupations == "") {
+                $allOccupations = $allOccupations. $occu->getOccupation() ;
+            } else {
+                $allOccupations = $allOccupations . " | ".  $occu->getOccupation() ;
+            }
+    }
+    
+}
+
+
+$result = mysqli_query($connection, $vidQuery) or die(mysqli_error($connection));
+
+$count = mysqli_num_rows($result);
+
+if ($count >= 1) {
+    
+    while ($row = mysqli_fetch_array($result)) {
+        
+        $videoDTO[] = new entVideo($row['entVideoId'], $row['entId'], $row['entVideoEmbedCode']);
+    }
+} else {
+    // $fmsg = "No venues for this user";
+}
 
 $connection->close();
 
@@ -179,7 +242,7 @@ $connection->close();
             <div class="col-12">
               <div class="text-center">
                 <h1 class="display-sm-4 display-lg-3"><?= $firstName . ' ' . $lastName  ?></h1>
-                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= 'Occupation Here' ?></p>
+                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= $allOccupations ?></p>
 
                 <ul class="list-inline text-center mb-0">
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Facebook">
@@ -238,7 +301,7 @@ $connection->close();
               <h1 class="main-title">ABOUT ME</h1>
               <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;"><?= $aboutMe ?></p>
               <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;"><?= $myQuote ?></p>
-              <p class="blockquote-footer"><?= $firstName . ' ' . $lastName . ', ' . $occupation?></p>
+              <p class="blockquote-footer"><?= $firstName . ' ' . $lastName . ', ' . $allOccupations?></p>
               <br/>
               <h1 class="main-title">CONTACT ME</h1>
               <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;">EMAIL: <?= $email ?></p>
@@ -257,7 +320,19 @@ $connection->close();
           <div class="row u-content-space-bottom">
             <div class="col-lg-12" style="text-align: center;">
             <h1 class="main-title">MY MEDIA</h1>
-            
+                        <?php
+foreach ($videoDTO as $entVid) {
+    ?>
+    <iframe width="420" height="315"
+    <?php
+    echo $entVid ->getEntVideoEmbedCode();
+    ?>>
+    </iframe> 
+
+<?php    
+}
+
+?>
             </div>
             </div>
 <!-- end -->

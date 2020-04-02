@@ -1,5 +1,32 @@
 <!DOCTYPE html>
 <html>
+<?php 
+session_start();
+include ('../config.php');
+$authId = $_SESSION['authId'];
+
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
+?>
 <head>
 <title>My Availability List</title>
 <meta charset="utf-8">

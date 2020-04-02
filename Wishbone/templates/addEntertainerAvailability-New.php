@@ -1,6 +1,8 @@
 <?php
-Session_start();
-print_r($_SESSION);
+
+session_start();
+//print_r($_SESSION);
+
 require_once ('../config.php');
 
 //include "navigationheaderVenueHost.php";
@@ -10,131 +12,137 @@ require_once ('../config.php');
 $authIdLocal = $_SESSION['authId'];
 //$authIdLocal=$authId;
 
-?>
-<?php
 
 
-//$venueDTO = $_SESSION['myVenues'];
-
-// $authId = $_SESSION['authId'];
-
-// $query = "SELECT venueOwnerId
-// FROM venueowners
-// WHERE authid = ?";
-
-// if ($stmt = $connection->prepare( $query)) {
-
-// $stmt->bind_param( "i", $authId);
-
-// //execute statement
-// $stmt->execute();
-
-// //bind result variables
-// $stmt->bind_result( $venueOwnerId);
-
-// // fetch values
-// $stmt->fetch();
-
-// //close statement
-// $stmt->close();
-
-// }
 
 // $_SESSION['venueOwnerId'] = $venueOwnerId;
 
+
+$startDateErr = "";
+$endDateErr = "";
+$startTimeErr = "";
+$endTimeErr = "";
+$startBeforeEndErr = "";
+
+$startDate = "";
+$endDate = "";
+$startTime = "";
+$endTime = "";
+$availTitle = "";
+
+$requiredFields=0;
+
 if (! empty($_POST)) {
 
-    echo "Posting";
+    if (empty($_POST["startDate"])) {
+        $startDateErr = "Start date is required";
+    } else {
+        $startDate = $_POST['startDate'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["endDate"])) {
+        $endDateErr = "End date is required";
+    } else {
+        $endDate = $_POST['endDate'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["startTime"])) {
+        $startTimeErr = "Start time is required";
+    } else {
+        $startTime = $_POST['startTime'];
+        $requiredFields++;
+    }
+    
+    if (empty($_POST["endTime"])) {
+        $endTimeErr = "End time is required";
+    } else {
+        $endTime = $_POST['endTime'];
+        $requiredFields++;
+    }
 
+    $availTitle = $_POST['availTitle'];
+    
     //$venueName = $_POST['venueName'];
-    $startDate = $_POST['startDate'];
+/*     $startDate = $_POST['startDate'];
+
     $endDate = $_POST['endDate'];
     $startTime = $_POST['startTime'];
-    $endTime = $_POST['endTime'];
+    $endTime = $_POST['endTime']; */
 
-    $querya = 'SELECT entId FROM entertainers WHERE authId = ?';
-    $stmta =mysqli_prepare ($connection,$querya);
-    $stmta->bind_param('s', $authIdLocal);
-    $stmta->execute();
-    $stmta->bind_result($chosenEntId);
-    $stmta->fetch();
-    $stmta->close();
-/*      $sql2 = "SELECT entid
-            FROM entertainers
-            WHERE authid=?";
-    
-    if ($stmt = $connection->prepare( $sql2)) {
-        
-        $stmt->bind_param( "i", $authIdLocal);
-        
-        //execute statement
-        $stmt->execute();
-        
-        //bind result variables
-        $stmt->bind_result( $chosenEntId);
-        
-        // fetch values
-        $stmt->fetch();
-        
-        //close statement
-        $stmt->close();
-        
-    }  */
+    if($requiredFields==4){
 
-    $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime) 
-VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
-    
-
-    if (mysqli_query($connection, $sql)) {
-        echo "New availability created successfully";
-    } else {
-        echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+        $begin=$startDate."".$startTime;
+        $end=$endDate."".$endTime;
+        
+        $beginTimeStamp=strtotime($begin);
+        $endTimeStamp=strtotime($end);
+        
+        
+        
+        $diff=$endTimeStamp-$beginTimeStamp;
+        
+        
+        if($diff<0){
+            $startBeforeEndErr = "Start time cannot be after end time";
+        }
+        else{
+            $querya = 'SELECT entId FROM entertainers WHERE authId = ?';
+            $stmta =mysqli_prepare ($connection,$querya);
+            $stmta->bind_param('s', $authIdLocal);
+            $stmta->execute();
+            $stmta->bind_result($chosenEntId);
+            $stmta->fetch();
+            $stmta->close();
+        
+            $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) 
+        VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime', '$availTitle')";
+            
+        
+                if (mysqli_query($connection, $sql)) {
+                    echo "";
+                } else {
+                    echo "Error: " . $sql . "<br>" . mysqli_error($connection);
+                }
+        
+                    
+        }
     }
-    
-    //mysqli_close($connection);
-    
-//     $sql2 = "SELECT venueID 
-//             FROM venues 
-//             WHERE venueName=$venueName";
-//     $chosenVenueID = mysqli_query($connection, $sql2) or die(mysqli_error($connection));
 
-    
-   /*  $sql3="SELECT availId
-            FROM availability
-            WHERE availStartDate=? AND availEndDate=? AND availStartTime=? AND availEndTime=?";
-    
-    if ($stmt = $connection->prepare( $sql3)) {
+        $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+                      FROM entertainers
+                      WHERE  authid = ?";
+
+        if ($stmt3 = $connection->prepare( $query3)) {
         
-        $stmt->bind_param( "ssss", $startDate, $endDate, $startTime, $endTime);
+            $stmt3->bind_param( "i", $authId);
+            
+            //execute statement
+            $stmt3->execute();
+            
+            //bind result variables
+            $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+            
+            // fetch values
+            $stmt3->fetch();
+            
         
-        //execute statement
-        $stmt->execute();
+            //close statement
+            $stmt3->close();
         
-        //bind result variables
-        $stmt->bind_result( $availId);
-        
-        // fetch values
-        $stmt->fetch();
-        
-        //close statement
-        $stmt->close();
+            
+        }
         
     }
-    $sql4="INSERT INTO resourceAvailability(availId, entId)
-            VALUES ($availId, $chosenEntId)";
-    
-    $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
-    ?>
-     <script type="text/javascript"> 
-     //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php';
-    window.location.href = 'entertainerMainPortfolio.php';
-    </script>
-<?php
-
-    
-}
 
 ?>
+
+<!--  <script type="text/javascript"> -->
+<!--      //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php'; -->
+<!--     //window.location.href = 'entertainerMainPortfolio.php'; -->
+<!--     </script> -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -300,7 +308,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
+                                                <h5 class="notification-user"><?= $_SESSION['authId']  ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -331,7 +339,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span> NEED A NAME HERE @NIKHIL </span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -366,7 +374,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details">NEED A NAME HERE @NIKHIL<i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -490,16 +498,16 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 							<div class="row">
 								<div class="col-md-4 mx-auto">
 									<div class="u-pull-half text-center">
-										<img
-											class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3"
-											style ="border-radius: 50%;"
-											src="../assets/img-temp/200x200/img1.jpg"
-											alt="Image Description">
+										
 									</div>
 								</div>
 							</div>
 							<form action="addEntertainerAvailability-New.php" method="POST">
-
+							
+								<div class="form-group">
+											<label for="availTitle" class="control-label title2">Availability Name</label>
+											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="availTitle" name="availTitle">
+										</div>
 								  
 								<div class="form-group">
 									<!-- Event Name -->
@@ -507,6 +515,8 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 									<input type="date" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="startDate"
 										name="startDate" placeholder="Enter the start date of the avilability">
+										<span class="error"> <?php echo $startDateErr;?></span>
+										
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -514,6 +524,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 									<input type="date" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="endDate"
 										name="endDate" placeholder="Enter the end date of the avilability">
+										<span class="error"> <?php echo $endDateErr;?></span>
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -521,6 +532,7 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 										</label> <input type="time" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="startTime"
 										name="startTime">
+										<span class="error"> <?php echo $startTimeErr;?></span>
 								</div>
 								<div class="form-group">
 									<!-- Event Name -->
@@ -528,6 +540,8 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 										</label> <input type="time" class="form-control"
 										style="border-bottom: 3px solid #fac668;" id="endTime"
 										name="endTime">
+										<span class="error"> <?php echo $endTimeErr;?></span>
+										<span class="error"> <?php echo $startBeforeEndErr;?></span>
 								</div>
 
 								<!--
@@ -539,12 +553,12 @@ VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime')";
 										</div>
 										for later -->
 
- 								<a href="entertainerAvailabilityList.php"> 
+<!--  								<a href="entertainerAvailabilityList.php">  -->
 								<button type="submit" class="btn-all" style="display: inline;">Add</button>
- 								</a> 
+<!--  								</a>  -->
 
 
-								<a href="entertainerAvailabilityList.php"><button class="btn-all"
+								<a href="entertainerEventsCalendar.php"><button class="btn-all"
 										type="button" style="display: inline;">Cancel</button></a>
 
 								<!-- Replace buttons with below code -->

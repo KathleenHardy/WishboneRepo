@@ -37,11 +37,11 @@ $venueDTO = $_SESSION['myVenues'];
 
 if (! empty($_POST)) {
 
-    echo "Posting";
+
 
     $venueName = $_POST['venueName'];
     
-    echo $venueName;
+
     
     
     $querya = 'SELECT venueId FROM venues WHERE venueName = ?';
@@ -90,37 +90,37 @@ if (! empty($_POST)) {
 //     }
     $sql3 = "DELETE FROM bookedGigs WHERE venueId=$chosenVenueId";
     if (mysqli_query($connection, $sql3)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql3 . "<br>" . mysqli_error($connection);
     }
     $sql4 = "DELETE FROM bookedVenues WHERE venueId=$chosenVenueId";
     if (mysqli_query($connection, $sql4)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql4 . "<br>" . mysqli_error($connection);
     }
     $sql5 = "DELETE FROM venueBookingNotifications WHERE venueId=$chosenVenueId";
     if (mysqli_query($connection, $sql5)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql5 . "<br>" . mysqli_error($connection);
     }
     $sql6 = "DELETE FROM venueAvailability WHERE venueId=$chosenVenueId";
     if (mysqli_query($connection, $sql6)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql6 . "<br>" . mysqli_error($connection);
     }
     $sql7 = "DELETE FROM venuePendingBookings WHERE venueId=$chosenVenueId";
     if (mysqli_query($connection, $sql7)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql7 . "<br>" . mysqli_error($connection);
     }
     $sql8 = "DELETE FROM venueVideos WHERE venueId=$chosenVenueId";
     if (mysqli_query($connection, $sql8)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql8 . "<br>" . mysqli_error($connection);
     }
@@ -128,7 +128,7 @@ if (! empty($_POST)) {
     
     
     if (mysqli_query($connection, $sql)) {
-        echo "New availability created successfully";
+        echo "";
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
@@ -174,9 +174,9 @@ if (! empty($_POST)) {
     
     $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
     ?>
-<!--     <script type="text/javascript"> -->
-<!--      window.location.href = 'http://localhost:7331/Wishbone/templates/venueHostVenueList.php';
-    </script>--> 
+    <script type="text/javascript">
+      window.location.href = 'http://localhost:7331/Wishbone/templates/venueHostVenueList.php';
+    </script>
 <?php
 
     
@@ -187,7 +187,7 @@ if (! empty($_POST)) {
 <html lang="en">
 
 <head>
-    <title>Add Availability</title>
+    <title>Delete Venue</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -535,6 +535,11 @@ if (! empty($_POST)) {
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
+                                    									<h1 class="main-title">
+Delete a Venue
+
+
+</h1>
 				<div class="container">
 					<div class="row">
 						<div
@@ -543,11 +548,13 @@ if (! empty($_POST)) {
 							<div class="row">
 								<div class="col-md-4 mx-auto">
 									<div class="u-pull-half text-center">
-										<img
+									
+
+										<!-- <img
 											class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3"
 											width="200" height="auto"
 											src="../assets/img-temp/200x200/img1.jpg"
-											alt="Image Description">
+											alt="Image Description"> -->
 									</div>
 								</div>
 							</div>
@@ -578,10 +585,14 @@ if (! empty($_POST)) {
 												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
 										</div>
 										for later -->
-
-<!-- 								<a href="venueHostVenueList.php"> -->
+ <br/>
+  <br/>
+   <br/>
+    <br/>
+     <br/>
+ 								<a href="venueHostVenueList.php">
 								<button type="submit" class="btn-all" style="display: inline;">Delete</button>
-<!-- 								</a> -->
+ 								</a>
 
 
 								<a href="venueHostVenueList.php"><button class="btn-all"

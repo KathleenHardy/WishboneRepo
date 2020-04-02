@@ -66,6 +66,70 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
             
             
             //update picture
+            if(isset($_FILES['image'])) {
+                $errors= array();
+                $file_name = $_FILES['image']['name'];
+                $file_size =$_FILES['image']['size'];
+                $file_tmp =$_FILES['image']['tmp_name'];
+                $file_type=$_FILES['image']['type'];
+                //$file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
+                //$file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
+                
+                $file_path = "../assets/img-temp/portfolio/";
+                
+                /*
+                 $file_ext=strtolower(end(explode('.', $file_name)));
+                 
+                 $extensions= array("jpeg","jpg","png");
+                 
+                 if(in_array($file_ext,$extensions)=== false){
+                 $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+                 }
+                 */
+                
+                if($file_size > 2097152){
+                    $errors[]='File size must be excatly 2 MB';
+                }
+                
+                if(empty($errors)==true){
+                    move_uploaded_file($file_tmp, $file_path.$file_name);
+                }else{
+                    print_r($errors);
+                }
+                
+                //upload gigs Image
+                $query3 = "UPDATE gigsimages SET
+                           gigsImageLocation = ? 
+                           WHERE gigsid = ?";
+
+                if ($stmt3 = $connection->prepare( $query3)) {
+                    
+                    $stmt3->bind_param( "is", $gigsid_, $gigsImageLocation);
+                    
+                    //Set params
+                    
+                    //$gigsImageLocation = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+                    
+                    //$gigsImageLocation = $target_file; //---------------------------------------
+                    
+                    $gigsid_ = $_POST['str'];
+                    $gigsImageLocation = basename($_FILES["image"]["name"]);
+                    
+                    //execute statement
+                    $status = $stmt3->execute();
+                    
+                    if ($status === false) {
+                        trigger_error($stmt->error, E_USER_ERROR);
+                    } else {
+                        //header('Location: entertainerPortfolio.php');
+                        mysqli_close($connection);
+                    }
+                    //close statement
+                    $stmt3->close();
+                }
+                
+            }
+            
             
             
             //close statement
@@ -231,6 +295,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 */
+
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
 ?>
 
 <!DOCTYPE html>
@@ -415,7 +501,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
+                                                <h5 class="notification-user"><?= $entFirstName. " " . $entLastName ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -445,8 +531,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <img src="../assets/images/avatar-4.jpg" class="img-radius-40" alt="User-Profile-Image">
+                                    <span><?= $entFirstName. " " . $entLastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -481,7 +567,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $entFirstName. " " . $entLastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -698,8 +784,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                                           </div>
                                            -->
-                                            <input type="file" name="fileToUpload" id="fileToUpload">
-                                            <input type="submit" value="Upload Image" name="submit">                                          
+                                            <div class="form-group">
+				<label for ="gigimage" class="title2">Upload Your Gig Image</label>
+					<input type="file" name="image" id="gigimage" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
+					<label for="gigimage"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose image&hellip;</span></label>
+										
+										</div>                                        
                                         </div>
                                         </div>
                                         

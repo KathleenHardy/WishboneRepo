@@ -46,7 +46,6 @@ session_start();
 
 include ('../config.php');
 include ('../dto/entertainer.php');
-include ("navigationheaderVenueHost.php"); 
 
 $entertainersDTO = array();
 
@@ -89,6 +88,29 @@ if ($count >= 1) {
 
 $_SESSION['myEntertainers'] = $entertainersDTO;
 		
+$authId = $_SESSION['authId'];
+
+$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
+          FROM venueowners
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
 mysqli_close($connection);
 
 
@@ -201,7 +223,7 @@ mysqli_close($connection);
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
+                                                <h5 class="notification-user"><?= $firstName. " " . $lastName ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -232,7 +254,7 @@ mysqli_close($connection);
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -247,7 +269,7 @@ mysqli_close($connection);
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="auth-normal-sign-in.html">
+                                        <a href="index.php">
                                             <i class="index.php"></i> Logout
                                         </a>
                                     </li>
@@ -267,7 +289,7 @@ mysqli_close($connection);
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -346,7 +368,7 @@ mysqli_close($connection);
                                     </ul>
                                 </li>
                                 <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
@@ -402,13 +424,11 @@ Entertainers
 
 </h1>
 
-
-<div class="card-deck spacing1">
-<div class="row">
+<div class="row spacing1">
 
                     <?php
 					   foreach( $entertainersDTO as $entertainer) {
-    					    print '  <div class="card text-center">
+    					    print '  <div class="card text-center" style="width: 300px; margin: 30px;">
                             <img class="card-img-top event-img-size" src="../assets/img/profile/'.$entertainer->getProfilePicture().'" alt="event img">
                             <div class="card-body">
                               <h5 class="card-title title2">'.$entertainer->getFirstName() . " " . $entertainer->getLastName() .'</h5>
@@ -424,7 +444,6 @@ Entertainers
 
 
 
-</div>
 
 
                                     </div>

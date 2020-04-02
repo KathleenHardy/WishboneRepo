@@ -6,6 +6,28 @@ include ('../dto/bookedGigDetails.php');
 $_SESSION['bookedGigsId']=$_GET['id'];
 $bookedGigsId = $_SESSION['bookedGigsId'];
 
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
+
 $query = "SELECT bookedGigsId, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName,event_name, email
           FROM bookedgigsdetails
           WHERE  bookedGigsId = ?";
@@ -27,6 +49,8 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->close();
     
 }
+
+
 
 ?>
 <!DOCTYPE html>
@@ -178,7 +202,7 @@ if ($stmt = $connection->prepare( $query)) {
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
+                                                <h5 class="notification-user"><?= $_SESSION['entertainerfirstname']. " " . $entLastName ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -209,7 +233,7 @@ if ($stmt = $connection->prepare( $query)) {
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $entFirstName. " " . $entLastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -244,7 +268,7 @@ if ($stmt = $connection->prepare( $query)) {
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $entFirstName. " " . $entLastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">

@@ -174,6 +174,30 @@ if ($stmt3 = $connection->prepare( $query3)) {
     
 }
 
+$query4 = "SELECT gigsImageLocation
+              FROM gigsimages
+              WHERE  gigsid = ( select distinct gigsId from bookedgigsdetails where entid = ?)";
+
+if ($stmt4 = $connection->prepare( $query4)) {
+    
+    
+    $stmt4->bind_param( "i", $entid);
+    
+    //execute statement
+    $stmt4->execute();
+    
+    //bind result variables
+    $stmt4->bind_result( $gigsImageLocation);
+    
+    // fetch values
+    $stmt4->fetch();
+    
+    //close statement
+    $stmt4->close();
+    
+    
+}
+
 ?>
 
 
@@ -193,6 +217,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
     		myEvent.sponsor_name = "My availability";
     		myEvent.isDeletable = true;
     		myEvent.url = "entertainerEventsCalenderDetail.php?id=<?= $availability->getAvailId()?>";
+    		myEvent.image = "img8.jpg";
 
     		myEvent.start = new Date(
     	       <?=substr( $availability->getAvailStartDate(), 0, 4)?>, 
@@ -223,6 +248,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
 		myEvent.sponsor_name = "<?= $bookedGigs->getFirstName()." ".$bookedGigs->getLastName() ?>";
 		myEvent.isDeletable = false;
 		myEvent.url = "entertainerViewEventDetails.php?id=<?= $bookedGigs->getBookedGigsId()?>";
+		myEvent.image = "<?= $gigsImageLocation ?>";
 
 		myEvent.start = new Date(
 	       <?=substr( $bookedGigs->getEventDate(), 0, 4)?>, 
@@ -402,8 +428,8 @@ if ($stmt3 = $connection->prepare( $query3)) {
     							'<div id="eventContent" class="eventPopup ">' + 
     							  '<div class="">' + 
     							    '<div class="row row-centered pos">' + 
-    							      '<div class="col-lg-12 col-xs-12 col-centered">' + 
-    							        '<img src="../assets/images/user-bg.jpg" class="img-responsive event_image " alt=""  hegiht="140px">' +
+    							      '<div class="col-lg-12 col-xs-12 col-centered">' +  
+    							        '<img src="../assets/img-temp/portfolio/'+event.image+'" class="img-responsive event_image " alt=""  hegiht="150px" width="300px">' +
     							          '<h3 id="event_sponcername">'+event.sponsor_name+'</h3>' + 
     							          '<h3 id="event_heading">'+event.title+'</h3>' +
     							              '<ul>' + 
@@ -1035,6 +1061,19 @@ function formatDate(string $date) {
 
 <div style='clear:both'></div>
 </div>
+
+ <div style="text-align: center;">
+ <h1 class="main-title" style="padding: 50px; text-align: center;">
+My Availabilities
+
+</h1>
+</div>
+
+
+
+<div class="buttons-section" style="text-align: center;">
+<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="addEntertainerAvailability-New.php">Add New Availability</a></div>
+ </div>
 
 
 

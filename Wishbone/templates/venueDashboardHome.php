@@ -41,9 +41,12 @@
 <?php
 session_start();
 include ('../config.php');
+include ('../dto/venue.php');
 
 
 $authId = $_SESSION['authId'];
+
+
 
 $query = "SELECT venueOwnerId, firstName, lastName, imageLocation
           FROM venueowners
@@ -136,7 +139,28 @@ $query_ent_booked = "select count(distinct entid) AS entertainers_booked from bo
             $stmt->close();
             
         }
-//print_r($_SESSION);
+        
+        $venueDTO = array();
+        
+        
+        $query2 = "SELECT *
+        FROM venues
+        WHERE venueOwnerId=$venueOwnerId";
+        
+        $result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+        
+        $count = mysqli_num_rows($result);
+        
+        if ($count >= 1) {
+            
+            while ($row = mysqli_fetch_array($result)) {
+                
+                $venueDTO[] = new Venue($row['venueId'], $row['venueOwnerId'], $row['venueName'], $row['venueCity'], $row['venueState'], $row['venueProvince'], $row['venueDescription'], $row['venuePicture']);
+            }
+        } else {
+            // $fmsg = "No venues for this user";
+        }
+        $_SESSION['myVenues'] = $venueDTO;
 ?>
 <body>
     <!-- Pre-loader start -->
@@ -277,7 +301,7 @@ $query_ent_booked = "select count(distinct entid) AS entertainers_booked from bo
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -312,7 +336,7 @@ $query_ent_booked = "select count(distinct entid) AS entertainers_booked from bo
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">

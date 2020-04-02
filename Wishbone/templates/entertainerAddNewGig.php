@@ -3,177 +3,187 @@ session_start();
 include ('../config.php');
 $authId = $_SESSION['authId'];
 
-/*
- if(isset($_FILES['fileToUpload'])) {
- 
- //'../assets/img-temp/gigs/'
- $target_dir = "../assets/img-temp/portfolio/";
- $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
- $uploadOk = 1;
- $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
- // Check if image file is a actual image or fake image
- if(isset($_POST["submit"])) {
- $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
- if($check !== false) {
- echo "File is an image - " . $check["mime"] . ".";
- $uploadOk = 1;
- } else {
- echo "File is not an image.";
- $uploadOk = 0;
- }
- }
- // Check if file already exists
- 
- if (file_exists($target_file)) {
- echo "Sorry, file already exists.";
- $uploadOk = 0;
- }
- 
- 
- // Check file size
- if ($_FILES["fileToUpload"]["size"] > 500000) {
- echo "Sorry, your file is too large.";
- $uploadOk = 0;
- }
- 
- // Allow certain file formats
- if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
- && $imageFileType != "gif" ) {
- echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
- $uploadOk = 0;
- }
- // Check if $uploadOk is set to 0 by an error
- if ($uploadOk == 0) {
- echo "Sorry, your file was not uploaded.";
- // if everything is ok, try to upload file
- } else {
- if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
- echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded to ". $target_file;
- } else {
- echo "Sorry, there was an error uploading your file.";
- }
- }
- }
- */
+$gigs_nameErr = $gigs_categoryErr = $gigs_labelErr = $gigs_artTypeErr = $gigs_detailsErr = "";
 
-if(isset($_FILES['fileToUpload'])){
-    $errors= array();
-    $file_name = $_FILES['fileToUpload']['name'];
-    $file_size =$_FILES['fileToUpload']['size'];
-    $file_tmp =$_FILES['fileToUpload']['tmp_name'];
-    $file_type=$_FILES['fileToUpload']['type'];
-    //$file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
-    //$file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
-    
-    $file_path = "../assets/img-temp/portfolio/";
-    
-    /*
-     $file_ext=strtolower(end(explode('.', $file_name)));
-     
-     $extensions= array("jpeg","jpg","png");
-     
-     if(in_array($file_ext,$extensions)=== false){
-     $errors[]="extension not allowed, please choose a JPEG or PNG file.";
-     }
-     */
-    
-    if($file_size > 2097152){
-        $errors[]='File size must be excatly 2 MB';
-    }
-    
-    if(empty($errors)==true){
-        move_uploaded_file($file_tmp, $file_path.$file_name);
-    }else{
-        print_r($errors);
-    }
-}
+$createGigErr = array();
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
-    $query = "SELECT entid
-               FROM entertainers
-               WHERE  authid = ?";
     
-    if ($stmt = $connection->prepare( $query)) {
-        
-        $stmt->bind_param( "i", $authId);
-        
-        //execute statement
-        $stmt->execute();
-        
-        //bind result variables
-        $stmt->bind_result($entid);
-        
-        // fetch values
-        $stmt->fetch();
-        
-        //close statement
-        $stmt->close();
+    if ( empty( $_POST["gigs_name"])) {
+        $gigs_nameErr = "Please enter a name for your gig";
+        $createGigErr[] = $gigs_nameErr;
     }
     
+    if ( empty( $_POST["gigs_category"])) {
+        $gigs_categoryErr = "Please specify a category for your gig";
+        $createGigErr[] = $gigs_categoryErr;
+    }
     
+    if ( empty( $_POST["gigs_label"])) {
+        $gigs_labelErr = "Please specify a label for your gig";
+        $createGigErr[] = $gigs_labelErr;
+    }
+
+}
+
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+              FROM entertainers
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
     
-    $query2 = "INSERT INTO gigs
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    
+    if ( empty( $_POST["gigs_artType"])) {
+        $gigs_artTypeErr = "Please specify an art type for your gig";
+        $createGigErr[] = $gigs_artTypeErr;
+    }
+    
+    if ( empty( $_POST["gigs_details"])) {
+        $gigs_detailsErr = "Please enter details for your gig";
+        $createGigErr[] = $gigs_detailsErr;
+    }
+    
+    if ( sizeof( $createGigErr) == 0) {
+        $query = "SELECT entid
+               FROM entertainers
+               WHERE  authid = ?";
+        
+        if ($stmt = $connection->prepare( $query)) {
+            
+            $stmt->bind_param( "i", $authId);
+            
+            //execute statement
+            $stmt->execute();
+            
+            //bind result variables
+            $stmt->bind_result($entid);
+            
+            // fetch values
+            $stmt->fetch();
+            
+            //close statement
+            $stmt->close();
+        }
+        
+        
+        
+        $query2 = "INSERT INTO gigs
                   ( entid, gigsName, gigscategory, gigslabel, gigsArttype, gigsdetails, notes)
                   VALUES
                   (?,?,?,?,?,?,?)";
-    
-    if ($stmt2 = $connection->prepare( $query2)) {
         
-        $stmt2->bind_param( "issssss", $entid, $gigsName, $gigsCategory, $gigsLabel, $gigsArtType, $gigsDetails, $gigsNotes);
-        //Set params
-        $gigsName = $_POST['gigs_name'];
-        $gigsCategory = $_POST['gigs_category'];
-        $gigsLabel = $_POST['gigs_label'];
-        $gigsArtType = $_POST['gigs_artType'];
-        $gigsDetails = $_POST['gigs_details'];
-        $gigsNotes = $_POST['gigs_notes'];
-        
-        //execute statement
-        $status = $stmt2->execute();
-        
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
-        } else {
-            $insertedId = $stmt2->insert_id;
+        if ($stmt2 = $connection->prepare( $query2)) {
+            
+            $stmt2->bind_param( "issssss", $entid, $gigsName, $gigsCategory, $gigsLabel, $gigsArtType, $gigsDetails, $gigsNotes);
+            //Set params
+            $gigsName = $_POST['gigs_name'];
+            $gigsCategory = $_POST['gigs_category'];
+            $gigsLabel = $_POST['gigs_label'];
+            $gigsArtType = $_POST['gigs_artType'];
+            $gigsDetails = $_POST['gigs_details'];
+            $gigsNotes = $_POST['gigs_notes'];
+            
+            //execute statement
+            $status = $stmt2->execute();
+            
+            if ($status === false) {
+                trigger_error($stmt->error, E_USER_ERROR);
+            } else {
+                $insertedId = $stmt2->insert_id;
+            }
+            //close statement
+            $stmt2->close();
         }
-        //close statement
-        $stmt2->close();
-    }
-    
-    
-    //upload gigs Image
-    $query3 = "INSERT INTO gigsimages
+        
+        
+        if(isset($_FILES['image'])) {
+            $errors= array();
+            $file_name = $_FILES['image']['name'];
+            $file_size =$_FILES['image']['size'];
+            $file_tmp =$_FILES['image']['tmp_name'];
+            $file_type=$_FILES['image']['type'];
+            //$file_path= $_SERVER['DOCUMENT_ROOT'] . "\\Wishbone\\assets\\img-temp\\portfolio\\";
+            //$file_path = "C:/xampp/htdocs/WishboneRepo/Wishbone/assets/img-temp/portfolio/";
+            
+            $file_path = "../assets/img-temp/portfolio/";
+            
+            /*
+             $file_ext=strtolower(end(explode('.', $file_name)));
+             
+             $extensions= array("jpeg","jpg","png");
+             
+             if(in_array($file_ext,$extensions)=== false){
+             $errors[]="extension not allowed, please choose a JPEG or PNG file.";
+             }
+             */
+            
+            if($file_size > 2097152){
+                $errors[]='File size must be excatly 2 MB';
+            }
+            
+            if(empty($errors)==true){
+                move_uploaded_file($file_tmp, $file_path.$file_name);
+            }else{
+                print_r($errors);
+            }
+            
+            //upload gigs Image
+            $query3 = "INSERT INTO gigsimages
                   ( gigsid, gigsImageLocation)
                   VALUES
                   (?,?)";
-    
-    if ($stmt3 = $connection->prepare( $query3)) {
-        
-        $stmt3->bind_param( "is", $insertedId, $gigsImageLocation);
-        
-        //Set params
-        
-        //$gigsImageLocation = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-        
-        //$gigsImageLocation = $target_file; //---------------------------------------
-        
-        
-        $gigsImageLocation = basename($_FILES["fileToUpload"]["name"]);
-        
-        //execute statement
-        $status = $stmt3->execute();
-        
-        if ($status === false) {
-            trigger_error($stmt->error, E_USER_ERROR);
-        } else {
-            //header('Location: entertainerPortfolio.php');
-            mysqli_close($connection);
+            
+            if ($stmt3 = $connection->prepare( $query3)) {
+                
+                $stmt3->bind_param( "is", $insertedId, $gigsImageLocation);
+                
+                //Set params
+                
+                //$gigsImageLocation = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+                
+                //$gigsImageLocation = $target_file; //---------------------------------------
+                
+                
+                $gigsImageLocation = basename($_FILES["image"]["name"]);
+                
+                //execute statement
+                $status = $stmt3->execute();
+                
+                if ($status === false) {
+                    trigger_error($stmt->error, E_USER_ERROR);
+                } else {
+                    //header('Location: entertainerPortfolio.php');
+                    mysqli_close($connection);
+                }
+                //close statement
+                $stmt3->close();
+            }
+            
         }
-        //close statement
-        $stmt3->close();
+        
+        
     }
+    
     
 }
 
@@ -332,7 +342,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
+                                                <h5 class="notification-user"><?= $entFirstName. " " . $entLastName ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -363,7 +373,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $entFirstName. " " . $entLastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -398,7 +408,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $entFirstName. " " . $entLastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -535,31 +545,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										<div class="form-group"> <!-- Gig Name -->
 											<label for="gig_name_id" class="control-label title2">Gig Name</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="gig_name_id" name="gigs_name" placeholder="Enter a name for your Gig">
+											<span class="error"><?php echo $gigs_nameErr;?></span>
 										</div>	
 										
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="gigs_category_id" class="control-label title2">Gig Category</label>
 											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigs_category_id" name="gigs_category">
+												<option value="" disabled selected="selected" >Select a category</option>
 												<option value="Event">Event</option>
 												<option value="Music">Music</option>
 												<option value="Concert">Concert</option>
 												<option value="Festival">Festival</option>
 												<option value="Party">Party</option>
-											</select>					
+											</select>
+											<span class="error"><?php echo $gigs_categoryErr;?></span>					
 										</div>
 										<div class="form-group" style="padding: 20px;"> <!-- Gigs category -->
 											<label for="gigs_label_id" class="control-label title2">Gig Label</label>
 											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigs_label_id" name="gigs_label">
+											    <option value="" disabled selected="selected" >Select a Label</option>
 												<option value="Personal">Personal</option>
 												<option value="Professional">Professional</option>
 												<option value="Best">Best</option>
 												<option value="Other">Other</option>
-											</select>					
+											</select>
+											<span class="error"><?php echo $gigs_labelErr;?></span>					
 										</div>
 										
 										<div class="form-group"> <!-- Gigs category -->
 											<label for="gigs_artType_id" class="control-label title2">Gig Art Type</label>
 											<select class="form-control" style="border-bottom: 2px solid #faa828;" id="gigs_artType_id" name="gigs_artType">
+											    <option value="" disabled selected="selected" >Select an art type</option>
 												<option value="Musician">Musician</option>
 												<option value="Dancer">Dancer</option>
 												<option value="Painter">Painter</option>
@@ -568,12 +584,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 												<option value="Singer">Singer</option>
 												<option value="Photographer">Photographer</option>
 												<option value="Blogger">Blogger</option>
-											</select>					
+											</select>
+											<span class="error"><?php echo $gigs_artTypeErr;?></span>					
 										</div>
 										
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="gigs_details-id" class="title2">Gigs Details</label>
 											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="gigs_details-id" name="gigs_details" placeholder ="Enter details"></textarea>
+											<span class="error"><?php echo $gigs_detailsErr;?></span>
 										</div>
 										
 										<div class="form-group"> <!-- Gigs details -->
@@ -583,7 +601,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 										
 		<div class="form-group">
 				<label for ="gigimage" class="title2">Upload Your Gig Image</label>
-					<input type="file" name="file-1[]" id="gigimage" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
+					<input type="file" name="image" id="gigimage" class="inputfile inputfile-1" data-multiple-caption="{count} files selected" multiple />
 					<label for="gigimage"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> <span>Choose image&hellip;</span></label>
 										
 										</div>

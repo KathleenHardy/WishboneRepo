@@ -56,6 +56,9 @@ body {
 	background-image: linear-gradient(rgba(255, 255, 255, 0.2) 180px, rgba(255, 255, 255, 0.9) 0%);
 }
 
+.img-small {
+	height: 50px;
+}
 /* custom */
 .inputfile {
     width: 0.1px;
@@ -4224,6 +4227,7 @@ select.form-control:not([size]):not([multiple]) {
 
 .img-80 {
 	width: 80px;
+	height: 60px;
 }
 
 .img-90 {
@@ -5130,6 +5134,15 @@ table tbody .border-bottom-info td {
 
 .img-radius {
 	border-radius: 50%;
+}
+
+.img-radius-40 {
+    border-radius: 50%;
+    height: 40px;
+}
+
+.img-small-dashboard {
+	   height: 40px;
 }
 
 .main-menu .main-menu-header .user-details {
