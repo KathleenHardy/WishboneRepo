@@ -160,6 +160,13 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
         $errorMessages['eventDescription'] = 'Please enter event description';
     }
     
+    if ($_POST["eventplanner_email"] == "") {
+        $hasError = true;
+        $errorMessages['eventplanner_email'] = 'Please enter EventPlanner Email';
+    }
+    
+    
+    
     
   
         if (! $hasError) {
@@ -167,22 +174,22 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
 			echo $_POST["eventplanner_email"];
 			$eventPlannerEmail = $_POST["eventplanner_email"];
 			
-			$querya = 'SELECT authid FROM authentication WHERE email = ?';
-            $stmta =mysqli_prepare ($connection,$querya);
-            $stmta->bind_param('s', $eventPlannerEmail);
-            $stmta->execute();
-            $stmta->bind_result($eventPlannerAuthId);
-            $stmta->fetch();
-            $stmta->close();
+// 			$querya = 'SELECT authid FROM authentication WHERE email = ?';
+//             $stmta =mysqli_prepare ($connection,$querya);
+//             $stmta->bind_param('s', $eventPlannerEmail);
+//             $stmta->execute();
+//             $stmta->bind_result($eventPlannerAuthId);
+//             $stmta->fetch();
+//             $stmta->close();
 
 
-			$querya = 'SELECT eventPlannerId FROM eventplanners WHERE authid = ?';
-            $stmta =mysqli_prepare ($connection,$querya);
-            $stmta->bind_param('s', $eventPlannerAuthId);
-            $stmta->execute();
-            $stmta->bind_result($epID);
-            $stmta->fetch();
-            $stmta->close();
+// 			$querya = 'SELECT eventPlannerId FROM eventplanners WHERE authid = ?';
+//             $stmta =mysqli_prepare ($connection,$querya);
+//             $stmta->bind_param('s', $eventPlannerAuthId);
+//             $stmta->execute();
+//             $stmta->bind_result($epID);
+//             $stmta->fetch();
+//             $stmta->close();
 
 
             //fetch venueOwnerId from vanues based on venueId
@@ -217,11 +224,11 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             
             //get event description
             $event_description = $_POST["eventDescription"];
-			
+			$epID = '1';
 			
             //query to insrt into bookedgigs
-            $query = "insert into bookingrequests(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
-values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."');";
+            $query = "insert into bookingrequests(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description,eventPlannerEmail) 
+values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."','".$eventPlannerEmail."');";
             echo $query;
            //if success then show success msg else show error msg
 		   $conn =   mysqli_query($connection,$query);
@@ -240,7 +247,7 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
         <title>Welcome to WishBone</title> 
     </head> 
     <body> 
-        <h1>Thanks you for joining with us!</h1> 
+      
         <table cellspacing="0" style="border: 2px dashed #FB4314; width: 100%;"> 
             <tr> 
                 <th>WishBone 
@@ -264,7 +271,7 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
                 // send email
                 mail($entertainerEmail,"Wishbone", $htmlContent,$headers);
               ?> <script type="text/javascript">
-              window.location.href = 'eventPlannerEventConfirmation.php';
+              window.location.href = 'index.php';
               </script>
                <?php
                
@@ -308,10 +315,16 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 										<div class="form-group"> <!-- Event Name -->
 											<label for="eventName" class="control-label title2">Event Name</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventName" name="eventName" placeholder="Enter a name for your event">
+												<span class="error"><?php 
+											if(isset($errorMessages['eventName']))
+											echo $errorMessages['eventName'];?></span>
 										</div>	 
 										<div class="form-group"> <!-- Event Name -->   
 											<label for="eventDate" class="control-label title2">Event Date/Time</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
+													<span class="error"><?php 
+											if(isset($errorMessages['eventDate']))
+											echo $errorMessages['eventDate'];?></span>
 										</div>	
 									
 										<!-- <div class="form-group" style="padding: 20px;"> 
@@ -354,12 +367,18 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 										<div class="form-group">
 											<label for="eventName" class="control-label title2">Event Planner Email Address</label>
 											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventplanner_email" name="eventplanner_email" placeholder="Enter Event Planner Email">
+													<span class="error"><?php 
+											if(isset($errorMessages['eventplanner_email']))
+											echo $errorMessages['eventplanner_email'];?></span>
 											
 										</div>
 										
 										<div class="form-group"> <!-- Gigs details -->
 											<label for="eventDescription" class="title2">Event Description</label>
 											<textarea class="form-control" style="border: 2px solid #faa828;" rows="5" id="eventDescription" name="eventDescription" placeholder ="Enter details"></textarea>
+													<span class="error"><?php 
+											if(isset($errorMessages['eventDescription']))
+											echo $errorMessages['eventDescription'];?></span>
 										</div>
 <div class="form-group">
 				<label for ="gigimage" class="title2">Upload Your Gig Image</label>

@@ -38,38 +38,131 @@
     <!-- Style.css -->
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
     <?php
-session_start();
-include ('../config.php');
 
-
-$authId = $_SESSION['authId'];
-
-$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
+    session_start();
+    
+    include ('../config.php');
+    include ('../dto/bookedGigDetails.php');
+    include ('../dto/venue.php');
+    
+    
+    $authIdd = $_SESSION['authId'];
+    
+    
+    
+    $query = "SELECT venueOwnerId, firstName, lastName, imageLocation
           FROM venueowners
           WHERE  authid = ?";
-
-if ($stmt = $connection->prepare( $query)) {
     
-    $stmt->bind_param( "i", $authId);
+    if ($stmt = $connection->prepare( $query)) {
+        
+        $stmt->bind_param( "i", $authIdd);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables
+        $stmt->bind_result( $venueOwnerIdd, $firstName, $lastName, $imageLocation);
+        
+        // fetch values
+        $stmt->fetch();
+        
+        //close statement
+        $stmt->close();
+        
+    }
     
-    //execute statement
-    $stmt->execute();
+    $_SESSION['venueOwnerfirstname'] = $firstName;
+    $_SESSION['venueOwnerlastname'] = $lastName;
+    $_SESSION['venueOwnerId'] = $venueOwnerIdd;
     
-    //bind result variables
-    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
+    $query_owned = "select count(*) AS owned from venues ve
+                inner join venueowners vo on vo.venueOwnerId = ve.venueOwnerId
+                where vo.authId = ?";
     
-    // fetch values
-    $stmt->fetch();
+    if ($stmt = $connection->prepare( $query_owned)) {
+        
+        $stmt->bind_param( "i", $authId);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables
+        $stmt->bind_result( $owned);
+        
+        // fetch values
+        $stmt->fetch();
+        
+        //close statement
+        $stmt->close();
+        
+    }
     
-    //close statement
-    $stmt->close();
+    $bookedGigsDTO = array();
     
-}
-
-$_SESSION['venueOwnerfirstname'] = $firstName;
-$_SESSION['venueOwnerlastname'] = $lastName;
-$_SESSION['venueOwnerId'] = $venueOwnerId;
-
+    $authId =  $_SESSION['authId'];
+   
+    //fetch eventPlannerId based on authId
+    $querya = 'SELECT venueOwnerId FROM venueOwners WHERE authid = ?';
+    $stmta =mysqli_prepare ($connection,$querya);
+    $stmta->bind_param('s', $authId);
+    $stmta->execute();
+    $stmta->bind_result($venueOwnerId);
+    $stmta->fetch();
+    $stmta->close();
+    
+    $query2 = "select * from bookedgigsdetails where venueOwnerId = ". $venueOwnerId;
+    
+    $result = mysqli_query($connection, $query2) or die(mysqli_error($connection));
+    
+    $count = mysqli_num_rows($result);
+    
+    if ($count >= 1) {
+        
+        while ($row = mysqli_fetch_array($result)) {
+            
+            $bookGig = new BookedGigDetails();
+         
+            $bookGig->setBookedGigsId($row['bookedGigsId']);
+            
+            $bookGig->setGigsName( $row['gigsName']);
+            
+            $bookGig->setGigsDetails( $row['gigsDetails']);
+            
+            $bookGig->setEventDate( $row['event_date']);
+            
+            $bookGig->setVenueName($row['venueName']);
+            
+            $bookGig->setVenueCity( $row['venueCity']);
+            
+            $bookGig->setVenueProvince( $row['venueProvince']);
+            
+            $bookGig->setFirstName($row['firstName']);
+            
+            $bookGig->setLastName( $row['lastName']);
+            
+            $bookGig->setEventName($row['event_name']);
+            
+            $bookGig->setEventDescription($row['event_description']);
+            
+            if(isset($row['eventPlannerEmail'])){
+                $bookGig->setEmail($row['eventPlannerEmail']);
+            }
+            
+            $bookedGigsDTO[] = $bookGig;
+            
+        }
+        
+    } else {
+        // $fmsg = "No venues for this user";
+    }
+    
+    $_SESSION['myBookedGigs'] = $bookedGigsDTO;
+    
+    mysqli_close($connection);
+    
+    
+   
 ?>
 </head>
 
@@ -383,88 +476,28 @@ Upcoming Events
 
 
 <div class="card-deck spacing1">
-<div class="row">
+
+<?php
+    foreach($bookedGigsDTO as $bookedgig)
+        
+        print '<div class="row">
   <div class="card text-center">
     <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
     <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
+      <h5 class="card-title title2">'. $bookedgig->getEventName() .'</h5>
+      <p class="card-text">DATE: '. $bookedgig->getEventDate() .'</p>
+      <p class="card-text">VENUE: '. $bookedgig->getVenueName() .'</p>
+      <p class="card-text">DESCRIPTION: '. $bookedgig->getEventDescription() .'</p>
+      <p class="card-text">ENTERTAINER NAME '. $bookedgig->getGigsName()  .'</p>
+      	<button type="button"><a href="entertainerViewEventDetails.php'.$bookedgig->getBookedGigsId().'">View More</a></button>
       
     </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event1.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-      
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-      
-          </div>
-  </div>
- </div> 
- <br/>
- <br/>
-<div class="row">
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-      
-    </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event3.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p> 
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-         
-      </div>
-  </div>
-  <div class="card text-center">
-    <img class="card-img-top event-img-size" src="../assets/img-temp/extras/event2.jpg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title title2">Biggest Event Ever</h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
-      <p class="card-text">Macy's Backyard</p>
-      <p class="card-text">A large celebration with DJ and professional singers at an awesome venue for all ages!</p>
-      <p class="card-text">Contact entertainer Etlana Fries at etlana@fries.com</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php">View More</a></button>
-      
-    </div>
-  </div>
- </div> 
+  </div>';
+						    
+						    
+					?>
 
 
-
-</div>
 
                                     </div>
                                     <!-- Page-body end -->
