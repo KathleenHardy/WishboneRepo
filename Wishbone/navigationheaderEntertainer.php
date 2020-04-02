@@ -8,7 +8,7 @@
           </a>
 
           <button class="navbar-toggler" type="button"
-                  data-toggle="collapse"
+                  
                   data-target="#navbarTogglerDemo"
 
                   aria-controls="navbarTogglerDemo"
