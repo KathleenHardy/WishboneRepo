@@ -417,6 +417,7 @@ mysqli_close($connection);
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
+                                    
 <div class="pg-start">
 <h1 class="main-title">
 My Venues

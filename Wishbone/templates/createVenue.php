@@ -87,7 +87,6 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
                 // close statement
                 $stmt4->close();
             }
-            echo $venueId;
 
             $vidSql = "INSERT INTO venueVideos(venueId, venueVideoEmbedCode) VALUES( $venueId, '$venueVideoEmbedCode')";
 

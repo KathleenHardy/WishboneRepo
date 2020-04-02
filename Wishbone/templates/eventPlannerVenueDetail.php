@@ -13,7 +13,7 @@ if ( isset ($_GET['venueId'])) {
 }
 
 
-$venueOwnerId = $_SESSION['venueOwnerId'];
+//$venueOwnerId = $_SESSION['venueOwnerId'];
 
 $venueNameErr = "";
 $venueName = "";
