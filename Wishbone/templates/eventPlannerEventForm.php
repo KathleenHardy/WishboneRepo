@@ -321,7 +321,7 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 										</div>	 
 										<div class="form-group"> <!-- Event Name -->   
 											<label for="eventDate" class="control-label title2">Event Date/Time</label>
-											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
+											<input type="date" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
 													<span class="error"><?php 
 											if(isset($errorMessages['eventDate']))
 											echo $errorMessages['eventDate'];?></span>
