@@ -421,7 +421,7 @@ VALUES( '$chosenEntId', '$entVideoEmbedCode')";
                                     </li>
                                     <li class="waves-effect waves-light">
                                         <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
+                                             <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
                                             <div class="media-body">
                                                 <h5 class="notification-user"><?= $entFirstName. " " . $entLastName ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
@@ -453,7 +453,7 @@ VALUES( '$chosenEntId', '$entVideoEmbedCode')";
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                     <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius-40" alt="User-Profile-Image">
                                     <span><?= $entFirstName. " " . $entLastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
@@ -487,7 +487,7 @@ VALUES( '$chosenEntId', '$entVideoEmbedCode')";
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
                                     <div class="user-details">
                                         <span id="more-details"><?= $entFirstName. " " . $entLastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>

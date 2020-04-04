@@ -280,9 +280,36 @@ values(".$_SESSION['entId'].",".$gigsid.",1,".$venueOwnerId.",".$venue_id.",'".$
     //testing.test@1.com
     
 }
+$authId = $_SESSION['authId'];
+
+$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
+          FROM venueowners
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+mysqli_close($connection);
 
 
 ?>
+
+
+
     <!-- Pre-loader start -->
     <div class="theme-loader">
         <div class="loader-track">
@@ -421,7 +448,7 @@ values(".$_SESSION['entId'].",".$gigsid.",1,".$venueOwnerId.",".$venue_id.",'".$
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -456,7 +483,7 @@ values(".$_SESSION['entId'].",".$gigsid.",1,".$venueOwnerId.",".$venue_id.",'".$
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
