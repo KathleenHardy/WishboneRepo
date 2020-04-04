@@ -485,7 +485,7 @@ $query_ent_booked = "select count(distinct entid) AS entertainers_booked from bo
                                                             <div class="col-sm-6 p-b-20 p-t-20">
                                                                 <div class="row align-items-center text-center">
                                                                     <div class="col-4 p-r-0">
-                                                                        <i class="fas fa-volume-down text-c-green f-24"></i>
+                                                                        <i class="far fa-user text-c-purple f-24"></i>
                                                                     </div>
                                                                     <div class="col-8 p-l-0">
                                                                         <h5><?php echo $venues_not_booked?></h5>

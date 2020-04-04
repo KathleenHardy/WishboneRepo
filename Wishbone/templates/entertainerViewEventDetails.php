@@ -49,7 +49,30 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->close();
     
 }
+$authId = $_SESSION['authId'];
+$query3 = "SELECT profileStatus, firstName, lastName, profilePicture
+                      FROM entertainers
+                      WHERE  authid = ?";
 
+if ($stmt3 = $connection->prepare( $query3)) {
+    
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    
+    //close statement
+    $stmt3->close();
+    
+    
+}
 
 
 ?>
@@ -232,7 +255,7 @@ if ($stmt = $connection->prepare( $query)) {
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
                                     <span><?= $entFirstName. " " . $entLastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
@@ -266,7 +289,7 @@ if ($stmt = $connection->prepare( $query)) {
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                   <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
                                     <div class="user-details">
                                         <span id="more-details"><?= $entFirstName. " " . $entLastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>

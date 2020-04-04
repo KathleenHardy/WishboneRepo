@@ -74,6 +74,28 @@
         
     }
     
+    $query_gigs_booked = "select count(*) AS gigs_not_booked from gigs g
+                INNER join entertainers e on e.entid = g.entid
+                where e.authid = ? and g.gigsid in ( select gigsid from bookedgigs)";
+    
+    if ($stmt = $connection->prepare( $query_gigs_booked)) {
+        
+        $stmt->bind_param( "i", $authId);
+        
+        //execute statement
+        $stmt->execute();
+        
+        //bind result variables
+        $stmt->bind_result( $gigs_booked );
+        
+        // fetch values
+        $stmt->fetch();
+        
+        //close statement
+        $stmt->close();
+        
+    }
+    
     
 ?>
 
@@ -256,7 +278,7 @@
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius-40" alt="User-Profile-Image">
                                     <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
@@ -455,11 +477,11 @@
                                                             <div class="col-sm-6 p-b-20 p-t-20">
                                                                 <div class="row align-items-center text-center">
                                                                     <div class="col-4 p-r-0">
-                                                                        <i class="fas fa-volume-down text-c-green f-24"></i>
+                                                                        <i class="far fa-file-alt text-c-red f-24"></i>
                                                                     </div>
                                                                     <div class="col-8 p-l-0">
-                                                                        <h5><?php echo $gigs_not_booked?></h5>
-                                                                        <p class="text-muted m-b-0">Gigs not booked</p>
+                                                                        <h5><?php echo $gigs_booked?></h5>
+                                                                        <p class="text-muted m-b-0">Gigs booked</p>
                                                                     </div>
                                                                 </div>
                                                             </div>

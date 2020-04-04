@@ -236,6 +236,32 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime','$ava
 
     
 } 
+$authId = $_SESSION['authId'];
+
+$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
+          FROM venueowners
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+mysqli_close($connection);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -280,6 +306,7 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime','$ava
     
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
 <script>
+
     $(document).ready(function(){
       var date_input=$('input[name="date"]'); //our date input has the name "date"
       var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
@@ -433,7 +460,7 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime','$ava
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -468,7 +495,7 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime','$ava
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">

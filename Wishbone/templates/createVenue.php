@@ -112,6 +112,32 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
 <?php
 }
 
+$authId = $_SESSION['authId'];
+
+$query = "SELECT venueOwnerId, firstName, lastName, imageLocation
+          FROM venueowners
+          WHERE  authid = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result( $venueOwnerId, $firstName, $lastName, $imageLocation);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+mysqli_close($connection);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -327,7 +353,7 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
 							<li class="user-profile header-notification"><a href="#!"
 								class="waves-effect waves-light"> <img
 									src="../assets/images/avatar-4.jpg" class="img-radius"
-									alt="User-Profile-Image"> <span>John Doe</span> <i
+									alt="User-Profile-Image"> <span><?= $firstName. " " . $lastName ?></span> <i
 									class="ti-angle-down"></i>
 							</a>
 								<ul class="show-notification profile-notification">
@@ -359,7 +385,7 @@ VALUES( $venueOwnerId, '$venueName','$venueCity','$venueState','$venueProvince',
 									<img class="img-80 img-radius"
 										src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
 									<div class="user-details">
-										<span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+										<span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
 									</div>
 								</div>
 								<div class="main-menu-content">
