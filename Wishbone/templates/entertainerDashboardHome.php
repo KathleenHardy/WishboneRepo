@@ -5,10 +5,10 @@
     
     include ('../config.php');
     include ('../enums/profileStatus.php');
-    
+
     $authId = $_SESSION['authId'];
     
-    $query = "SELECT profileStatus, firstName, lastName, profilePicture
+    $query = "SELECT profileStatus, entid, firstName, lastName, profilePicture
               FROM entertainers
               WHERE  authid = ?";
     
@@ -20,7 +20,7 @@
         $stmt->execute();
     
         //bind result variables
-        $stmt->bind_result( $profileStatus, $firstName, $lastName, $profilePicture);
+        $stmt->bind_result( $profileStatus, $entid, $firstName, $lastName, $profilePicture);
         
         // fetch values
         $stmt->fetch();
@@ -73,6 +73,44 @@
         $stmt->close();
         
     }
+    
+    include ('../dto/notification.php');
+    $notificationDTO = array();
+    $getNotifications = "SELECT notificationId, notificationType, bookingRequestId, gigsid, event_date, requestorEmail, message
+              FROM entertainerbookingnotifications
+              WHERE  entid = ?";
+    
+    if ($stmt2 = $connection->prepare( $getNotifications)) {
+        
+        $stmt2->bind_param( "i", $entid);
+        
+        //execute statement
+        $stmt2->execute();
+        
+        //bind result variables
+        $stmt2->bind_result( $notificationId, $notificationType, $bookingRequestId, $gigsid, $event_date, $requestorEmail, $message);
+        
+        //fetch values
+        while( $stmt2->fetch()) {
+            
+            $notification = new Notification();
+            
+            $notification->setNotificationId( $notificationId);
+            $notification->setNotificationType( $notificationType);
+            $notification->setBookingRequestId($bookingRequestId);
+            $notification->setGigsid($gigsid);
+            $notification->setEventDate($event_date);
+            $notification->setRequestorEmail($requestorEmail);
+            $notification->setMessage( $message);
+            
+            $notificationDTO[] = $notification;
+        }
+        
+        //close statement
+        $stmt2->close();
+        
+    }
+    
     
     
 ?>
@@ -215,13 +253,35 @@
                             <li class="header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <i class="ti-bell"></i>
-                                    <span class="badge bg-c-red"></span>
+                                    <?php 
+                                    if ( sizeof( $notificationDTO) != 0) {
+                                        print '<span class="badge bg-c-red"></span>';
+                                    }
+                                    ?> 
                                 </a>
                                 <ul class="show-notification">
                                     <li>
                                         <h6>Notifications</h6>
                                         <label class="label label-danger">New</label>
                                     </li>
+                                    <?php
+                                        foreach($notificationDTO as $notifications) {
+                                            print
+                                            '
+                                                <li class="waves-effect waves-light">
+                                                    <div class="media">
+                                                        <!-- <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image"> -->
+                                                        <div class="media-body">
+                                                            <!-- <h5 class="notification-user">Event Planner: John Doe</h5> -->
+                                                            <p class="notification-msg"><a href="entertainerNotificationDetails.php?id='. $notifications->getBookingRequestId() . '">' .$notifications->getMessage(). '</a></p>
+                                                            <!-- <span class="notification-time">30 minutes ago</span> -->
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            ';
+                                        }
+                                    ?>
+                                    <!-- 
                                     <li class="waves-effect waves-light">
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
@@ -252,6 +312,7 @@
                                             </div>
                                         </div>
                                     </li>
+                                    -->
                                 </ul>
                             </li>
                             <li class="user-profile header-notification">
