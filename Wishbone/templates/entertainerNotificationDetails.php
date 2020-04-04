@@ -80,7 +80,7 @@
                     
 
                         $gigssid = $row["gigsid"];
-                            echo $gigssid;
+
                         $eventPlannerId = $row["eventPlannerId"];
     
                         $entid = $row["entid"];

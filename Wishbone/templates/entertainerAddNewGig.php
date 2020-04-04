@@ -172,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($status === false) {
                     trigger_error($stmt->error, E_USER_ERROR);
                 } else {
-                    //header('Location: entertainerPortfolio.php');
+                    header('Location: entertainerMainPortfolio.php');
                     mysqli_close($connection);
                 }
                 //close statement

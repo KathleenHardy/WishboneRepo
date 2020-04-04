@@ -189,7 +189,7 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
 //             $stmta->execute();
 //             $stmta->bind_result($epID);
 //             $stmta->fetch();
-//             $stmta->close();
+//             $stmta->close()
 
 
             //fetch venueOwnerId from vanues based on venueId
@@ -282,9 +282,38 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
                echo "<script type='text/javascript'>alert('".mysqli_error($connection)."');</script>";
                echo mysqli_error($connection);
            }
+           
+           
+           //insert into notifications
+           $query2 = "INSERT INTO entertainerBookingNotifications
+                  ( notificationType, bookingRequestId, entid, gigsid, event_date, requestorEmail, message)
+                  VALUES
+                  ( ?,?,?,?,?,?,?)";
+           
+           if ( $stmt2 = $connection->prepare( $query2)) {
+               
+               $stmt2->bind_param( "iiiisss", $notificationType, $bookingRequestId, $entid_, $gigsid_, $event_date_, $requestorEmail, $message);
+               
+               $notificationType = 1;
+               $bookingRequestId = $last_id;
+               $entid_ = $entid;
+               $gigsid_ = $gigsid;
+               $event_date_ = $event_date;
+               $requestorEmail = $eventPlannerEmail;
+               $message = $event_description;
+               
+               //execute statement
+               $status = $stmt2->execute();
+               
+               //close statement
+               $stmt2->close();
+           }
             
          }
     //testing.test@1.com
+    
+         
+         
     
 }
 
@@ -321,7 +350,7 @@ values(".$_SESSION['entid'].",".$gigsid.",".$epID.",".$venueOwnerId.",".$venue_i
 										</div>	 
 										<div class="form-group"> <!-- Event Name -->   
 											<label for="eventDate" class="control-label title2">Event Date/Time</label>
-											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
+											<input type="date" class="form-control" style="border-bottom: 2px solid #faa828;" id="eventDate" name="eventDate" placeholder="Enter the date/time of event">
 													<span class="error"><?php 
 											if(isset($errorMessages['eventDate']))
 											echo $errorMessages['eventDate'];?></span>

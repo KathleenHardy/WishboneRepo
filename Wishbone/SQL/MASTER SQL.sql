@@ -554,9 +554,9 @@ CREATE TABLE bookedVenues (
 CREATE TABLE entertainerBookingNotifications (
     notificationId int not null auto_increment,
     notificationType int not null,
+    bookingRequestId int,
     entid int not null,
     gigsid int not null,
-    venue varchar(20) not null,
     event_date date not null,
     requestorEmail varchar(20) not null,
     message varchar(100),
@@ -592,10 +592,12 @@ CREATE TABLE venueOwnerNotifications (
 
 CREATE TABLE eventPlannerNotifications (
     notificationId int not null auto_increment,
+    bookingRequestId int,
     notificationType int not null,
     eventPlannerId int not null,
     entid int not null,
     message varchar(100),
+    
 
     FOREIGN KEY (eventPlannerId) REFERENCES eventPlanners(eventPlannerId),
     primary key (notificationId)
@@ -614,6 +616,9 @@ entertainerAvailability.entid = entertainers.entid
 );
 
 
+
+
+
 /*
 SELECT availStartDate, availEndDate, availStartTime, availEndTime, entertainers.entid, firstName, lastName, ratePerHour, aboutMe, gigsName, gigsCategory, gigsArtType, gigsDetails, notes
 
@@ -624,10 +629,9 @@ gigs.gigsid = gigsimages.gigsid
 */
 
 
-
 CREATE View bookedGigsDetails as 
 (
-select bookedGigsId, eventplanners.eventPlannerId, gigs.gigsId, bookedgigs.entid, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName, email, event_description, event_name  
+select bookedGigsId, bookedgigs.venueOwnerId,eventplanners.eventPlannerId, gigs.gigsId, bookedgigs.entid, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName, email, event_description, event_name  
 from bookedgigs INNER JOIN gigs ON 
 gigs.gigsid = bookedgigs.gigsid inner join eventplanners ON 
 bookedgigs.eventPlannerId = eventplanners.eventPlannerId JOIN venues ON 
@@ -639,7 +643,9 @@ ALTER TABLE `bookingrequests`  ADD `gigsid` INT NOT NULL  AFTER `venueOwnerId`, 
 
 ALTER TABLE `bookingrequests` ADD CONSTRAINT `bookingrequests_ibfk_4` FOREIGN KEY (`gigsid`) REFERENCES `gigs`(`gigsid`) ON DELETE RESTRICT ON UPDATE RESTRICT; ALTER TABLE `bookingrequests` ADD CONSTRAINT `bookingrequests_ibfk_5` FOREIGN KEY (`venueid`) REFERENCES `venues`(`venueId`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
+ALTER TABLE `bookingrequests` ADD `eventPlannerEmail` VARCHAR(50) NOT NULL AFTER `message`;
 
+ALTER TABLE `bookedgigs` ADD `eventPlannerEmail` VARCHAR(50) NOT NULL AFTER `event_description`;
 
 
 insert into artforms (formname) values ('musician');
