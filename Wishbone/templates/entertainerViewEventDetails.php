@@ -5,6 +5,7 @@ include ('../dto/bookedGigDetails.php');
 
 $_SESSION['bookedGigsId']=$_GET['id'];
 $bookedGigsId = $_SESSION['bookedGigsId'];
+$entid = $_SESSION['entertainerid'];
 
 $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
               FROM entertainers
@@ -49,6 +50,11 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->close();
     
 }
+
+//$newDate = date( "D M j \\f\\r\\o\\m\\ ", strtotime( $event_date));
+$newDate = date( "D M j", strtotime( $event_date));
+
+
 $authId = $_SESSION['authId'];
 $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
                       FROM entertainers
@@ -73,6 +79,50 @@ if ($stmt3 = $connection->prepare( $query3)) {
     
     
 }
+
+include ('../dto/notification.php');
+$notificationDTO = array();
+$_SESSION['notifications'] = array();
+
+$getNotifications = "SELECT notificationId, notificationType, bookingRequestId, gigsid, event_date, requestorEmail, message
+              FROM entertainerbookingnotifications
+              WHERE  entid = ?";
+
+if ($stmt2 = $connection->prepare( $getNotifications)) {
+    
+    $stmt2->bind_param( "i", $entid);
+    
+    //execute statement
+    $stmt2->execute();
+    
+    //bind result variables
+    $stmt2->bind_result( $notificationId, $notificationType, $bookingRequestId, $gigsid, $event_date, $requestorEmail, $message);
+    
+    //fetch values
+    while( $stmt2->fetch()) {
+        
+        $notification = new Notification();
+        
+        $notification->setNotificationId( $notificationId);
+        $notification->setNotificationType( $notificationType);
+        $notification->setBookingRequestId($bookingRequestId);
+        $notification->setGigsid($gigsid);
+        $notification->setEventDate($event_date);
+        $notification->setRequestorEmail($requestorEmail);
+        $notification->setMessage( $message);
+        
+        $notificationDTO[] = $notification;
+        array_push($_SESSION['notifications'], $notification);
+    }
+    
+    
+    
+    
+    //close statement
+    $stmt2->close();
+    
+}
+
 
 
 ?>
@@ -214,43 +264,39 @@ if ($stmt3 = $connection->prepare( $query3)) {
                             <li class="header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <i class="ti-bell"></i>
-                                    <span class="badge bg-c-red"></span>
+                                    <?php 
+                                    if ( sizeof( $notificationDTO) != 0) {
+                                        print '<span class="badge bg-c-red"></span>';
+                                    }
+                                    ?> 
                                 </a>
                                 <ul class="show-notification">
                                     <li>
                                         <h6>Notifications</h6>
-                                        <label class="label label-danger">New</label>
+                                        <?php 
+                                    if ( sizeof( $notificationDTO) != 0) {
+                                        print '<label class="label label-danger">New</label>';
+                                    }
+                                    ?> 
+                                        
                                     </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user"><?= $_SESSION['entertainerfirstname']. " " . $entLastName ?></h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-4.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Joseph William</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-3.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Sara Soudein</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    <?php
+                                        foreach($notificationDTO as $notifications) {
+                                            print
+                                            '
+                                                <li class="waves-effect waves-light">
+                                                    <div class="media">
+                                                        <!-- <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image"> -->
+                                                        <div class="media-body">
+                                                            <!-- <h5 class="notification-user">Event Planner: John Doe</h5> -->
+                                                            <p class="notification-msg"><a href="entertainerNotificationDetails.php?id='. $notifications->getBookingRequestId() . '">' .$notifications->getMessage(). '</a></p>
+                                                            <!-- <span class="notification-time">30 minutes ago</span> -->
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            ';
+                                        }
+                                    ?>
                                 </ul>
                             </li>
                             <li class="user-profile header-notification">
@@ -297,7 +343,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="index.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -422,7 +468,7 @@ if ($stmt3 = $connection->prepare( $query3)) {
     <img class="card-img-top event-img-size-notification" src="../assets/img/backgrounds/1.jpg" alt="event img">
     <div class="card-body">
       <h5 class="card-title title2"><?= $event_name ?></h5>
-      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
+      <p class="card-text"><?= $newDate ?></p>
       <p class="card-text"><?= $venueName ?></p>
             <p class="card-text">Gig Selected: <?= $gigsName ?></p>
       <p class="card-text"><?= $gigsDetails ?></p>
@@ -430,7 +476,9 @@ if ($stmt3 = $connection->prepare( $query3)) {
     </div>
       
   </div>           
-  </div>                           
+  </div>    
+  
+                       
                                       
                                              </div>
                                     <!-- Page-body end -->

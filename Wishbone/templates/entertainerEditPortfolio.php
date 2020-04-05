@@ -248,7 +248,7 @@ mysqli_close($connection);
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="user-profile.html">
+                                        <a href="entertainerViewProfile-New.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>
@@ -280,7 +280,7 @@ mysqli_close($connection);
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>

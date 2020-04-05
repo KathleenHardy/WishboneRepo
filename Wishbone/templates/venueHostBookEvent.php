@@ -69,6 +69,9 @@ if(isset($_GET["id"]))
 
  //get logged in auth id
  $authId = $_SESSION['authId'];
+ 
+ $venueHostEmail = $_SESSION['useremail'];
+ 
  //echo $authId;
  //fetch eventPlannerId based on authId
  $querya = 'SELECT venueOwnerId FROM venueowners WHERE authid = ?';
@@ -208,8 +211,8 @@ if(isset($_POST["eventName"]) || isset($_POST["eventDate"]) || isset($_POST["eve
             $event_description = $_POST["eventDescription"];
             
             //query to insrt into bookedgigs
-            $query = "insert into bookingrequests(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
-values(".$_SESSION['entId'].",".$gigsid.",1,".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."');";
+            $query = "insert into bookingrequests(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description,eventPlannerEmail) 
+values(".$_SESSION['entId'].",".$gigsid.",1,".$venueOwnerId.",".$venue_id.",'".$event_name."','".$event_date."','".$event_description."','".$venueHostEmail."');";
             echo $query;
            //if success then show success msg else show error msg
             $conn =   mysqli_query($connection,$query);
@@ -277,9 +280,35 @@ values(".$_SESSION['entId'].",".$gigsid.",1,".$venueOwnerId.",".$venue_id.",'".$
            }
             
          }
+         
+         //insert into notifications
+         $query2 = "INSERT INTO entertainerBookingNotifications
+                  ( notificationType, bookingRequestId, entid, gigsid, event_date, requestorEmail, message)
+                  VALUES
+                  ( ?,?,?,?,?,?,?)";
+         
+         if ( $stmt2 = $connection->prepare( $query2)) {
+             
+             $stmt2->bind_param( "iiiisss", $notificationType, $bookingRequestId, $entid_, $gigsid_, $event_date_, $requestorEmail, $message);
+             
+             $notificationType = 1;
+             $bookingRequestId = $last_id;
+             $entid_ = $entid;
+             $gigsid_ = $gigsid;
+             $event_date_ = $event_date;
+             $requestorEmail = $venueHostEmail;
+             $message = $event_description;
+             
+             //execute statement
+             $status = $stmt2->execute();
+             
+             //close statement
+             $stmt2->close();
+         }
+}
     //testing.test@1.com
     
-}
+
 $authId = $_SESSION['authId'];
 
 $query = "SELECT venueOwnerId, firstName, lastName, imageLocation

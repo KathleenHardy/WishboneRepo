@@ -189,7 +189,7 @@ VALUES( $chosenVenueId, '$startDate', '$endDate', '$startTime', '$endTime','$ava
     
 
     if (mysqli_query($connection, $sql)) {
-        echo "";
+        header('Location: venueAvailabilityCalendar.php');
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
@@ -572,6 +572,13 @@ mysqli_close($connection);
                                             </a>
                                         </li>
                                     </ul>
+                                </li>
+                                <li class="">
+                                    <a href="venueAvailabilityCalendar.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Calendar</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
                                 </li>
                                 <li class="">
                                     <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">

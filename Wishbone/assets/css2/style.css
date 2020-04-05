@@ -241,7 +241,7 @@ option {
 .u-portfolio__image {
   display: block;
   width: 100%;
-  height: auto;
+  height: 300px;
   transition: all .2s ease;
 }
 

@@ -3,6 +3,7 @@ include ('../config.php');
 require_once ('../dto/gig.php');
 session_start();
 
+/*
 $user_check = $_SESSION['useremail'];
 
 $infoQuery = "SELECT entertainers.profilePicture, entertainers.entid, entertainers.firstName, entertainers.lastName
@@ -18,11 +19,56 @@ $Login_user_imagelocation = $row['profilePicture'];
 $login_user_firstname = $row['firstName'];
 $login_user_lastname = $row['lastName'];
 $login_user_userid = $row['entid'];
+*/
 
 
-$_SESSION['entertainerfirstname'] = $login_user_firstname;
-$_SESSION['entertainerlastname'] = $login_user_lastname;
-$_SESSION['entertainerid'] = $login_user_userid;
+$firstName = $_SESSION['entertainerfirstname'];
+$lastName = $_SESSION['entertainerlastname'];
+$entid = $_SESSION['entertainerid'];
+$profilePicture =$_SESSION['entertainerProfilePicture'];
+
+include ('../dto/notification.php');
+$notificationDTO = array();
+$_SESSION['notifications'] = array();
+
+$getNotifications = "SELECT notificationId, notificationType, bookingRequestId, gigsid, event_date, requestorEmail, message
+              FROM entertainerbookingnotifications
+              WHERE  entid = ?";
+
+if ($stmt2 = $connection->prepare( $getNotifications)) {
+    
+    $stmt2->bind_param( "i", $entid);
+    
+    //execute statement
+    $stmt2->execute();
+    
+    //bind result variables
+    $stmt2->bind_result( $notificationId, $notificationType, $bookingRequestId, $gigsid, $event_date, $requestorEmail, $message);
+    
+    //fetch values
+    while( $stmt2->fetch()) {
+        
+        $notification = new Notification();
+        
+        $notification->setNotificationId( $notificationId);
+        $notification->setNotificationType( $notificationType);
+        $notification->setBookingRequestId($bookingRequestId);
+        $notification->setGigsid($gigsid);
+        $notification->setEventDate($event_date);
+        $notification->setRequestorEmail($requestorEmail);
+        $notification->setMessage( $message);
+        
+        $notificationDTO[] = $notification;
+        array_push($_SESSION['notifications'], $notification);
+    }
+    
+    
+    
+    
+    //close statement
+    $stmt2->close();
+    
+}
 
 
 mysqli_close($connection);
@@ -169,49 +215,45 @@ mysqli_close($connection);
                             <li class="header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <i class="ti-bell"></i>
-                                    <span class="badge bg-c-red"></span>
+                                    <?php 
+                                    if ( sizeof( $notificationDTO) != 0) {
+                                        print '<span class="badge bg-c-red"></span>';
+                                    }
+                                    ?> 
                                 </a>
                                 <ul class="show-notification">
                                     <li>
                                         <h6>Notifications</h6>
-                                        <label class="label label-danger">New</label>
+                                        <?php 
+                                    if ( sizeof( $notificationDTO) != 0) {
+                                        print '<label class="label label-danger">New</label>';
+                                    }
+                                    ?> 
+                                        
                                     </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Event Planner: John Doe</h5>
-                                                <p class="notification-msg"><a href="entertainerNotificationDetails.php">View New Event Booking Request</a></p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-4.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Joseph William</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-3.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Sara Soudein</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    <?php
+                                        foreach($notificationDTO as $notifications) {
+                                            print
+                                            '
+                                                <li class="waves-effect waves-light">
+                                                    <div class="media">
+                                                        <!-- <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image"> -->
+                                                        <div class="media-body">
+                                                            <!-- <h5 class="notification-user">Event Planner: John Doe</h5> -->
+                                                            <p class="notification-msg"><a href="entertainerNotificationDetails.php?id='. $notifications->getBookingRequestId() . '">' .$notifications->getMessage(). '</a></p>
+                                                            <!-- <span class="notification-time">30 minutes ago</span> -->
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            ';
+                                        }
+                                    ?>
                                 </ul>
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius-40" alt="User-Profile-Image">
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -244,9 +286,9 @@ mysqli_close($connection);
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -375,31 +417,24 @@ mysqli_close($connection);
 
 							<!-- title-01 -->
 							<div class="title-01 title-01__style-04" style="padding: 20px;">
-								<h2 class="title-01__title"><?= $login_user_firstname.' '.$login_user_lastname ?></h2>
+								<h2 class="title-01__title"><?= $firstName.' '.$lastName ?></h2>
 							</div>
-          <div class="row">
-            <div class="col-md-4 mx-auto">
-              <div class="u-pull-half text-center">
-                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="auto" src="../assets/img-temp/200x200/img1.jpg" alt="Image Description">
-              </div>
-            </div>
-          </div>
-		
+							
 										<div class="profileInfo" style ="padding: 20px; text-align: center;">		
 										<form action="eventPlannerProfileUpdate.php" method="POST">
 
     										<div class="form-group"> <!-- Event Name -->
     											<label for="firstName" class="control-label title2">First Name</label>
-    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="firstName" name="firstName" value="<?php echo $login_user_firstname;?>">
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="firstName" name="firstName" value="<?php echo $firstName;?>">
     										</div>	
     										<div class="form-group"> <!-- Event Name -->
     											<label for="lastName" class="control-label title2">Last Name</label>
-    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="lastName" name="lastName" value="<?php echo $login_user_lastname;?>">
+    											<input type="text" class="form-control" style="border-bottom: 3px solid #fac668;" id="lastName" name="lastName" value="<?php echo $lastName;?>">
     										</div>	
     																											
     										
                                             </div>										
-										 <button type="submit" class="btn-all" style="display:inline;">Update</button>
+
 										</form>										
 										
 											

@@ -129,6 +129,7 @@ if ($stmt2 = $connection->prepare( $getNotifications)) {
 }
 
 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -281,7 +282,11 @@ if ($stmt2 = $connection->prepare( $getNotifications)) {
                                 <ul class="show-notification">
                                     <li>
                                         <h6>Notifications</h6>
-                                        <label class="label label-danger">New</label>
+                                            <?php 
+                                    if ( sizeof( $notificationDTO) != 0) {
+                                        print '<label class="label label-danger">New</label>';
+                                    }
+                                    ?> 
                                     </li>
                                     <?php
                                         foreach($notificationDTO as $notifications) {
@@ -346,7 +351,7 @@ if ($stmt2 = $connection->prepare( $getNotifications)) {
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -417,13 +422,6 @@ if ($stmt2 = $connection->prepare( $getNotifications)) {
                                             </a>
                                         </li>
                                     </ul>
-                                </li>
-                                <li class="">
-                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Calendar</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
                                 </li>
                                 <li class="">
                                     <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">

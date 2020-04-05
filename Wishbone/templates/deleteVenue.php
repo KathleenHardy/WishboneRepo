@@ -128,7 +128,7 @@ if (! empty($_POST)) {
     
     
     if (mysqli_query($connection, $sql)) {
-        echo "";
+        header('Location: venueHostVenueList.php');
     } else {
         echo "Error: " . $sql . "<br>" . mysqli_error($connection);
     }
@@ -174,9 +174,6 @@ if (! empty($_POST)) {
     
     $run = mysqli_query($connection, $sql4) or die(mysqli_error($connection)); */
     ?>
-    <script type="text/javascript">
-      window.location.href = 'http://localhost:7331/Wishbone/templates/venueHostVenueList.php';
-    </script>
 <?php
 
     
