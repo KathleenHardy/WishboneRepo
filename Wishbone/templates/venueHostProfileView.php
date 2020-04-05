@@ -431,13 +431,7 @@ $connection->close();
 							<div class="title-01 title-01__style-04" style="padding: 20px;">
 								<h2 class="title-01__title"><?= $firstName . ' ' . $lastName  ?></h2>
 							</div>
-          <div class="row">
-            <div class="col-md-4 mx-auto">
-              <div class="u-pull-half text-center">
-                <img class="img-fluid u-avatar u-box-shadow-lg rounded-circle mb-3" width="200" height="auto" src="../assets/img-temp/200x200/img1.jpg" alt="Image Description">
-              </div>
-            </div>
-          </div>
+
 		
 									<div class="profileInfo" style ="padding: 20px; text-align: center;">
 										<form action="eventPlannerProfileUpdate.php" method="POST">

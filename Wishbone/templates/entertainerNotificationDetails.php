@@ -44,10 +44,60 @@
         session_start();
 
         include ('../config.php');
+        
+        $firstName= $_SESSION['entertainerfirstname'];
+        $lastName=$_SESSION['entertainerlastname'];
+        $entid=$_SESSION['entertainerid'];
+        $profilePicture =$_SESSION['entertainerProfilePicture'];
+        
+        include ('../dto/notification.php');
+        $notificationDTO = array();
+        $_SESSION['notifications'] = array();
+        
+        $getNotifications = "SELECT notificationId, notificationType, bookingRequestId, gigsid, event_date, requestorEmail, message
+              FROM entertainerbookingnotifications
+              WHERE  entid = ?";
+        
+        if ($stmt2 = $connection->prepare( $getNotifications)) {
+            
+            $stmt2->bind_param( "i", $entid);
+            
+            //execute statement
+            $stmt2->execute();
+            
+            //bind result variables
+            $stmt2->bind_result( $notificationId, $notificationType, $bookingRequestId, $gigsid, $event_date, $requestorEmail, $message);
+            
+            //fetch values
+            while( $stmt2->fetch()) {
+                
+                $notification = new Notification();
+                
+                $notification->setNotificationId( $notificationId);
+                $notification->setNotificationType( $notificationType);
+                $notification->setBookingRequestId($bookingRequestId);
+                $notification->setGigsid($gigsid);
+                $notification->setEventDate($event_date);
+                $notification->setRequestorEmail($requestorEmail);
+                $notification->setMessage( $message);
+                
+                $notificationDTO[] = $notification;
+                array_push($_SESSION['notifications'], $notification);
+            }
+            
+            
+            
+            
+            //close statement
+            $stmt2->close();
+            
+        }
+        
     
         if(isset($_SESSION['authId']) )
         {
             $requestID = $_GET["id"];
+
             $query2 = "SELECT * 
                     FROM bookingrequests where bookingReqId = ".$requestID;
                     
@@ -88,20 +138,22 @@
                         $venueOwnerId = $row["venueOwnerId"];
     
                         $venueid = $row["venueid"];
+                        
+                        $contactEmail = $row["eventPlannerEmail"];
 
                         if(isset($_POST['accept']))
-                        {
-                                        //query to insrt into bookedgigs
+                        { 
+                        //query to insrt into bookedgigs
                         $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
                         values(".$entid.",".$gigssid.",".$eventPlannerId.",".$venueOwnerId.",".$venueid.",'".$eventName."','".$eventDate."','".$eventDescription."');";
-                                    echo $query;
+
                                 //if success then show success msg else show error msg
                                 $conn =   mysqli_query($connection,$query);
                                     if($conn  === TRUE)
                                     {
                                         ?>
                                         <script type="text/javascript">
-                                        alert("Booking Accepted!");
+                                        alert("Booking Accept        ed!");
                                         window.location.href = 'entertainerDashboardHome.php';
                                         </script>
                                         <?php
@@ -110,7 +162,8 @@
                                         echo mysqli_error($connection);
                                     }
                                     
-                                
+                                    
+
                         }
                         else if(isset($_POST['reject']))
                         {
@@ -291,49 +344,45 @@
                             <li class="header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <i class="ti-bell"></i>
-                                    <span class="badge bg-c-red"></span>
+                                    <?php 
+                                    if ( sizeof( $notificationDTO) != 0) {
+                                        print '<span class="badge bg-c-red"></span>';
+                                    }
+                                    ?> 
                                 </a>
                                 <ul class="show-notification">
                                     <li>
                                         <h6>Notifications</h6>
-                                        <label class="label label-danger">New</label>
+                                        <?php 
+                                    if ( sizeof( $notificationDTO) != 0) {
+                                        print '<label class="label label-danger">New</label>';
+                                    }
+                                    ?> 
+                                        
                                     </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-4.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Joseph William</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="waves-effect waves-light">
-                                        <div class="media">
-                                            <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-3.jpg" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Sara Soudein</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    <?php
+                                        foreach($notificationDTO as $notifications) {
+                                            print
+                                            '
+                                                <li class="waves-effect waves-light">
+                                                    <div class="media">
+                                                        <!-- <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image"> -->
+                                                        <div class="media-body">
+                                                            <!-- <h5 class="notification-user">Event Planner: John Doe</h5> -->
+                                                            <p class="notification-msg"><a href="entertainerNotificationDetails.php?id='. $notifications->getBookingRequestId() . '">' .$notifications->getMessage(). '</a></p>
+                                                            <!-- <span class="notification-time">30 minutes ago</span> -->
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            ';
+                                        }
+                                    ?>
                                 </ul>
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius-40" alt="User-Profile-Image">
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -366,15 +415,15 @@
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
+                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="index.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -447,6 +496,13 @@
                                     </ul>
                                 </li>
                                 <li class="">
+                                    <a href="entertainerEventsCalendar.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fa fa-calendar"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">Calendar</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li>
+                                <li class="">
                                     <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Portfolio</span>
@@ -502,7 +558,7 @@
      <p class="card-text"><?php echo $eventDescription; ?></p>
            <p class="card-text">Gig Selected: <?php echo $gig; ?></p>
      <p class="card-text"><?php echo $venue; ?></p>
-     <p class="card-text">Contact <?php echo $eventPlanner; ?></p>
+     <p class="card-text">Contact <?php echo $contactEmail; ?></p>
    </div>
    <div class="card-footer text-muted">
    

@@ -374,7 +374,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -476,14 +476,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
                                              ';
                                         
                                     }
-                                ?>
-                                <li class="">
-                                    <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
-                                        <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Portfolio</span>
-                                        <span class="pcoded-mcaret"></span>
-                                    </a>
-                                </li>                                                                
+                                ?>                                                                
                             </ul>
                             <div class="pcoded-navigation-label">ACCOUNT</div>
                             <ul class="pcoded-item pcoded-left-item">

@@ -2,6 +2,7 @@
  session_start();
 
  include ('../config.php');
+
  if(isset($_SESSION['authId']) )
  {
      $requestID = $_GET["id"];
@@ -35,9 +36,8 @@
  
                  $eventDescription = $row["event_description"];
              
-
                  $gigssid = $row["gigsid"];
-                     echo $gigssid;
+
                  $eventPlannerId = $row["eventPlannerId"];
 
                  $entid = $row["entid"];
@@ -51,7 +51,6 @@
                                  //query to insrt into bookedgigs
                  $query = "insert into bookedgigs(entid,gigsid,eventPlannerId,venueOwnerId,venueId,event_name,event_date,event_description) 
                  values(".$entid.",".$gigssid.",".$eventPlannerId.",".$venueOwnerId.",".$venueid.",'".$eventName."','".$eventDate."','".$eventDescription."');";
-                             echo $query;
                          //if success then show success msg else show error msg
                          $conn =   mysqli_query($connection,$query);
                              if($conn  === TRUE)
@@ -65,9 +64,7 @@
                              }else  {
                                  echo "<script type='text/javascript'>alert('".mysqli_error($connection)."');</script>";
                                  echo mysqli_error($connection);
-                             }
-                             
-                         
+                             }  
                  }
                  else if(isset($_GET['reject']))
                  {
@@ -77,6 +74,22 @@
                      window.location.href = 'entertainerDashboardHome.php';
                      </script>
                      <?php
+                 }
+                 
+                 
+                 if ( isset($_GET['reject']) || isset($_GET['accept'])) {
+                     $deleteFromNotifications = "delete from entertainerbookingnotifications where bookingRequestId=?";
+                     
+                     if ($stmt2 = $connection->prepare( $deleteFromNotifications)) {
+                         
+                         $stmt2->bind_param( "i", $requestID_);
+                         
+                         //Set params
+                         $requestID_ = $requestID;
+                         //execute statement
+                         $stmt2->execute();
+                         
+                     }
                  }
                  
             

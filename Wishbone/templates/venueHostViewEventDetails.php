@@ -1,177 +1,68 @@
 <?php
-
 session_start();
-//print_r($_SESSION);
+include ('config.php');
+include ('../dto/bookedGigDetails.php');
 
-require_once ('../config.php');
+$_SESSION['bookedGigsId']=$_GET['id'];
+$bookedGigsId = $_SESSION['bookedGigsId'];
 
-//include "navigationheaderVenueHost.php";
-//require_once ('../dto/venue.php');
-//session_start();
-//$authIdLocal=$_SESSION['authId'];
-$authIdLocal = $_SESSION['authId'];
-//$authIdLocal=$authId;
+$firstName = $_SESSION['venueOwnerfirstname'];
+$lastName = $_SESSION['venueOwnerlastname'];
+$venueOwnerId = $_SESSION['venueOwnerId'];
 
-
-
-
-// $_SESSION['venueOwnerId'] = $venueOwnerId;
-
-
-$startDateErr = "";
-$endDateErr = "";
-$startTimeErr = "";
-$endTimeErr = "";
-$startBeforeEndErr = "";
-
-$startDate = "";
-$endDate = "";
-$startTime = "";
-$endTime = "";
-$availTitle = "";
-
-$requiredFields=0;
-
-if (! empty($_POST)) {
-
-    if (empty($_POST["startDate"])) {
-        $startDateErr = "Start date is required";
-    } else {
-        $startDate = $_POST['startDate'];
-        $requiredFields++;
-    }
-    
-    if (empty($_POST["endDate"])) {
-        $endDateErr = "End date is required";
-    } else {
-        $endDate = $_POST['endDate'];
-        $requiredFields++;
-    }
-    
-    if (empty($_POST["startTime"])) {
-        $startTimeErr = "Start time is required";
-    } else {
-        $startTime = $_POST['startTime'];
-        $requiredFields++;
-    }
-    
-    if (empty($_POST["endTime"])) {
-        $endTimeErr = "End time is required";
-    } else {
-        $endTime = $_POST['endTime'];
-        $requiredFields++;
-    }
-
-    $availTitle = $_POST['availTitle'];
-    
-    //$venueName = $_POST['venueName'];
-/*     $startDate = $_POST['startDate'];
-
-    $endDate = $_POST['endDate'];
-    $startTime = $_POST['startTime'];
-    $endTime = $_POST['endTime']; */
-
-    if($requiredFields==4){
-
-        $begin=$startDate."".$startTime;
-        $end=$endDate."".$endTime;
-        
-        $beginTimeStamp=strtotime($begin);
-        $endTimeStamp=strtotime($end);
-        
-        
-        
-        $diff=$endTimeStamp-$beginTimeStamp;
-        
-        
-        if($diff<0){
-            $startBeforeEndErr = "Start time cannot be after end time";
-        }
-        else{
-            $querya = 'SELECT entId FROM entertainers WHERE authId = ?';
-            $stmta =mysqli_prepare ($connection,$querya);
-            $stmta->bind_param('s', $authIdLocal);
-            $stmta->execute();
-            $stmta->bind_result($chosenEntId);
-            $stmta->fetch();
-            $stmta->close();
-        
-            $sql = "INSERT INTO entertaineravailability(entId, availStartDate, availEndDate, availStartTime, availEndTime, availTitle) 
-        VALUES( '$chosenEntId', '$startDate', '$endDate', '$startTime', '$endTime', '$availTitle')";
-            
-        
-                if (mysqli_query($connection, $sql)) {
-                    echo "";
-                } else {
-                    echo "Error: " . $sql . "<br>" . mysqli_error($connection);
-                }
-        
-                    
-        }
-    }
-
-        $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
-                      FROM entertainers
-                      WHERE  authid = ?";
-
-        if ($stmt3 = $connection->prepare( $query3)) {
-        
-            $stmt3->bind_param( "i", $authId);
-            
-            //execute statement
-            $stmt3->execute();
-            
-            //bind result variables
-            $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
-            
-            // fetch values
-            $stmt3->fetch();
-            
-        
-            //close statement
-            $stmt3->close();
-        
-            
-        }
-        
-    }
-$authId = $_SESSION['authId'];
+/*
 $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
-                      FROM entertainers
-                      WHERE  authid = ?";
+              FROM entertainers
+              WHERE  authid = ?";
+
+if ($stmt3 = $connection->prepare( $query3)) {
     
-    if ($stmt3 = $connection->prepare( $query3)) {
-        
-        $stmt3->bind_param( "i", $authId);
-        
-        //execute statement
-        $stmt3->execute();
-        
-        //bind result variables
-        $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
-        
-        // fetch values
-        $stmt3->fetch();
-        
-        
-        //close statement
-        $stmt3->close();
-        
-        
-    }
+    $stmt3->bind_param( "i", $authId);
+    
+    //execute statement
+    $stmt3->execute();
+    
+    //bind result variables
+    $stmt3->bind_result( $profileStatus, $entFirstName, $entLastName, $profilePicture);
+    
+    // fetch values
+    $stmt3->fetch();
+    
+    //close statement
+    $stmt3->close();
+    
+}
+*/
+
+$query = "SELECT bookedGigsId, gigsName, gigsDetails, event_date, venueName, venueCity, venueProvince, firstName, lastName,event_name, email
+          FROM bookedgigsdetails
+          WHERE  bookedGigsId = ?";
+
+if ($stmt = $connection->prepare( $query)) {
+    
+    $stmt->bind_param( "i", $bookedGigsId);
+    
+    //execute statement
+    $stmt->execute();
+    
+    //bind result variables
+    $stmt->bind_result($bookedGigsId, $gigsName, $gigsDetails, $event_date, $venueName, $venueCity, $venueProvince, $entFirstName, $entLastName, $event_name, $email);
+    
+    // fetch values
+    $stmt->fetch();
+    
+    //close statement
+    $stmt->close();
+    
+}
+
 
 ?>
-
-<!--  <script type="text/javascript"> -->
-<!--      //window.location.href = 'http://localhost:7331/Wishbone/templates/entertainerAvailabilityList.php'; -->
-<!--     //window.location.href = 'entertainerMainPortfolio.php'; -->
-<!--     </script> -->
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Add Entertainer Availability</title>
+    <title>Notification Details</title>
     <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 10]>
@@ -205,23 +96,7 @@ $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
-        <link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
-    
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
-
-<script>
-    $(document).ready(function(){
-      var date_input=$('input[name="date"]'); //our date input has the name "date"
-      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-      var options={
-        format: 'mm/dd/yyyy',
-        container: container,
-        todayHighlight: true,
-        autoclose: true,
-      };
-      date_input.datepicker(options);
-    })
-</script>    
 </head>
 
 <body>
@@ -332,7 +207,7 @@ $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user"><?= $_SESSION['authId']  ?></h5>
+                                                <h5 class="notification-user"><?= $firstName . " " . $lastName ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -362,8 +237,8 @@ $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius-40" alt="User-Profile-Image">
-                                    <span> <?= $entFirstName. " " . $entLastName ?> </span>
+                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -396,9 +271,9 @@ $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
+                                   <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details"><?= $entFirstName. " " . $entLastName ?><i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -482,7 +357,7 @@ $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
                                         <span class="pcoded-mtext">Calendar</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
-                                </li>
+                                </li>                                
                                 <li class="">
                                     <a href="entertainerMainPortfolio.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
@@ -520,92 +395,25 @@ $query3 = "SELECT profileStatus, firstName, lastName, profilePicture
                                 <div class="page-wrapper">
                                     <!-- Page-body start -->
                                     <div class="page-body">
-
-				<div class="container">
-					<div class="row">
-						<div
-							class="col-lg-10 col-xl-8 offset-0 offset-sm-0 offset-md-0 offset-lg-1 offset-xl-2 ">
-
-							<div class="row">
-								<div class="col-md-4 mx-auto">
-									<div class="u-pull-half text-center">
-										
-									</div>
-								</div>
-							</div>
-							<form action="addEntertainerAvailability-New.php" method="POST">
-							
-								<div class="form-group">
-											<label for="availTitle" class="control-label title2">Availability Name</label>
-											<input type="text" class="form-control" style="border-bottom: 2px solid #faa828;" id="availTitle" name="availTitle">
-										</div>
-								  
-								<div class="form-group">
-									<!-- Event Name -->
-									<label for="startDate" class="control-label title2">Availability Start Date</label>
-									<input type="date" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="startDate"
-										name="startDate" placeholder="Enter the start date of the avilability">
-										<span class="error"> <?php echo $startDateErr;?></span>
-										
-								</div>
-								<div class="form-group">
-									<!-- Event Name -->
-									<label for="endDate" class="control-label title2">Availability End Date</label>
-									<input type="date" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="endDate"
-										name="endDate" placeholder="Enter the end date of the avilability">
-										<span class="error"> <?php echo $endDateErr;?></span>
-								</div>
-								<div class="form-group">
-									<!-- Event Name -->
-									<label for="startTime" class="control-label title2">Availability Start Time
-										</label> <input type="time" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="startTime"
-										name="startTime">
-										<span class="error"> <?php echo $startTimeErr;?></span>
-								</div>
-								<div class="form-group">
-									<!-- Event Name -->
-									<label for="endTime" class="control-label title2">Availability End Time
-										</label> <input type="time" class="form-control"
-										style="border-bottom: 3px solid #fac668;" id="endTime"
-										name="endTime">
-										<span class="error"> <?php echo $endTimeErr;?></span>
-										<span class="error"> <?php echo $startBeforeEndErr;?></span>
-								</div>
-
-								<!--
-										<div class="input-group">
-											  <div class="input-group-prepend">
-												<span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-											  </div>
-												<input id="input-b1" name="input-b1" type="file" class="file" data-browse-on-zone-click="true"> 
-										</div>
-										for later -->
-
-<!--  								<a href="entertainerAvailabilityList.php">  -->
-								<button type="submit" class="btn-all" style="display: inline;">Add</button>
-<!--  								</a>  -->
-
-
-								<a href="entertainerEventsCalendar.php"><button class="btn-all"
-										type="button" style="display: inline;">Cancel</button></a>
-
-								<!-- Replace buttons with below code -->
-								<!--<div class="form-group" style="display:inline;"> 
-											<a href="entertainerPortfolio.php"><button type="submit" class="btn-all">Create</button></a>
-										</div> 
-										<div class="form-group" style="display:inline;"> 
-											<button class="btn-all">Cancel</button>
-										</div>   -->
-
-
-							</form>
-
-						</div>
-					</div>
-				</div>
+ <h1 class="main-title">Event Details</h1>      
+ <br/>
+ <br/>   
+  <div class="center" style ="padding: 30px;">
+  
+  <div class="card text-center notification-card">
+    <img class="card-img-top event-img-size-notification" src="../assets/img/backgrounds/1.jpg" alt="event img">
+    <div class="card-body">
+      <h5 class="card-title title2"><?= $event_name ?></h5>
+      <p class="card-text">Wednesday June 2nd from 2:00pm to 9:00pm</p>
+      <p class="card-text"><?= $venueName ?></p>
+            <p class="card-text">Gig Selected: <?= $gigsName ?></p>
+      <p class="card-text"><?= $gigsDetails ?></p>
+      <p class="card-text">Contact: <?= $entFirstName . '  ' . $entLastName . ' at ' . $email ?></p>
+    </div>
+      
+  </div>           
+  </div>                           
+                                      
                                              </div>
                                     <!-- Page-body end -->
                                 </div>

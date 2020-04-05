@@ -45,10 +45,11 @@
     include ('../dto/bookedGigDetails.php');
     include ('../dto/venue.php');
     
+    $firstName = $_SESSION['venueOwnerfirstname'];
+    $lastName = $_SESSION['venueOwnerlastname'];
+    $venueOwnerId = $_SESSION['venueOwnerId'];
     
-    $authIdd = $_SESSION['authId'];
-    
-    
+    /*
     
     $query = "SELECT venueOwnerId, firstName, lastName, imageLocation
           FROM venueowners
@@ -75,6 +76,7 @@
     $_SESSION['venueOwnerfirstname'] = $firstName;
     $_SESSION['venueOwnerlastname'] = $lastName;
     $_SESSION['venueOwnerId'] = $venueOwnerIdd;
+    */
     
     $query_owned = "select count(*) AS owned from venues ve
                 inner join venueowners vo on vo.venueOwnerId = ve.venueOwnerId
@@ -489,7 +491,7 @@ Upcoming Events
       <p class="card-text">VENUE: '. $bookedgig->getVenueName() .'</p>
       <p class="card-text">DESCRIPTION: '. $bookedgig->getEventDescription() .'</p>
       <p class="card-text">ENTERTAINER NAME '. $bookedgig->getGigsName()  .'</p>
-      	<button type="button"><a href="entertainerViewEventDetails.php'.$bookedgig->getBookedGigsId().'">View More</a></button>
+      	<button type="button"><a href="venueHostViewEventDetails.php?id='.$bookedgig->getBookedGigsId().'">View More</a></button>
       
     </div>
   </div>';

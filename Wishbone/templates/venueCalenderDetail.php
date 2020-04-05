@@ -9,11 +9,14 @@ $authId = $_SESSION['authId'];
 if ( isset ($_GET['id'])) {
     $_SESSION['availid'] = $_GET['id'];
     $availid = $_GET['id'];
-    echo $availid;
 }
 
+$firstName = $_SESSION['venueOwnerfirstname'];
+$lastName = $_SESSION['venueOwnerlastname'];
+$venueOwnerId = $_SESSION['venueOwnerId'];
 
 
+/*
 $query = "SELECT venueOwnerId
           FROM venueOwners
           WHERE  authid = ?";
@@ -34,6 +37,7 @@ if ($stmt = $connection->prepare( $query)) {
     //close statement
     $stmt->close();
 }
+*/
 
 $query3 = "SELECT firstName, lastName, imageLocation
               FROM venueOwners
@@ -333,8 +337,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
                             </li>
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
-                                    <img src=<?= "../assets/img/profile/" . $profilePicture ?> class="img-radius" alt="User-Profile-Image">
-                                    <span><?= $venueOwnerFirstName. " " . $venueOwnerLastName ?></span>
+                                    <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                    <span><?= $firstName. " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -367,17 +371,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
                         <div class="pcoded-inner-navbar main-menu">
                             <div class="">
                                 <div class="main-menu-header">
-                                    <img class="img-80 img-radius" src=<?= "../assets/img/profile/" . $profilePicture ?> alt="User-Profile-Image">
+                                    <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details"><?= $venueOwnerFirstName. " " . $venueOwnerLastName ?><i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName. " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="venueHostProfileView.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
-                                            <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
+                                            <a href="index.php"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -394,7 +398,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
                             <div class="pcoded-navigation-label">NAVIGATION</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="active">
-                                    <a href="venueProfileView.php" class="waves-effect waves-dark">
+                                    <a href="venueDashboardHome.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Dashboard</span>
                                         <span class="pcoded-mcaret"></span>
@@ -454,34 +458,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" ) {
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>
-                                <?php
-                                    if ( $profileStatus == ProfileStatus::INCOMPLETE || $profileStatus == ProfileStatus::NOT_CREATED) {
-                                      print'
-                                           <li class="">
-                                                <a href="venueProfileCreate.php" class="waves-effect waves-dark">
-                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                                    <span class="pcoded-mtext">Create Portfolio</span>
-                                                    <span class="pcoded-mcaret"></span>
-                                                </a>
-                                            </li> 
-                                           '; 
-                                    } else {
-                                        print'
-                                            <li class="">
-                                                <a href="venueDashboardHome.php" class="waves-effect waves-dark">
-                                                    <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                                    <span class="pcoded-mtext">Portfolio</span>
-                                                    <span class="pcoded-mcaret"></span>
-                                                </a>
-                                            </li>
-                                             ';
-                                        
-                                    }
-                                ?>
                                 <li class="">
-                                    <a href="venueProfileView.php" class="waves-effect waves-dark">
+                                    <a href="venueHostAllEntertainers.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="fa fa-user"></i><b>D</b></span>
-                                        <span class="pcoded-mtext">Portfolio</span>
+                                        <span class="pcoded-mtext">Book Entertainers</span>
+                                        <span class="pcoded-mcaret"></span>
+                                    </a>
+                                </li> 
+                                <li class="">
+                                    <a href="venueHostVenueList.php" class="waves-effect waves-dark">
+                                        <span class="pcoded-micon"><i class="fas fa-building"></i><b>D</b></span>
+                                        <span class="pcoded-mtext">My Venues</span>
                                         <span class="pcoded-mcaret"></span>
                                     </a>
                                 </li>                                                                

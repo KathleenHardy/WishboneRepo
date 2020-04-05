@@ -464,7 +464,7 @@ VALUES( '$chosenEntId', '$entVideoEmbedCode')";
                                         </a>
                                     </li>
                                     <li class="waves-effect waves-light">
-                                        <a href="user-profile.html">
+                                        <a href="entertainerViewProfile-New.php">
                                             <i class="ti-user"></i> Profile
                                         </a>
                                     </li>

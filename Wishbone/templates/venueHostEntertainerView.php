@@ -64,11 +64,18 @@ SOFTWARE. -->
 session_start();
 include ('../config.php');
 require_once ('../dto/gig.php');
+include ('../dto/occupation.php');
 
-$_SESSION['entid']=$_GET['entid'];
+$_SESSION['entid']=$_GET['id'];
+
+$firstName = $_SESSION['venueOwnerfirstname'];
+$lastName = $_SESSION['venueOwnerlastname'];
+$venueOwnerId = $_SESSION['venueOwnerId'];
+
+
 $entid = $_SESSION['entid'];
 
-$query = "SELECT authid, firstName, lastName, ratePerHour, occupation, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus
+$query = "SELECT authid, firstName, lastName, ratePerHour, workDescription, profilePicture, homePagePicture, aboutMe, myQuote, profileStatus
           FROM entertainers
           WHERE  entid = ?";
 
@@ -80,7 +87,7 @@ if ($stmt = $connection->prepare( $query)) {
     $stmt->execute();
     
     //bind result variables
-    $stmt->bind_result($authId, $firstName, $lastName, $ratePerHour, $occupation, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
+    $stmt->bind_result($authId, $entfirstName, $entlastName, $ratePerHour, $workDescription, $profilePicture, $homePagePicture, $aboutMe, $myQuote, $profileStatus);
     
     // fetch values
     $stmt->fetch();
@@ -171,6 +178,42 @@ if ($stmt4 = $connection->prepare( $query4)) {
     
     //close statement
     $stmt4->close();
+    
+}
+
+$occupationsDTO = array();
+$query5 = "SELECT occupation
+           FROM occupation
+           WHERE entid = ?";
+
+if ($stmt5 = $connection->prepare( $query5)) {
+    
+    $stmt5->bind_param( "i", $entid);
+    //execute statement
+    $stmt5->execute();
+    
+    //bind result variables
+    $stmt5->bind_result( $occupation);
+    
+    while ($stmt5->fetch()){
+        $occupation_ = new Occupation();
+        $occupation_->setOccupation( $occupation);
+        
+        $occupationsDTO[] = $occupation_;
+    }
+    
+    
+    //close statement
+    $stmt5->close();
+    
+    $allOccupations="";
+    foreach($occupationsDTO as $occu) {
+        if ($allOccupations == "") {
+            $allOccupations = $allOccupations. $occu->getOccupation() ;
+        } else {
+            $allOccupations = $allOccupations . " | ".  $occu->getOccupation() ;
+        }
+    }
     
 }
 
@@ -287,7 +330,7 @@ $connection->close();
                                         <div class="media">
                                             <img class="d-flex align-self-center img-radius" src="../assets/images/avatar-2.jpg" alt="Generic placeholder image">
                                             <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
+                                                <h5 class="notification-user"><?= $firstName . " " . $lastName ?></h5>
                                                 <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
                                                 <span class="notification-time">30 minutes ago</span>
                                             </div>
@@ -318,7 +361,7 @@ $connection->close();
                             <li class="user-profile header-notification">
                                 <a href="#!" class="waves-effect waves-light">
                                     <img src="../assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
-                                    <span>John Doe</span>
+                                    <span><?= $firstName . " " . $lastName ?></span>
                                     <i class="ti-angle-down"></i>
                                 </a>
                                 <ul class="show-notification profile-notification">
@@ -353,7 +396,7 @@ $connection->close();
                                 <div class="main-menu-header">
                                     <img class="img-80 img-radius" src="../assets/images/avatar-4.jpg" alt="User-Profile-Image">
                                     <div class="user-details">
-                                        <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                                        <span id="more-details"><?= $firstName . " " . $lastName ?><i class="fa fa-caret-down"></i></span>
                                     </div>
                                 </div>
                                 <div class="main-menu-content">
@@ -491,8 +534,8 @@ $connection->close();
           <div class="row justify-content-center">
             <div class="col-12">
               <div class="text-center">
-                <h1 class="display-sm-4 display-lg-3"><?= $firstName . ' ' . $lastName  ?></h1>
-                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= $occupation ?></p>
+                <h1 class="display-sm-4 display-lg-3"><?= $entfirstName . ' ' . $entlastName  ?></h1>
+                <p class="h6 text-uppercase u-letter-spacing-sm mb-2"><?= $allOccupations ?></p>
 
                 <ul class="list-inline text-center mb-0">
                   <li class="list-inline-item mx-2" data-toggle="tooltip" data-placement="top" title="Facebook">
@@ -551,7 +594,7 @@ $connection->close();
               <h1 class="main-title">ABOUT ME</h1>
               <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;"><?= $aboutMe ?></p>
               <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;"><?= $myQuote ?></p>
-              <p class="blockquote-footer"><?= $firstName . ' ' . $lastName . ', ' . $occupation?></p>
+              <p class="blockquote-footer"><?= $entfirstName . ' ' . $entlastName . ', ' . $allOccupations?></p>
               <br/>
               <h1 class="main-title">CONTACT ME</h1>
               <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;">EMAIL: <?= $email ?></p>
@@ -624,7 +667,7 @@ $connection->close();
             <!-- End Portfolio -->
       <!--  Button to Add Gigs -->  
       <div class="buttons-section" style="text-align: center;">
-<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="venueHostBookEvent.php">Book</a></div>
+<div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="venueHostBookEvent.php?id=<?php echo $entid?>">Book</a></div>
 <div class="button_entertainer" style="display: inline;" align="center"><a class="button_add_gigs" href="venueHostAllEntertainers.php">Back</a></div>
  </div>
 

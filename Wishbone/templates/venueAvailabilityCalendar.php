@@ -679,7 +679,7 @@ mysqli_close($connection);
                                 </div>
                             </div>
                         </div>
-                        <a href="entertainerDashboardHome.php">
+                        <a href="venueDashboardHome.php">
                             <h4>WISHBONE</h4>
                         </a>
                         <a class="mobile-options waves-effect waves-light">
@@ -784,7 +784,7 @@ mysqli_close($connection);
                                 <div class="main-menu-content">
                                     <ul>
                                         <li class="more-details">
-                                            <a href="user-profile.html"><i class="ti-user"></i>View Profile</a>
+                                            <a href="entertainerViewProfile-New.php"><i class="ti-user"></i>View Profile</a>
                                             <a href="#!"><i class="ti-settings"></i>Settings</a>
                                             <a href="auth-normal-sign-in.html"><i class="ti-layout-sidebar-left"></i>Logout</a>
                                         </li>
@@ -803,7 +803,7 @@ mysqli_close($connection);
                             <div class="pcoded-navigation-label">NAVIGATION</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="active">
-                                    <a href="entertainerDashboardHome.php" class="waves-effect waves-dark">
+                                    <a href="venueDashboardHome.php" class="waves-effect waves-dark">
                                         <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
                                         <span class="pcoded-mtext">Dashboard</span>
                                         <span class="pcoded-mcaret"></span>
