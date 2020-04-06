@@ -55,6 +55,8 @@ SOFTWARE. -->
     <!-- font awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">    
     <!-- Style.css -->
+    				<link rel="stylesheet" type="text/css" href="../assets/css/styles.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/custom.css" />
             <link rel="stylesheet" type="text/css" href="../assets/css/mainNew.css">
     <link rel="stylesheet" type="text/css" href="../assets/css2/style.css">
 </head>
@@ -526,7 +528,7 @@ $connection->close();
                                     <!-- Page-body start -->
                                     <div class="page-body">
 
-<div>
+
       <!-- Promo Block -->
       <section class="js-parallax u-promo-block u-promo-block--mheight-500 u-overlay text-white" style="background-image: url(../assets/img-temp/1920x1080/img5.jpg);">
         <!-- Promo Content -->
@@ -675,7 +677,7 @@ $connection->close();
 
 
 
-</div>
+
 
 
                                     </div>

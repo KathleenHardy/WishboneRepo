@@ -200,7 +200,7 @@ if( $_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['sign-in'])){
             } else if ( $_POST["userType"] == UserType::VENUE_OWNER) {
                 $_SESSION['useremail'] = $authentication->getRegistrantEmail();
                 $_SESSION['authId'] = $authentication->getAuthId();
-                header('Location: venueProfileView.php');
+                header('Location: venueHostProfileView.php');
             }
 
     } else {

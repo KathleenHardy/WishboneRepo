@@ -360,7 +360,7 @@ $connection->close();
                             </div>
                         </div>
                         <a href="entertainerDashboardHome.php">
-                            <h4>WISHBONE</h4>
+                            <h4 style="color:white;">WISHBONE</h4>
                         </a>
                         <a class="mobile-options waves-effect waves-light">
                             <i class="ti-more"></i>
@@ -651,7 +651,7 @@ $connection->close();
               <br/>
               <h1 class ="main-title">CONTACT ME</h1>
               <p class="h5" style="font-family: 'Averta'; text-align:center; color:#36454f;">EMAIL: <?= $email ?></p>
-            <div class="button_entertainer""><a class="button_add_gigs" href="entertainerEditPortfolio.php">Update Portfolio Information</a></div>
+            <div class="button_entertainer"><a class="button_add_gigs" href="entertainerEditPortfolio.php">Update Portfolio Information</a></div>
             </div>
                     
           <!-- End About and Contact -->
