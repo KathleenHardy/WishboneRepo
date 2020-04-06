@@ -477,13 +477,13 @@ Upcoming Events
 </h1>
 
 
-<div class="card-deck spacing1">
+<div class="row spacing1">
 
 <?php
     foreach($bookedGigsDTO as $bookedgig)
         
-        print '<div class="row">
-  <div class="card text-center">
+        print '
+  <div class="card text-center" style="width: 500px; margin: 30px;">
     <img class="card-img-top event-img-size" src="../assets/img/backgrounds/1.jpg" alt="event img">
     <div class="card-body">
       <h5 class="card-title title2">'. $bookedgig->getEventName() .'</h5>
